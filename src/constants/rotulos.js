@@ -1,0 +1,21 @@
+// Rótulos legíveis dos campos do RDO, usados no "antes/depois" da edição pelo master (seção 9).
+export const ROTULOS_CAMPOS = {
+  data: 'Data', turno: 'Turno', identificacao: 'Identificação', responsavelPreenchimento: 'Responsável pelo preenchimento',
+  clima: 'Clima', periodos: 'Período', manha: 'Manhã', tarde: 'Tarde', noite: 'Noite', condicao: 'condição', temperatura: 'temperatura',
+  choveu: 'houve chuva', chuvaInicio: 'início da chuva', chuvaFim: 'fim da chuva', precipitacaoMm: 'precipitação (mm)',
+  impacto: 'impacto', horasParalisadas: 'horas paralisadas', fonte: 'fonte do dado', observacao: 'observação',
+  maoDeObra: 'Mão de obra', observacaoMaoDeObra: 'Obs. da mão de obra', quantidade: 'quantidade', horas: 'horas', horaInicio: 'início', horaFim: 'fim',
+  empresa: 'empresa/equipe', funcao: 'função',
+  equipamentos: 'Equipamentos', horasDisponiveis: 'horas disponíveis', horasProdutivas: 'horas produtivas', horasParadas: 'horas paradas', motivoParada: 'motivo da parada',
+  operador: 'operador', condicaoEquip: 'condição',
+  atividades: 'Atividades', quantidadeDia: 'quantidade do dia', unidade: 'unidade', percentual: 'percentual', situacao: 'situação', descricao: 'descrição',
+  frente: 'frente/local', servico: 'serviço', referenciaEAP: 'EAP',
+  semProducao: 'Dia sem produção', ativo: 'ativo', justificativa: 'justificativa',
+  materiais: 'Materiais', qualidade: 'Qualidade', seguranca: 'Segurança', dds: 'DDS', realizado: 'realizado', tema: 'tema', participantes: 'participantes',
+  epiEpc: 'EPI/EPC', conferidos: 'conferidos', semIncidentes: 'sem incidentes', incidentes: 'incidentes', residuos: 'resíduos', providencias: 'providências',
+  ocorrencias: 'Ocorrências', fato: 'fato', horario: 'horário', local: 'local', acaoImediata: 'ação imediata', responsavel: 'responsável', prazo: 'prazo',
+  visitas: 'Visitas', visitante: 'visitante', motivo: 'motivo', orientacao: 'orientação',
+  fotos: 'Fotos', legenda: 'legenda',
+  pendencias: 'Pendências', criticidade: 'criticidade', status: 'status', origem: 'origem',
+  planejamento: 'Planejamento', proximoDia: 'próximo dia', restricoes: 'restrições', observacoesGerais: 'Observações gerais',
+};
