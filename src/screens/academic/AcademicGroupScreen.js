@@ -7,7 +7,19 @@ import { notaFinal } from '../../data/seedAcademico';
 import { formatDateTime } from '../../utils/date';
 import { formatNumber, toNumber } from '../../utils/format';
 import { haptic } from '../../utils/feedback';
-import { Badge, Banner, BottomSheet, Button, Card, EmptyState, Icon, Screen, SectionTitle, Txt, useUI } from '../../components/ui';
+import {
+  Badge,
+  Banner,
+  BottomSheet,
+  Button,
+  Card,
+  EmptyState,
+  Icon,
+  Screen,
+  SectionTitle,
+  Txt,
+  useUI,
+} from '../../components/ui';
 import { NumberField, TextField } from '../../components/form';
 import { mediaDoGrupo } from './AcademicScreen';
 
@@ -32,7 +44,12 @@ export default function AcademicGroupScreen({ route, navigation }) {
   if (!grupo || currentUser.perfil !== PERFIL.MASTER) {
     return (
       <Screen title="Grupo" back>
-        <EmptyState icon="lock-outline" title="Acesso restrito" actionLabel="Voltar" onAction={() => navigation.goBack()} />
+        <EmptyState
+          icon="lock-outline"
+          title="Acesso restrito"
+          actionLabel="Voltar"
+          onAction={() => navigation.goBack()}
+        />
       </Screen>
     );
   }
@@ -40,11 +57,22 @@ export default function AcademicGroupScreen({ route, navigation }) {
   const entrega = faseId ? grupo.entregas.find((e) => e.faseId === faseId) : null;
   const fase = faseId ? fases.find((f) => f.id === faseId) : null;
   const media = mediaDoGrupo(grupo, criterios);
-  const previa = notaFinal(Object.fromEntries(Object.entries(notas).filter(([, v]) => v !== '').map(([k, v]) => [k, toNumber(v)])), criterios);
+  const previa = notaFinal(
+    Object.fromEntries(
+      Object.entries(notas)
+        .filter(([, v]) => v !== '')
+        .map(([k, v]) => [k, toNumber(v)]),
+    ),
+    criterios,
+  );
 
   const abrir = (f) => {
     const e = grupo.entregas.find((x) => x.faseId === f.id);
-    setNotas(Object.fromEntries(criterios.map((c) => [c.id, e.notas?.[c.id] != null ? String(e.notas[c.id]).replace('.', ',') : ''])));
+    setNotas(
+      Object.fromEntries(
+        criterios.map((c) => [c.id, e.notas?.[c.id] != null ? String(e.notas[c.id]).replace('.', ',') : '']),
+      ),
+    );
     setComentario(e.comentario || '');
     setErro('');
     setFaseId(f.id);
@@ -96,7 +124,12 @@ export default function AcademicGroupScreen({ route, navigation }) {
         const s = STATUS[e.status];
         const nf = e.status === 'avaliada' ? notaFinal(e.notas, criterios) : null;
         return (
-          <Card key={f.id} onPress={() => abrir(f)} style={{ gap: 6 }} accessibilityLabel={`Fase ${f.id}, ${f.titulo}, ${s.label}${nf != null ? `, nota ${nf}` : ''}`}>
+          <Card
+            key={f.id}
+            onPress={() => abrir(f)}
+            style={{ gap: 6 }}
+            accessibilityLabel={`Fase ${f.id}, ${f.titulo}, ${s.label}${nf != null ? `, nota ${nf}` : ''}`}
+          >
             <View style={styles.row}>
               <View style={styles.num}>
                 <Txt v="smallStrong" color={colors.white}>
@@ -111,7 +144,9 @@ export default function AcademicGroupScreen({ route, navigation }) {
             <View style={styles.row}>
               <Badge label={s.label} color={s.color} bg={s.bg} icon={s.icon} size="sm" />
               <Txt v="caption" muted style={{ flex: 1 }}>
-                {e.versoes.length ? `${e.versoes.length} versão(ões) · última ${formatDateTime(e.versoes[e.versoes.length - 1].data)}` : 'Sem entrega'}
+                {e.versoes.length
+                  ? `${e.versoes.length} versão(ões) · última ${formatDateTime(e.versoes[e.versoes.length - 1].data)}`
+                  : 'Sem entrega'}
               </Txt>
               <Icon name="chevron-right" size={20} color={colors.textSubtle} />
             </View>
@@ -162,7 +197,17 @@ export default function AcademicGroupScreen({ route, navigation }) {
               <>
                 <SectionTitle>Notas por critério (0–10)</SectionTitle>
                 {criterios.map((c) => (
-                  <NumberField key={c.id} label={`${c.nome} (${c.peso}%)`} value={notas[c.id]} onChangeText={(t) => { setNotas((n) => ({ ...n, [c.id]: t })); setErro(''); }} suffix="/10" placeholder="0–10" />
+                  <NumberField
+                    key={c.id}
+                    label={`${c.nome} (${c.peso}%)`}
+                    value={notas[c.id]}
+                    onChangeText={(t) => {
+                      setNotas((n) => ({ ...n, [c.id]: t }));
+                      setErro('');
+                    }}
+                    suffix="/10"
+                    placeholder="0–10"
+                  />
                 ))}
                 <Card tone="soft" style={styles.row}>
                   <Txt v="bodyStrong" style={{ flex: 1 }}>
@@ -170,7 +215,13 @@ export default function AcademicGroupScreen({ route, navigation }) {
                   </Txt>
                   <Txt v="h2">{previa != null ? formatNumber(previa, 1) : '—'}</Txt>
                 </Card>
-                <TextField label="Comentário do professor" multiline value={comentario} onChangeText={setComentario} placeholder="Pontos fortes e melhorias solicitadas…" />
+                <TextField
+                  label="Comentário do professor"
+                  multiline
+                  value={comentario}
+                  onChangeText={setComentario}
+                  placeholder="Pontos fortes e melhorias solicitadas…"
+                />
                 {erro ? <Banner tone="danger" message={erro} /> : null}
               </>
             ) : null}
@@ -183,6 +234,20 @@ export default function AcademicGroupScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  num: { width: 30, height: 30, borderRadius: 15, backgroundColor: colors.navy700, alignItems: 'center', justifyContent: 'center' },
-  versao: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: 10, backgroundColor: colors.blue50 },
+  num: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: colors.navy700,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  versao: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: colors.blue50,
+  },
 });

@@ -11,7 +11,7 @@ export async function capturarFoto() {
     const r = await ImagePicker.launchCameraAsync({ mediaTypes: ['images'], quality: QUALIDADE_FOTO });
     if (r.canceled) return { cancelado: true };
     return { assets: r.assets };
-  } catch (e) {
+  } catch {
     return { erro: 'A câmera não está disponível neste aparelho. Use a galeria.' };
   }
 }
@@ -20,11 +20,14 @@ export async function capturarFoto() {
 export async function escolherDaGaleria(limite = 6) {
   try {
     const r = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'], allowsMultipleSelection: true, selectionLimit: limite, quality: QUALIDADE_FOTO,
+      mediaTypes: ['images'],
+      allowsMultipleSelection: true,
+      selectionLimit: limite,
+      quality: QUALIDADE_FOTO,
     });
     if (r.canceled) return { cancelado: true };
     return { assets: r.assets };
-  } catch (e) {
+  } catch {
     return { erro: 'Não foi possível abrir a galeria.' };
   }
 }
@@ -36,7 +39,7 @@ export async function obterCoordenada() {
     if (perm.status !== 'granted') return { erro: 'Permissão de localização negada. A coordenada é opcional.' };
     const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
     return { coordenada: { lat: pos.coords.latitude, lng: pos.coords.longitude, precisao: pos.coords.accuracy || 0 } };
-  } catch (e) {
+  } catch {
     return { erro: 'Não foi possível obter a localização agora.' };
   }
 }

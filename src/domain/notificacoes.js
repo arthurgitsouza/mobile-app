@@ -21,14 +21,30 @@ export function entregasPara(usuario, { simularFalhaEmail = false, agora = nowIS
   const prefs = usuario?.canais || { push: true, email: true, whatsapp: false };
   const entregas = [];
   entregas.push({ canal: 'push', status: prefs.push === false ? 'desativado' : 'entregue', em: agora });
-  entregas.push({ canal: 'email', status: prefs.email === false ? 'desativado' : simularFalhaEmail ? 'falha' : 'entregue', em: agora });
+  entregas.push({
+    canal: 'email',
+    status: prefs.email === false ? 'desativado' : simularFalhaEmail ? 'falha' : 'entregue',
+    em: agora,
+  });
   entregas.push({ canal: 'whatsapp', status: prefs.whatsapp ? 'entregue' : 'nao_configurado', em: agora });
   return entregas;
 }
 
 export function criarNotificacao({
-  usuario, tipo, titulo, mensagem, obraId = null, rdoId = null, rdoStatus = null, prazo = null,
-  dataHora = nowISO(), lida = false, simularFalhaEmail = false, entregas, chave = null, alvoId = null,
+  usuario,
+  tipo,
+  titulo,
+  mensagem,
+  obraId = null,
+  rdoId = null,
+  rdoStatus = null,
+  prazo = null,
+  dataHora = nowISO(),
+  lida = false,
+  simularFalhaEmail = false,
+  entregas,
+  chave = null,
+  alvoId = null,
 }) {
   return {
     id: uid('nt'),

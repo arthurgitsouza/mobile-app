@@ -13,9 +13,24 @@ const TONES = {
   info: { bg: colors.infoBg, border: '#B5DBF1' },
 };
 
-export default function Card({ children, style, onPress, padded = true, tone = 'default', accessibilityLabel, hint, flat }) {
+export default function Card({
+  children,
+  style,
+  onPress,
+  padded = true,
+  tone = 'default',
+  accessibilityLabel,
+  hint,
+  flat,
+}) {
   const t = TONES[tone];
-  const base = [styles.card, { backgroundColor: t.bg, borderColor: t.border }, !flat && shadows.card, padded && styles.padded, style];
+  const base = [
+    styles.card,
+    { backgroundColor: t.bg, borderColor: t.border },
+    !flat && shadows.card,
+    padded && styles.padded,
+    style,
+  ];
   if (onPress) {
     return (
       <Pressable

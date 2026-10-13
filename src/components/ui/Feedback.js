@@ -19,7 +19,16 @@ export function EmptyState({ icon = 'clipboard-text-outline', title, message, ac
           {message}
         </Txt>
       ) : null}
-      {actionLabel ? <Button title={actionLabel} onPress={onAction} full={false} size="sm" variant="tonal" style={{ marginTop: 6 }} /> : null}
+      {actionLabel ? (
+        <Button
+          title={actionLabel}
+          onPress={onAction}
+          full={false}
+          size="sm"
+          variant="tonal"
+          style={{ marginTop: 6 }}
+        />
+      ) : null}
     </View>
   );
 }
@@ -52,7 +61,13 @@ export function Banner({ tone = 'info', title, message, icon, actionLabel, onAct
         ) : null}
         {children}
         {actionLabel ? (
-          <Pressable onPress={onAction} accessibilityRole="button" accessibilityLabel={actionLabel} style={styles.bannerAction} hitSlop={8}>
+          <Pressable
+            onPress={onAction}
+            accessibilityRole="button"
+            accessibilityLabel={actionLabel}
+            style={styles.bannerAction}
+            hitSlop={8}
+          >
             <Txt v="smallStrong" color={t.fg} style={{ textDecorationLine: 'underline' }}>
               {actionLabel}
             </Txt>
@@ -65,7 +80,15 @@ export function Banner({ tone = 'info', title, message, icon, actionLabel, onAct
 
 const styles = StyleSheet.create({
   empty: { alignItems: 'center', gap: 8, paddingVertical: 32, paddingHorizontal: 24 },
-  emptyIcon: { width: 64, height: 64, borderRadius: 32, backgroundColor: colors.blue100, alignItems: 'center', justifyContent: 'center', marginBottom: 4 },
+  emptyIcon: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: colors.blue100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 4,
+  },
   banner: { flexDirection: 'row', gap: 10, padding: 12, borderRadius: radius.md },
   bannerAction: { alignSelf: 'flex-start', paddingVertical: 4, minHeight: 32, justifyContent: 'center' },
 });

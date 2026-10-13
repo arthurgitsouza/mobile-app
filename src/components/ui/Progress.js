@@ -19,12 +19,25 @@ export function ProgressBar({ value = 0, color = chart.seq[450], track = chart.t
   );
 }
 
-export function ProgressRing({ value = 0, size = 64, stroke = 7, color = chart.seq[450], track = chart.track, children, label }) {
+export function ProgressRing({
+  value = 0,
+  size = 64,
+  stroke = 7,
+  color = chart.seq[450],
+  track = chart.track,
+  children,
+  label,
+}) {
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   const pct = Math.max(0, Math.min(100, value));
   return (
-    <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }} accessibilityRole="progressbar" accessibilityLabel={label} accessibilityValue={{ min: 0, max: 100, now: Math.round(pct) }}>
+    <View
+      style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}
+      accessibilityRole="progressbar"
+      accessibilityLabel={label}
+      accessibilityValue={{ min: 0, max: 100, now: Math.round(pct) }}
+    >
       <Svg width={size} height={size} style={StyleSheet.absoluteFill}>
         <Circle cx={size / 2} cy={size / 2} r={r} stroke={track} strokeWidth={stroke} fill="none" />
         <Circle

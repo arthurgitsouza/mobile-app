@@ -14,13 +14,20 @@ export default function StepJustificativa({ rdo, ctx, definirRodape, navigation 
   const { actions, currentUser } = useApp();
   const { toast } = useUI();
   const [justificativa, setJustificativa] = useState('');
-  const alteracoes = useMemo(() => diffConteudo(conteudoTecnico(ctx.original), conteudoTecnico(rdo), ROTULOS_CAMPOS), [ctx.original, rdo]);
+  const alteracoes = useMemo(
+    () => diffConteudo(conteudoTecnico(ctx.original), conteudoTecnico(rdo), ROTULOS_CAMPOS),
+    [ctx.original, rdo],
+  );
   const ok = alteracoes.length > 0 && justificativa.trim().length >= 10;
 
   const salvar = () => {
     actions.editarComoMaster({ rdoId: rdo.id, userId: currentUser.id, novo: rdo, justificativa, alteracoes });
     haptic.success();
-    toast.show({ type: 'success', title: 'Alterações registradas', message: 'Antes/depois e justificativa gravados na auditoria; o autor foi notificado.' });
+    toast.show({
+      type: 'success',
+      title: 'Alterações registradas',
+      message: 'Antes/depois e justificativa gravados na auditoria; o autor foi notificado.',
+    });
     navigation.goBack();
   };
 
@@ -28,7 +35,14 @@ export default function StepJustificativa({ rdo, ctx, definirRodape, navigation 
     definirRodape(
       <View style={{ flexDirection: 'row', gap: 10 }}>
         <Button title="Cancelar" variant="secondary" onPress={() => navigation.goBack()} style={{ flex: 1 }} />
-        <Button title="Salvar alterações" icon="content-save-check-outline" variant="accent" disabled={!ok} onPress={salvar} style={{ flex: 1.6 }} />
+        <Button
+          title="Salvar alterações"
+          icon="content-save-check-outline"
+          variant="accent"
+          disabled={!ok}
+          onPress={salvar}
+          style={{ flex: 1.6 }}
+        />
       </View>,
     );
     return () => definirRodape(null);
@@ -37,7 +51,12 @@ export default function StepJustificativa({ rdo, ctx, definirRodape, navigation 
 
   return (
     <View style={{ gap: 14 }}>
-      <Banner tone="warning" icon="lightbulb-on-outline" title="Prefira devolver ao autor" message="Quando a mudança for técnica (quantidades, horários, equipe), devolva o RDO ao operacional em vez de editar. Use a edição para ajustes pontuais." />
+      <Banner
+        tone="warning"
+        icon="lightbulb-on-outline"
+        title="Prefira devolver ao autor"
+        message="Quando a mudança for técnica (quantidades, horários, equipe), devolva o RDO ao operacional em vez de editar. Use a edição para ajustes pontuais."
+      />
       <Card style={{ gap: 8 }}>
         <Txt v="label" color={colors.navy600}>
           ALTERAÇÕES DETECTADAS ({alteracoes.length})

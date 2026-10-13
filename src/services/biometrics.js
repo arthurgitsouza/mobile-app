@@ -4,9 +4,12 @@ import * as LocalAuthentication from 'expo-local-authentication';
 // nesse caso o sistema oferece o código do aparelho ou a função fica indisponível — sempre com fallback.
 export async function biometriaDisponivel() {
   try {
-    const [hardware, cadastrada] = await Promise.all([LocalAuthentication.hasHardwareAsync(), LocalAuthentication.isEnrolledAsync()]);
+    const [hardware, cadastrada] = await Promise.all([
+      LocalAuthentication.hasHardwareAsync(),
+      LocalAuthentication.isEnrolledAsync(),
+    ]);
     return hardware && cadastrada;
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -19,7 +22,7 @@ export async function autenticarBiometria(motivo = 'Confirme sua identidade') {
       fallbackLabel: 'Usar código do aparelho',
     });
     return !!r.success;
-  } catch (e) {
+  } catch {
     return false;
   }
 }

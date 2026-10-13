@@ -21,7 +21,10 @@ function Contagem({ icon, valor, label }) {
 export default function RdoCard({ rdo, obra, onPress, showObra = true, agora, autorNome, config }) {
   const meta = statusMeta[rdo.status];
   const nowMs = new Date(agora || Date.now()).getTime();
-  const atraso = atrasoDeAcao(rdo, nowMs, { master: config?.masterHoras || 24, cliente: config?.clienteHoras?.[0] || 24 });
+  const atraso = atrasoDeAcao(rdo, nowMs, {
+    master: config?.masterHoras || 24,
+    cliente: config?.clienteHoras?.[0] || 24,
+  });
   const ocorr = rdo.ocorrencias?.length || 0;
   const turno = { diurno: 'Diurno', noturno: 'Noturno', misto: 'Misto' }[rdo.turno] || rdo.turno;
 
@@ -61,13 +64,25 @@ export default function RdoCard({ rdo, obra, onPress, showObra = true, agora, au
           ) : null}
         </View>
         {rdo.status === 'devolvido' && rdo.devolucao ? (
-          <Aviso tone="warning" icon="undo-variant" texto={`Corrigir até ${formatDateTime(rdo.devolucao.prazo)}: ${rdo.devolucao.motivo}`} />
+          <Aviso
+            tone="warning"
+            icon="undo-variant"
+            texto={`Corrigir até ${formatDateTime(rdo.devolucao.prazo)}: ${rdo.devolucao.motivo}`}
+          />
         ) : null}
-        {rdo.esclarecimentoPendente ? <Aviso tone="info" icon="help-circle-outline" texto="Cliente solicitou esclarecimento" /> : null}
+        {rdo.esclarecimentoPendente ? (
+          <Aviso tone="info" icon="help-circle-outline" texto="Cliente solicitou esclarecimento" />
+        ) : null}
         {atraso && atraso.responsavel !== 'operacional' ? (
-          <Aviso tone="danger" icon="clock-alert-outline" texto={`Prazo sugerido excedido: ${atraso.horas} h ${atraso.responsavel === 'master' ? 'sem análise' : 'sem ciência do cliente'}`} />
+          <Aviso
+            tone="danger"
+            icon="clock-alert-outline"
+            texto={`Prazo sugerido excedido: ${atraso.horas} h ${atraso.responsavel === 'master' ? 'sem análise' : 'sem ciência do cliente'}`}
+          />
         ) : null}
-        {atraso && atraso.responsavel === 'operacional' ? <Aviso tone="danger" icon="clock-alert-outline" texto="Prazo de correção vencido" /> : null}
+        {atraso && atraso.responsavel === 'operacional' ? (
+          <Aviso tone="danger" icon="clock-alert-outline" texto="Prazo de correção vencido" />
+        ) : null}
         {rdo.status === 'submetido' && rdo.submetidoEm && !atraso ? (
           <Txt v="caption" subtle>
             Enviado {tempoRelativo(rdo.submetidoEm, agora)}
@@ -98,6 +113,13 @@ const styles = StyleSheet.create({
   top: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   counts: { flexDirection: 'row', alignItems: 'center', gap: 14, flexWrap: 'wrap' },
   count: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  flag: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 },
+  flag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 999,
+  },
   aviso: { flexDirection: 'row', alignItems: 'center', gap: 6, padding: 8, borderRadius: 8 },
 });

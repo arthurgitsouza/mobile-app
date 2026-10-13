@@ -19,15 +19,20 @@ export function validarRdo(rdo, { obra, rdos = [], agora } = {}) {
   if (!rdo.data) erro('identificacao', 'data', 'Informe a data do RDO.');
   else if (isFuture(rdo.data, agora)) erro('identificacao', 'data', 'A data do RDO não pode ser futura.');
   if (!rdo.turno) erro('identificacao', 'turno', 'Informe o turno.');
-  if (!isFilled(rdo.identificacao?.responsavelPreenchimento)) erro('identificacao', 'responsavel', 'Informe o responsável pelo preenchimento.');
+  if (!isFilled(rdo.identificacao?.responsavelPreenchimento))
+    erro('identificacao', 'responsavel', 'Informe o responsável pelo preenchimento.');
 
-  const duplicado = rdosAtivos(rdos).find((r) => r.id !== rdo.id && r.numero !== rdo.numero && chaveUnicidade(r) === chaveUnicidade(rdo));
-  if (duplicado) aviso('identificacao', 'data', `Já existe o RDO ${numeroRdo(duplicado.numero)} para esta obra, data e turno.`);
+  const duplicado = rdosAtivos(rdos).find(
+    (r) => r.id !== rdo.id && r.numero !== rdo.numero && chaveUnicidade(r) === chaveUnicidade(rdo),
+  );
+  if (duplicado)
+    aviso('identificacao', 'data', `Já existe o RDO ${numeroRdo(duplicado.numero)} para esta obra, data e turno.`);
 
   // ---- B. Clima ----
   const clima = rdo.clima || {};
   const periodos = Object.values(clima.periodos || {});
-  if (!periodos.some((p) => isFilled(p.condicao))) erro('clima', 'periodos', 'Informe a condição do tempo em pelo menos um período.');
+  if (!periodos.some((p) => isFilled(p.condicao)))
+    erro('clima', 'periodos', 'Informe a condição do tempo em pelo menos um período.');
   periodos.forEach((p) => {
     if (isFilled(p.temperatura) && !isValidNumber(p.temperatura)) erro('clima', 'temperatura', 'Temperatura inválida.');
   });
@@ -35,17 +40,24 @@ export function validarRdo(rdo, { obra, rdos = [], agora } = {}) {
   if (clima.choveu) {
     const temDuracao = isFilled(clima.chuvaInicio) && isFilled(clima.chuvaFim);
     const temMm = isValidNumber(clima.precipitacaoMm);
-    if (!temDuracao && !temMm) erro('clima', 'chuva', 'Houve chuva: informe a duração (início e fim) e/ou a precipitação em mm.');
+    if (!temDuracao && !temMm)
+      erro('clima', 'chuva', 'Houve chuva: informe a duração (início e fim) e/ou a precipitação em mm.');
     if (temDuracao) {
-      if (timeToMinutes(clima.chuvaInicio) === null || timeToMinutes(clima.chuvaFim) === null) erro('clima', 'chuvaHorario', 'Horário da chuva inválido (use HH:MM).');
-      else if (duracaoChuvaMin(clima) === null) erro('clima', 'chuvaHorario', 'O fim da chuva deve ser posterior ao início.');
+      if (timeToMinutes(clima.chuvaInicio) === null || timeToMinutes(clima.chuvaFim) === null)
+        erro('clima', 'chuvaHorario', 'Horário da chuva inválido (use HH:MM).');
+      else if (duracaoChuvaMin(clima) === null)
+        erro('clima', 'chuvaHorario', 'O fim da chuva deve ser posterior ao início.');
     }
     if (!clima.impacto) erro('clima', 'impacto', 'Informe o impacto da chuva no serviço.');
     if (clima.impacto && clima.impacto !== 'nenhum' && timeToMinutes(clima.horasParalisadas) === null) {
       erro('clima', 'horasParalisadas', 'Informe as horas paralisadas (HH:MM) pelo impacto da chuva.');
     }
   } else if (marcouChuvaNoPeriodo) {
-    aviso('clima', 'choveu', 'Você registrou chuva em um período: marque "Houve chuva" para informar duração e impacto.');
+    aviso(
+      'clima',
+      'choveu',
+      'Você registrou chuva em um período: marque "Houve chuva" para informar duração e impacto.',
+    );
   }
 
   // ---- C. Mão de obra ----
@@ -57,24 +69,35 @@ export function validarRdo(rdo, { obra, rdos = [], agora } = {}) {
     const horas = toNumber(m.horas);
     if (!(horas > 0 && horas <= 24)) erro('maoDeObra', 'horas', `${nome}: informe as horas trabalhadas (0–24).`, m.id);
     const chave = `${(m.empresa || '').toLowerCase()}|${(m.funcao || '').toLowerCase()}`;
-    if (chaves.has(chave)) aviso('maoDeObra', 'funcao', `${nome} aparece mais de uma vez para a mesma equipe: some as quantidades em uma linha (evita dupla contagem).`, m.id);
+    if (chaves.has(chave))
+      aviso(
+        'maoDeObra',
+        'funcao',
+        `${nome} aparece mais de uma vez para a mesma equipe: some as quantidades em uma linha (evita dupla contagem).`,
+        m.id,
+      );
     chaves.add(chave);
   });
-  if (!(rdo.maoDeObra || []).length && !rdo.semProducao?.ativo) aviso('maoDeObra', 'lista', 'Nenhuma mão de obra registrada.');
+  if (!(rdo.maoDeObra || []).length && !rdo.semProducao?.ativo)
+    aviso('maoDeObra', 'lista', 'Nenhuma mão de obra registrada.');
 
   // ---- D. Equipamentos ----
   (rdo.equipamentos || []).forEach((e, i) => {
     const nome = e.tipo || `Equipamento ${i + 1}`;
     if (!isFilled(e.tipo)) erro('equipamentos', 'tipo', `Equipamento ${i + 1}: informe o tipo.`, e.id);
-    if (toNumber(e.quantidade) < 1) erro('equipamentos', 'quantidade', `${nome}: quantidade deve ser ao menos 1.`, e.id);
+    if (toNumber(e.quantidade) < 1)
+      erro('equipamentos', 'quantidade', `${nome}: quantidade deve ser ao menos 1.`, e.id);
     const disp = toNumber(e.horasDisponiveis);
     const prod = toNumber(e.horasProdutivas);
     const par = toNumber(e.horasParadas);
-    if (prod + par > disp + 0.001) erro('equipamentos', 'horas', `${nome}: horas produtivas + paradas excedem as horas disponíveis.`, e.id);
+    if (prod + par > disp + 0.001)
+      erro('equipamentos', 'horas', `${nome}: horas produtivas + paradas excedem as horas disponíveis.`, e.id);
     const parado = ['parado', 'manutencao'].includes(e.condicao) || par > 0;
     if (parado) {
-      if (!isFilled(e.motivoParada)) erro('equipamentos', 'motivoParada', `${nome}: equipamento parado exige o motivo.`, e.id);
-      if (!(par > 0)) erro('equipamentos', 'horasParadas', `${nome}: equipamento parado exige a duração (horas paradas).`, e.id);
+      if (!isFilled(e.motivoParada))
+        erro('equipamentos', 'motivoParada', `${nome}: equipamento parado exige o motivo.`, e.id);
+      if (!(par > 0))
+        erro('equipamentos', 'horasParadas', `${nome}: equipamento parado exige a duração (horas paradas).`, e.id);
     }
   });
 
@@ -83,13 +106,16 @@ export function validarRdo(rdo, { obra, rdos = [], agora } = {}) {
   if (!(rdo.atividades || []).length && !sp.ativo) {
     erro('atividades', 'lista', 'Registre ao menos uma atividade ou marque "Dia sem produção" com justificativa.');
   }
-  if (sp.ativo && !isFilled(sp.justificativa)) erro('atividades', 'justificativa', 'Dia sem produção: informe a justificativa.');
+  if (sp.ativo && !isFilled(sp.justificativa))
+    erro('atividades', 'justificativa', 'Dia sem produção: informe a justificativa.');
   (rdo.atividades || []).forEach((a, i) => {
     const nome = a.servico || `Atividade ${i + 1}`;
     if (!isFilled(a.servico)) erro('atividades', 'servico', `Atividade ${i + 1}: informe o serviço.`, a.id);
     if (!isFilled(a.unidade)) erro('atividades', 'unidade', `${nome}: informe a unidade.`, a.id);
-    if (!isValidNumber(a.quantidadeDia)) erro('atividades', 'quantidadeDia', `${nome}: informe a quantidade executada no dia.`, a.id);
-    if (isFilled(a.percentual) && !(toNumber(a.percentual) >= 0 && toNumber(a.percentual) <= 100)) erro('atividades', 'percentual', `${nome}: percentual deve estar entre 0 e 100.`, a.id);
+    if (!isValidNumber(a.quantidadeDia))
+      erro('atividades', 'quantidadeDia', `${nome}: informe a quantidade executada no dia.`, a.id);
+    if (isFilled(a.percentual) && !(toNumber(a.percentual) >= 0 && toNumber(a.percentual) <= 100))
+      erro('atividades', 'percentual', `${nome}: percentual deve estar entre 0 e 100.`, a.id);
   });
 
   // ---- F. Materiais / G. Qualidade ----
@@ -98,11 +124,14 @@ export function validarRdo(rdo, { obra, rdos = [], agora } = {}) {
     if (!isFilled(m.material)) erro('materiaisQualidade', 'material', `Material ${i + 1}: informe o material.`, m.id);
     if (!isFilled(m.unidade)) erro('materiaisQualidade', 'unidade', `${nome}: informe a unidade.`, m.id);
     if (!isValidNumber(m.quantidade)) erro('materiaisQualidade', 'quantidade', `${nome}: informe a quantidade.`, m.id);
-    if (m.movimento === 'recebido' && !isFilled(m.notaRomaneio)) aviso('materiaisQualidade', 'notaRomaneio', `${nome}: recebimento sem nota/romaneio informado.`, m.id);
+    if (m.movimento === 'recebido' && !isFilled(m.notaRomaneio))
+      aviso('materiaisQualidade', 'notaRomaneio', `${nome}: recebimento sem nota/romaneio informado.`, m.id);
   });
   (rdo.qualidade || []).forEach((q, i) => {
-    if (!isFilled(q.descricao)) erro('materiaisQualidade', 'descricao', `Qualidade ${i + 1}: descreva a inspeção/ensaio.`, q.id);
-    if (q.tipo === 'nao_conformidade' && !isFilled(q.responsavel)) aviso('materiaisQualidade', 'responsavel', 'Não conformidade sem responsável pela tratativa.', q.id);
+    if (!isFilled(q.descricao))
+      erro('materiaisQualidade', 'descricao', `Qualidade ${i + 1}: descreva a inspeção/ensaio.`, q.id);
+    if (q.tipo === 'nao_conformidade' && !isFilled(q.responsavel))
+      aviso('materiaisQualidade', 'responsavel', 'Não conformidade sem responsável pela tratativa.', q.id);
   });
 
   // ---- H. Segurança ----
@@ -111,7 +140,8 @@ export function validarRdo(rdo, { obra, rdos = [], agora } = {}) {
     aviso('seguranca', 'incidentes', 'Informe se houve acidentes/quase acidentes no dia (ou marque "Sem incidentes").');
   }
   (seg.incidentes || []).forEach((inc, i) => {
-    if (!isFilled(inc.tipo) || !isFilled(inc.descricao)) erro('seguranca', 'incidentes', `Incidente ${i + 1}: informe tipo e descrição.`, inc.id);
+    if (!isFilled(inc.tipo) || !isFilled(inc.descricao))
+      erro('seguranca', 'incidentes', `Incidente ${i + 1}: informe tipo e descrição.`, inc.id);
   });
 
   // ---- I. Ocorrências / J. Visitas ----
@@ -120,7 +150,8 @@ export function validarRdo(rdo, { obra, rdos = [], agora } = {}) {
     if (!isFilled(o.fato)) erro('ocorrencias', 'fato', `${nome}: descreva o fato.`, o.id);
     if (timeToMinutes(o.horario) === null) erro('ocorrencias', 'horario', `${nome}: informe o horário (HH:MM).`, o.id);
     if (!isFilled(o.local)) aviso('ocorrencias', 'local', `${nome}: local não informado.`, o.id);
-    if (!isFilled(o.responsavel)) aviso('ocorrencias', 'responsavel', `${nome}: sem responsável pela providência.`, o.id);
+    if (!isFilled(o.responsavel))
+      aviso('ocorrencias', 'responsavel', `${nome}: sem responsável pela providência.`, o.id);
   });
   (rdo.visitas || []).forEach((v, i) => {
     const nome = v.visitante || `Visita ${i + 1}`;
@@ -133,10 +164,13 @@ export function validarRdo(rdo, { obra, rdos = [], agora } = {}) {
 
   // ---- K. Fotos ----
   (rdo.fotos || []).forEach((f) => {
-    if (!isFilled(f.legenda)) erro('fotos', 'legenda', `Foto ${String(f.numero).padStart(2, '0')}: a legenda é obrigatória.`, f.id);
-    else if (!isFilled(f.local)) aviso('fotos', 'local', `Foto ${String(f.numero).padStart(2, '0')}: local não informado.`, f.id);
+    if (!isFilled(f.legenda))
+      erro('fotos', 'legenda', `Foto ${String(f.numero).padStart(2, '0')}: a legenda é obrigatória.`, f.id);
+    else if (!isFilled(f.local))
+      aviso('fotos', 'local', `Foto ${String(f.numero).padStart(2, '0')}: local não informado.`, f.id);
   });
-  if (!(rdo.fotos || []).length) aviso('fotos', 'lista', 'Nenhuma foto anexada (recomendado: ao menos 3 fotos com legenda).');
+  if (!(rdo.fotos || []).length)
+    aviso('fotos', 'lista', 'Nenhuma foto anexada (recomendado: ao menos 3 fotos com legenda).');
 
   // ---- L. Pendências ----
   (rdo.pendencias || []).forEach((p, i) => {
@@ -149,7 +183,8 @@ export function validarRdo(rdo, { obra, rdos = [], agora } = {}) {
 
   // ---- M. Aprovações ----
   if (!rdo.declaracao?.aceita) erro('revisao', 'declaracao', 'Aceite a declaração de responsabilidade para enviar.');
-  if (obra?.exigeAssinaturaOperacional && !rdo.assinaturaOperacional) erro('revisao', 'assinatura', 'Esta obra exige a assinatura do responsável pelo preenchimento.');
+  if (obra?.exigeAssinaturaOperacional && !rdo.assinaturaOperacional)
+    erro('revisao', 'assinatura', 'Esta obra exige a assinatura do responsável pelo preenchimento.');
 
   // ---- Resumo por passo ----
   const temConteudo = {
@@ -158,11 +193,19 @@ export function validarRdo(rdo, { obra, rdos = [], agora } = {}) {
     maoDeObra: (rdo.maoDeObra || []).length > 0,
     equipamentos: (rdo.equipamentos || []).length > 0,
     atividades: (rdo.atividades || []).length > 0 || !!sp.ativo,
-    materiaisQualidade: (rdo.materiais || []).length + (rdo.qualidade || []).length > 0 || rdo.semRegistro?.materiais || rdo.semRegistro?.qualidade,
-    seguranca: !!seg.semIncidentes || (seg.incidentes || []).length > 0 || !!seg.dds?.realizado || !!seg.epiEpc?.conferidos,
-    ocorrencias: (rdo.ocorrencias || []).length + (rdo.visitas || []).length > 0 || rdo.semRegistro?.ocorrencias || rdo.semRegistro?.visitas,
+    materiaisQualidade:
+      (rdo.materiais || []).length + (rdo.qualidade || []).length > 0 ||
+      rdo.semRegistro?.materiais ||
+      rdo.semRegistro?.qualidade,
+    seguranca:
+      !!seg.semIncidentes || (seg.incidentes || []).length > 0 || !!seg.dds?.realizado || !!seg.epiEpc?.conferidos,
+    ocorrencias:
+      (rdo.ocorrencias || []).length + (rdo.visitas || []).length > 0 ||
+      rdo.semRegistro?.ocorrencias ||
+      rdo.semRegistro?.visitas,
     fotos: (rdo.fotos || []).length > 0,
-    pendencias: (rdo.pendencias || []).length > 0 || rdo.semRegistro?.pendencias || isFilled(rdo.planejamento?.proximoDia),
+    pendencias:
+      (rdo.pendencias || []).length > 0 || rdo.semRegistro?.pendencias || isFilled(rdo.planejamento?.proximoDia),
     revisao: !!rdo.declaracao?.aceita,
   };
 
@@ -179,7 +222,13 @@ export function validarRdo(rdo, { obra, rdos = [], agora } = {}) {
   const passosContaveis = PASSOS_RDO.filter((p) => p.key !== 'revisao');
   const completos = passosContaveis.filter((p) => ['completo', 'atencao'].includes(porPasso[p.key].estado)).length;
 
-  return { erros, avisos, porPasso, valido: erros.length === 0, progresso: { completos, total: passosContaveis.length } };
+  return {
+    erros,
+    avisos,
+    porPasso,
+    valido: erros.length === 0,
+    progresso: { completos, total: passosContaveis.length },
+  };
 }
 
 // Resumo textual curto de pendências para telas de lista (ex.: cartão do RDO).

@@ -11,7 +11,20 @@ import { inputStyles } from './inputs';
 const normalizeOptions = (options = []) => options.map((o) => (typeof o === 'string' ? { value: o, label: o } : o));
 
 // ---------------- Data ----------------
-export function DateField({ label, required, help, error, value, onChange, min, max, placeholder = 'Selecionar data', disabled, marks, style }) {
+export function DateField({
+  label,
+  required,
+  help,
+  error,
+  value,
+  onChange,
+  min,
+  max,
+  placeholder = 'Selecionar data',
+  disabled,
+  marks,
+  style,
+}) {
   const [open, setOpen] = useState(false);
   const [month, setMonth] = useState(ymOf(value || hojeObra()));
   return (
@@ -51,7 +64,21 @@ export function DateField({ label, required, help, error, value, onChange, min, 
 }
 
 // ---------------- Seleção em lista ----------------
-export function SelectField({ label, required, help, error, value, onChange, options, placeholder = 'Selecione', searchable, allowCustom, disabled, title, style }) {
+export function SelectField({
+  label,
+  required,
+  help,
+  error,
+  value,
+  onChange,
+  options,
+  placeholder = 'Selecione',
+  searchable,
+  allowCustom,
+  disabled,
+  title,
+  style,
+}) {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState('');
   const opts = useMemo(() => normalizeOptions(options), [options]);
@@ -82,7 +109,14 @@ export function SelectField({ label, required, help, error, value, onChange, opt
         </Txt>
         <Icon name="chevron-down" size={20} color={colors.textMuted} />
       </Pressable>
-      <BottomSheet visible={open} onClose={() => { setOpen(false); setQ(''); }} title={title || label || 'Selecione'}>
+      <BottomSheet
+        visible={open}
+        onClose={() => {
+          setOpen(false);
+          setQ('');
+        }}
+        title={title || label || 'Selecione'}
+      >
         {mostrarBusca ? (
           <View style={[inputStyles.wrap, { minHeight: 46 }]}>
             <Icon name="magnify" size={20} color={colors.textMuted} />
@@ -98,7 +132,12 @@ export function SelectField({ label, required, help, error, value, onChange, opt
           </View>
         ) : null}
         {allowCustom && q.trim() && !existe ? (
-          <Pressable onPress={() => escolher(q.trim())} accessibilityRole="button" accessibilityLabel={`Usar ${q.trim()}`} style={[styles.option, { backgroundColor: colors.blue50 }]}>
+          <Pressable
+            onPress={() => escolher(q.trim())}
+            accessibilityRole="button"
+            accessibilityLabel={`Usar ${q.trim()}`}
+            style={[styles.option, { backgroundColor: colors.blue50 }]}
+          >
             <Icon name="plus-circle-outline" size={22} color={colors.navy600} />
             <Txt v="bodyStrong" color={colors.navy600} style={{ flex: 1 }}>
               Usar “{q.trim()}”
@@ -128,7 +167,11 @@ export function SelectField({ label, required, help, error, value, onChange, opt
                   </Txt>
                 ) : null}
               </View>
-              <Icon name={ativo ? 'radiobox-marked' : 'radiobox-blank'} size={22} color={ativo ? colors.navy700 : colors.borderStrong} />
+              <Icon
+                name={ativo ? 'radiobox-marked' : 'radiobox-blank'}
+                size={22}
+                color={ativo ? colors.navy700 : colors.borderStrong}
+              />
             </Pressable>
           );
         })}
@@ -153,12 +196,25 @@ export function ChipGroup({ label, required, help, error, options, value, onChan
     } else onChange?.(v === value && !required ? '' : v);
   };
   const chips = opts.map((o) => (
-    <Chip key={String(o.value)} label={o.nota ? `${o.label} (${o.nota})` : o.label} icon={o.icone} selected={isOn(o.value)} disabled={o.disabled} onPress={() => toggle(o.value)} />
+    <Chip
+      key={String(o.value)}
+      label={o.nota ? `${o.label} (${o.nota})` : o.label}
+      icon={o.icone}
+      selected={isOn(o.value)}
+      disabled={o.disabled}
+      onPress={() => toggle(o.value)}
+    />
   ));
   return (
     <Field label={label} required={required} help={help} error={error} style={style}>
       {scroll ? (
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingRight: 8 }} accessibilityRole="radiogroup" style={{ flexGrow: 0 }}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ gap: 8, paddingRight: 8 }}
+          accessibilityRole="radiogroup"
+          style={{ flexGrow: 0 }}
+        >
           {chips}
         </ScrollView>
       ) : (
@@ -179,7 +235,12 @@ export function SwitchField({ label, description, value, onValueChange, disabled
       accessibilityLabel={label}
       accessibilityHint={description}
       accessibilityState={{ checked: !!value, disabled: !!disabled }}
-      style={[styles.switchRow, tone === 'gold' && { backgroundColor: colors.gold50, borderColor: colors.gold200 }, disabled && { opacity: 0.5 }, style]}
+      style={[
+        styles.switchRow,
+        tone === 'gold' && { backgroundColor: colors.gold50, borderColor: colors.gold200 },
+        disabled && { opacity: 0.5 },
+        style,
+      ]}
     >
       <View style={{ flex: 1, gap: 2 }}>
         <Txt v="bodyStrong">{label}</Txt>
@@ -203,13 +264,31 @@ export function SwitchField({ label, description, value, onValueChange, disabled
 }
 
 // ---------------- Quantidade (− n +) ----------------
-export function StepperField({ label, required, help, error, value, onChange, min = 0, max = 999, step = 1, suffix, style }) {
+export function StepperField({
+  label,
+  required,
+  help,
+  error,
+  value,
+  onChange,
+  min = 0,
+  max = 999,
+  step = 1,
+  suffix,
+  style,
+}) {
   const n = Math.round(toNumber(value));
   const set = (v) => onChange?.(String(Math.max(min, Math.min(max, v))));
   return (
     <Field label={label} required={required} help={help} error={error} style={style}>
       <View style={styles.stepper}>
-        <Pressable onPress={() => set(n - step)} disabled={n <= min} accessibilityRole="button" accessibilityLabel={`Diminuir ${label || ''}`} style={[styles.stepBtn, n <= min && { opacity: 0.4 }]}>
+        <Pressable
+          onPress={() => set(n - step)}
+          disabled={n <= min}
+          accessibilityRole="button"
+          accessibilityLabel={`Diminuir ${label || ''}`}
+          style={[styles.stepBtn, n <= min && { opacity: 0.4 }]}
+        >
           <Icon name="minus" size={24} color={colors.navy700} />
         </Pressable>
         <View style={styles.stepValue}>
@@ -227,7 +306,13 @@ export function StepperField({ label, required, help, error, value, onChange, mi
             </Txt>
           ) : null}
         </View>
-        <Pressable onPress={() => set(n + step)} disabled={n >= max} accessibilityRole="button" accessibilityLabel={`Aumentar ${label || ''}`} style={[styles.stepBtn, n >= max && { opacity: 0.4 }]}>
+        <Pressable
+          onPress={() => set(n + step)}
+          disabled={n >= max}
+          accessibilityRole="button"
+          accessibilityLabel={`Aumentar ${label || ''}`}
+          style={[styles.stepBtn, n >= max && { opacity: 0.4 }]}
+        >
           <Icon name="plus" size={24} color={colors.navy700} />
         </Pressable>
       </View>
@@ -236,18 +321,56 @@ export function StepperField({ label, required, help, error, value, onChange, mi
 }
 
 const styles = StyleSheet.create({
-  option: { flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 52, paddingHorizontal: 12, borderRadius: radius.md },
+  option: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    minHeight: 52,
+    paddingHorizontal: 12,
+    borderRadius: radius.md,
+  },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   switchRow: {
-    flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 14, paddingVertical: 12, minHeight: 56, borderRadius: radius.md,
-    borderWidth: 1.5, borderColor: colors.border, backgroundColor: colors.white,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    minHeight: 56,
+    borderRadius: radius.md,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    backgroundColor: colors.white,
   },
   stepper: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   stepBtn: {
-    width: 52, height: 52, borderRadius: radius.md, borderWidth: 1.5, borderColor: colors.borderStrong, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.blue50,
+    width: 52,
+    height: 52,
+    borderRadius: radius.md,
+    borderWidth: 1.5,
+    borderColor: colors.borderStrong,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.blue50,
   },
   stepValue: {
-    flex: 1, minHeight: 52, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, borderRadius: radius.md, borderWidth: 1.5, borderColor: colors.borderStrong, backgroundColor: colors.white,
+    flex: 1,
+    minHeight: 52,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    borderRadius: radius.md,
+    borderWidth: 1.5,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.white,
   },
-  stepInput: { fontSize: 22, fontWeight: '800', color: colors.text, textAlign: 'center', minWidth: 48, paddingVertical: 6 },
+  stepInput: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: colors.text,
+    textAlign: 'center',
+    minWidth: 48,
+    paddingVertical: 6,
+  },
 });

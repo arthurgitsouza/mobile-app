@@ -56,8 +56,12 @@ export default function MainTabs() {
         tabBarLabelStyle: { fontSize: 11, lineHeight: 14, fontWeight: '700' },
         // Altura explícita: ícone + rótulo completos em iOS/Android/web, respeitando a área segura inferior.
         tabBarStyle: {
-          backgroundColor: colors.surface, borderTopColor: colors.border, borderTopWidth: 1,
-          height: 68 + insets.bottom, paddingTop: 6, paddingBottom: insets.bottom + 10,
+          backgroundColor: colors.surface,
+          borderTopColor: colors.border,
+          borderTopWidth: 1,
+          height: 68 + insets.bottom,
+          paddingTop: 6,
+          paddingBottom: insets.bottom + 10,
         },
         tabBarBadgeStyle: { backgroundColor: colors.gold500, color: colors.navy900, fontWeight: '800', fontSize: 10 },
       }}

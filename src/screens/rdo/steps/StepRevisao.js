@@ -26,7 +26,17 @@ function Numero({ icone, valor, rotulo }) {
 }
 
 // Grupo M — Revisão antes do envio: validações, resumo, declaração de responsabilidade e assinatura do responsável.
-export default function StepRevisao({ rdo, update, obra, validacao, irPara, definirRodape, bloquearRolagem, navigation, salvar }) {
+export default function StepRevisao({
+  rdo,
+  update,
+  obra,
+  validacao,
+  irPara,
+  definirRodape,
+  bloquearRolagem,
+  navigation,
+  salvar,
+}) {
   const { actions, online, currentUser } = useApp();
   const { confirm, toast } = useUI();
   const [enviando, setEnviando] = useState(false);
@@ -42,7 +52,9 @@ export default function StepRevisao({ rdo, update, obra, validacao, irPara, defi
     const ok = await confirm({
       icon: 'send-check-outline',
       title: 'Enviar ao master?',
-      message: online ? 'Depois do envio você só poderá editar se o master devolver o RDO para correção.' : 'Você está sem conexão: o RDO ficará salvo no aparelho e será enviado ao master automaticamente quando a rede voltar.',
+      message: online
+        ? 'Depois do envio você só poderá editar se o master devolver o RDO para correção.'
+        : 'Você está sem conexão: o RDO ficará salvo no aparelho e será enviado ao master automaticamente quando a rede voltar.',
       confirmLabel: 'Enviar',
     });
     if (!ok) return;
@@ -57,8 +69,17 @@ export default function StepRevisao({ rdo, update, obra, validacao, irPara, defi
     haptic.success();
     toast.show(
       online
-        ? { type: 'success', title: 'RDO enviado ao master', message: 'Notificação entregue (simulada). Você será avisado se houver devolução.' }
-        : { type: 'info', icon: 'cloud-off-outline', title: 'Salvo no aparelho', message: 'Será enviado ao master quando a conexão voltar.' },
+        ? {
+            type: 'success',
+            title: 'RDO enviado ao master',
+            message: 'Notificação entregue (simulada). Você será avisado se houver devolução.',
+          }
+        : {
+            type: 'info',
+            icon: 'cloud-off-outline',
+            title: 'Salvo no aparelho',
+            message: 'Será enviado ao master quando a conexão voltar.',
+          },
     );
     navigation.replace('RdoDetail', { rdoId: rdo.id });
   };
@@ -73,8 +94,21 @@ export default function StepRevisao({ rdo, update, obra, validacao, irPara, defi
           </Txt>
         ) : null}
         <View style={{ flexDirection: 'row', gap: 10 }}>
-          <Button title="Voltar" icon="chevron-left" variant="secondary" onPress={() => irPara('pendencias')} style={{ flex: 1 }} />
-          <Button title="Enviar ao master" icon="send-check-outline" variant="accent" disabled={!valido} onPress={enviar} style={{ flex: 1.8 }} />
+          <Button
+            title="Voltar"
+            icon="chevron-left"
+            variant="secondary"
+            onPress={() => irPara('pendencias')}
+            style={{ flex: 1 }}
+          />
+          <Button
+            title="Enviar ao master"
+            icon="send-check-outline"
+            variant="accent"
+            disabled={!valido}
+            onPress={enviar}
+            style={{ flex: 1.8 }}
+          />
         </View>
       </View>,
     );
@@ -85,9 +119,23 @@ export default function StepRevisao({ rdo, update, obra, validacao, irPara, defi
   return (
     <View style={{ gap: 14 }}>
       {valido ? (
-        <Banner tone="success" icon="check-decagram-outline" title="Tudo certo para enviar" message={avisos.length ? `${contar(avisos.length, 'aviso')} não bloqueiam o envio, mas vale conferir.` : 'Todas as validações obrigatórias foram atendidas.'} />
+        <Banner
+          tone="success"
+          icon="check-decagram-outline"
+          title="Tudo certo para enviar"
+          message={
+            avisos.length
+              ? `${contar(avisos.length, 'aviso')} não bloqueiam o envio, mas vale conferir.`
+              : 'Todas as validações obrigatórias foram atendidas.'
+          }
+        />
       ) : (
-        <Banner tone="danger" icon="alert-circle-outline" title={`${contar(erros.length, 'pendência obrigatória', 'pendências obrigatórias')}`} message="Corrija os itens abaixo para liberar o envio ao master." />
+        <Banner
+          tone="danger"
+          icon="alert-circle-outline"
+          title={`${contar(erros.length, 'pendência obrigatória', 'pendências obrigatórias')}`}
+          message="Corrija os itens abaixo para liberar o envio ao master."
+        />
       )}
 
       {Object.keys(errosPorPasso).length ? (
@@ -101,10 +149,17 @@ export default function StepRevisao({ rdo, update, obra, validacao, irPara, defi
                 iconBg={colors.dangerBg}
                 iconColor={colors.danger}
                 title={`${nomeDe(chave)?.titulo} (${lista.length})`}
-                subtitle={lista.slice(0, 3).map((e) => e.mensagem).join('\n')}
+                subtitle={lista
+                  .slice(0, 3)
+                  .map((e) => e.mensagem)
+                  .join('\n')}
                 onPress={() => irPara(chave)}
                 style={i ? { borderTopWidth: 1, borderTopColor: colors.divider } : undefined}
-                right={<Txt v="smallStrong" color={colors.blue500}>Corrigir</Txt>}
+                right={
+                  <Txt v="smallStrong" color={colors.blue500}>
+                    Corrigir
+                  </Txt>
+                }
                 chevron={false}
               />
             ))}
@@ -123,10 +178,17 @@ export default function StepRevisao({ rdo, update, obra, validacao, irPara, defi
                 iconBg={colors.warningBg}
                 iconColor={colors.warning}
                 title={`${nomeDe(chave)?.titulo} (${lista.length})`}
-                subtitle={lista.slice(0, 3).map((e) => e.mensagem).join('\n')}
+                subtitle={lista
+                  .slice(0, 3)
+                  .map((e) => e.mensagem)
+                  .join('\n')}
                 onPress={() => irPara(chave)}
                 style={i ? { borderTopWidth: 1, borderTopColor: colors.divider } : undefined}
-                right={<Txt v="smallStrong" color={colors.blue500}>Ver</Txt>}
+                right={
+                  <Txt v="smallStrong" color={colors.blue500}>
+                    Ver
+                  </Txt>
+                }
                 chevron={false}
               />
             ))}
@@ -167,13 +229,18 @@ export default function StepRevisao({ rdo, update, obra, validacao, irPara, defi
         <View style={{ gap: 8 }}>
           <SectionTitle>Assinatura do responsável pelo preenchimento</SectionTitle>
           <Txt v="small" muted>
-            Esta obra exige a assinatura do operacional. O desenho é apenas a representação visual; a validade decorre da sessão autenticada e da trilha de auditoria.
+            Esta obra exige a assinatura do operacional. O desenho é apenas a representação visual; a validade decorre
+            da sessão autenticada e da trilha de auditoria.
           </Txt>
           <SignaturePad
             value={rdo.assinaturaOperacional}
             onDrawingChange={bloquearRolagem}
             onChange={(dados) =>
-              update({ assinaturaOperacional: dados ? { usuarioId: currentUser.id, nome: currentUser.nome, dataHora: nowISO(), ...dados } : null })
+              update({
+                assinaturaOperacional: dados
+                  ? { usuarioId: currentUser.id, nome: currentUser.nome, dataHora: nowISO(), ...dados }
+                  : null,
+              })
             }
           />
           {errosRevisao.find((e) => e.campo === 'assinatura') ? (
@@ -184,7 +251,13 @@ export default function StepRevisao({ rdo, update, obra, validacao, irPara, defi
         </View>
       ) : null}
 
-      {!online ? <Banner tone="warning" icon="cloud-off-outline" message="Você está offline. Ao enviar, o RDO fica salvo no aparelho e é entregue ao master quando a conexão voltar." /> : null}
+      {!online ? (
+        <Banner
+          tone="warning"
+          icon="cloud-off-outline"
+          message="Você está offline. Ao enviar, o RDO fica salvo no aparelho e é entregue ao master quando a conexão voltar."
+        />
+      ) : null}
 
       <SubmitProgress visible={enviando} fotos={rdo.fotos} online={online} onConcluir={concluir} />
     </View>
@@ -194,6 +267,14 @@ export default function StepRevisao({ rdo, update, obra, validacao, irPara, defi
 const styles = StyleSheet.create({
   resumo: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   num: {
-    width: '31%', flexGrow: 1, alignItems: 'center', gap: 2, paddingVertical: 12, borderRadius: radius.md, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border,
+    width: '31%',
+    flexGrow: 1,
+    alignItems: 'center',
+    gap: 2,
+    paddingVertical: 12,
+    borderRadius: radius.md,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
 });

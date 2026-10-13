@@ -64,17 +64,94 @@ export const ETAPAS_FLUXO = [
 
 // Passos do formulário por etapas (grupos A–M da seção 7).
 export const PASSOS_RDO = [
-  { key: 'identificacao', letras: 'A', titulo: 'Identificação', curto: 'Identif.', icone: 'card-account-details-outline', ajuda: 'Confira os dados que identificam o registro. Data e turno definem a unicidade do RDO na obra.' },
-  { key: 'clima', letras: 'B', titulo: 'Condições climáticas', curto: 'Clima', icone: 'weather-partly-rainy', ajuda: 'Registre o tempo por período e, se choveu, o impacto mensurável no serviço.' },
-  { key: 'maoDeObra', letras: 'C', titulo: 'Mão de obra', curto: 'Equipe', icone: 'account-group-outline', ajuda: 'Informe o efetivo por função. O total é calculado automaticamente para evitar dupla contagem.' },
-  { key: 'equipamentos', letras: 'D', titulo: 'Equipamentos', curto: 'Equip.', icone: 'excavator', ajuda: 'Registre horas produtivas e paradas. Equipamento parado exige motivo e duração.' },
-  { key: 'atividades', letras: 'E', titulo: 'Atividades executadas', curto: 'Atividades', icone: 'hammer-wrench', ajuda: 'Descreva serviço, local, unidade e quantidade do dia. Sem produção? Justifique.' },
-  { key: 'materiaisQualidade', letras: 'F·G', titulo: 'Materiais e qualidade', curto: 'Materiais', icone: 'package-variant-closed', ajuda: 'Materiais recebidos/utilizados, inspeções, ensaios e não conformidades.' },
-  { key: 'seguranca', letras: 'H', titulo: 'Segurança e meio ambiente', curto: 'Segurança', icone: 'shield-check-outline', ajuda: 'DDS, EPI/EPC, incidentes, resíduos e providências.' },
-  { key: 'ocorrencias', letras: 'I·J', titulo: 'Ocorrências e visitas', curto: 'Ocorrências', icone: 'alert-octagon-outline', ajuda: 'Fatos relevantes, interferências, visitas e orientações recebidas.' },
-  { key: 'fotos', letras: 'K', titulo: 'Registro fotográfico', curto: 'Fotos', icone: 'camera-outline', ajuda: 'Toda foto exige legenda. Vincule à atividade ou ocorrência para virar evidência.' },
-  { key: 'pendencias', letras: 'L', titulo: 'Pendências e planejamento', curto: 'Pendências', icone: 'clipboard-list-outline', ajuda: 'Cada pendência precisa de responsável, prazo e criticidade.' },
-  { key: 'revisao', letras: 'M', titulo: 'Revisão e envio', curto: 'Revisão', icone: 'clipboard-check-outline', ajuda: 'Confira as validações, aceite a declaração e envie ao master.' },
+  {
+    key: 'identificacao',
+    letras: 'A',
+    titulo: 'Identificação',
+    curto: 'Identif.',
+    icone: 'card-account-details-outline',
+    ajuda: 'Confira os dados que identificam o registro. Data e turno definem a unicidade do RDO na obra.',
+  },
+  {
+    key: 'clima',
+    letras: 'B',
+    titulo: 'Condições climáticas',
+    curto: 'Clima',
+    icone: 'weather-partly-rainy',
+    ajuda: 'Registre o tempo por período e, se choveu, o impacto mensurável no serviço.',
+  },
+  {
+    key: 'maoDeObra',
+    letras: 'C',
+    titulo: 'Mão de obra',
+    curto: 'Equipe',
+    icone: 'account-group-outline',
+    ajuda: 'Informe o efetivo por função. O total é calculado automaticamente para evitar dupla contagem.',
+  },
+  {
+    key: 'equipamentos',
+    letras: 'D',
+    titulo: 'Equipamentos',
+    curto: 'Equip.',
+    icone: 'excavator',
+    ajuda: 'Registre horas produtivas e paradas. Equipamento parado exige motivo e duração.',
+  },
+  {
+    key: 'atividades',
+    letras: 'E',
+    titulo: 'Atividades executadas',
+    curto: 'Atividades',
+    icone: 'hammer-wrench',
+    ajuda: 'Descreva serviço, local, unidade e quantidade do dia. Sem produção? Justifique.',
+  },
+  {
+    key: 'materiaisQualidade',
+    letras: 'F·G',
+    titulo: 'Materiais e qualidade',
+    curto: 'Materiais',
+    icone: 'package-variant-closed',
+    ajuda: 'Materiais recebidos/utilizados, inspeções, ensaios e não conformidades.',
+  },
+  {
+    key: 'seguranca',
+    letras: 'H',
+    titulo: 'Segurança e meio ambiente',
+    curto: 'Segurança',
+    icone: 'shield-check-outline',
+    ajuda: 'DDS, EPI/EPC, incidentes, resíduos e providências.',
+  },
+  {
+    key: 'ocorrencias',
+    letras: 'I·J',
+    titulo: 'Ocorrências e visitas',
+    curto: 'Ocorrências',
+    icone: 'alert-octagon-outline',
+    ajuda: 'Fatos relevantes, interferências, visitas e orientações recebidas.',
+  },
+  {
+    key: 'fotos',
+    letras: 'K',
+    titulo: 'Registro fotográfico',
+    curto: 'Fotos',
+    icone: 'camera-outline',
+    ajuda: 'Toda foto exige legenda. Vincule à atividade ou ocorrência para virar evidência.',
+  },
+  {
+    key: 'pendencias',
+    letras: 'L',
+    titulo: 'Pendências e planejamento',
+    curto: 'Pendências',
+    icone: 'clipboard-list-outline',
+    ajuda: 'Cada pendência precisa de responsável, prazo e criticidade.',
+  },
+  {
+    key: 'revisao',
+    letras: 'M',
+    titulo: 'Revisão e envio',
+    curto: 'Revisão',
+    icone: 'clipboard-check-outline',
+    ajuda: 'Confira as validações, aceite a declaração e envie ao master.',
+  },
 ];
 
 export const TURNOS = [
@@ -189,8 +266,18 @@ export const CONTEXTOS_COMENTARIO = [
 
 export const TIPOS_CIENCIA = {
   ciencia: { label: 'Ciente, sem ressalvas', curto: 'Ciência/aceite', cor: 'success', icone: 'check-decagram-outline' },
-  ressalva: { label: 'Ciente, com ressalva', curto: 'Aceite com ressalva', cor: 'warning', icone: 'alert-decagram-outline' },
-  esclarecimento: { label: 'Solicitar esclarecimento', curto: 'Esclarecimento solicitado', cor: 'info', icone: 'help-circle-outline' },
+  ressalva: {
+    label: 'Ciente, com ressalva',
+    curto: 'Aceite com ressalva',
+    cor: 'warning',
+    icone: 'alert-decagram-outline',
+  },
+  esclarecimento: {
+    label: 'Solicitar esclarecimento',
+    curto: 'Esclarecimento solicitado',
+    cor: 'info',
+    icone: 'help-circle-outline',
+  },
 };
 
 export const EVENTOS_AUDITORIA = {
@@ -235,42 +322,93 @@ export const EVENTOS_PUBLICOS = [
 
 // Matriz de permissões por perfil (seção 4). 'sim' | 'nao' | 'restrito'
 export const MATRIZ_PERMISSOES = [
-  { grupo: 'Acesso', itens: [
-    { label: 'Acessar todas as obras e RDOs', master: 'sim', operacional: 'restrito', cliente: 'restrito', nota: 'Operacional: obras atribuídas. Cliente: apenas suas obras e RDOs liberados.' },
-    { label: 'Cadastrar usuários, obras e clientes', master: 'sim', operacional: 'nao', cliente: 'nao' },
-    { label: 'Acompanhar indicadores e avaliações acadêmicas', master: 'sim', operacional: 'nao', cliente: 'nao' },
-  ] },
-  { grupo: 'Preenchimento', itens: [
-    { label: 'Criar e preencher RDO', master: 'nao', operacional: 'sim', cliente: 'nao' },
-    { label: 'Salvar rascunho e enviar ao master', master: 'nao', operacional: 'sim', cliente: 'nao' },
-    { label: 'Responder a devoluções', master: 'nao', operacional: 'sim', cliente: 'nao' },
-  ] },
-  { grupo: 'Análise e assinatura', itens: [
-    { label: 'Ler e comentar', master: 'sim', operacional: 'sim', cliente: 'restrito', nota: 'Cliente comenta apenas RDOs liberados.' },
-    { label: 'Devolver ao operacional (com motivo)', master: 'sim', operacional: 'nao', cliente: 'nao' },
-    { label: 'Editar com justificativa', master: 'sim', operacional: 'nao', cliente: 'nao' },
-    { label: 'Validar, chancelar e assinar', master: 'sim', operacional: 'nao', cliente: 'nao' },
-    { label: 'Ciência/aceite, ressalva ou esclarecimento', master: 'nao', operacional: 'nao', cliente: 'sim' },
-  ] },
-  { grupo: 'Documentos', itens: [
-    { label: 'Baixar PDF e consultar histórico', master: 'sim', operacional: 'sim', cliente: 'sim' },
-    { label: 'Exportar dados (CSV/planilha)', master: 'sim', operacional: 'nao', cliente: 'nao' },
-    { label: 'Cancelar / retificar RDO assinado', master: 'sim', operacional: 'nao', cliente: 'nao' },
-    { label: 'Excluir definitivamente (exceção, não assinados)', master: 'sim', operacional: 'nao', cliente: 'nao' },
-  ] },
+  {
+    grupo: 'Acesso',
+    itens: [
+      {
+        label: 'Acessar todas as obras e RDOs',
+        master: 'sim',
+        operacional: 'restrito',
+        cliente: 'restrito',
+        nota: 'Operacional: obras atribuídas. Cliente: apenas suas obras e RDOs liberados.',
+      },
+      { label: 'Cadastrar usuários, obras e clientes', master: 'sim', operacional: 'nao', cliente: 'nao' },
+      { label: 'Acompanhar indicadores e avaliações acadêmicas', master: 'sim', operacional: 'nao', cliente: 'nao' },
+    ],
+  },
+  {
+    grupo: 'Preenchimento',
+    itens: [
+      { label: 'Criar e preencher RDO', master: 'nao', operacional: 'sim', cliente: 'nao' },
+      { label: 'Salvar rascunho e enviar ao master', master: 'nao', operacional: 'sim', cliente: 'nao' },
+      { label: 'Responder a devoluções', master: 'nao', operacional: 'sim', cliente: 'nao' },
+    ],
+  },
+  {
+    grupo: 'Análise e assinatura',
+    itens: [
+      {
+        label: 'Ler e comentar',
+        master: 'sim',
+        operacional: 'sim',
+        cliente: 'restrito',
+        nota: 'Cliente comenta apenas RDOs liberados.',
+      },
+      { label: 'Devolver ao operacional (com motivo)', master: 'sim', operacional: 'nao', cliente: 'nao' },
+      { label: 'Editar com justificativa', master: 'sim', operacional: 'nao', cliente: 'nao' },
+      { label: 'Validar, chancelar e assinar', master: 'sim', operacional: 'nao', cliente: 'nao' },
+      { label: 'Ciência/aceite, ressalva ou esclarecimento', master: 'nao', operacional: 'nao', cliente: 'sim' },
+    ],
+  },
+  {
+    grupo: 'Documentos',
+    itens: [
+      { label: 'Baixar PDF e consultar histórico', master: 'sim', operacional: 'sim', cliente: 'sim' },
+      { label: 'Exportar dados (CSV/planilha)', master: 'sim', operacional: 'nao', cliente: 'nao' },
+      { label: 'Cancelar / retificar RDO assinado', master: 'sim', operacional: 'nao', cliente: 'nao' },
+      { label: 'Excluir definitivamente (exceção, não assinados)', master: 'sim', operacional: 'nao', cliente: 'nao' },
+    ],
+  },
 ];
 
 // Catálogos padrão (biblioteca de cadastros). Editáveis pelo master em Cadastros.
 export const CATALOGOS_PADRAO = {
   funcoes: [
-    'Engenheiro', 'Mestre de obras', 'Encarregado', 'Técnico em edificações', 'Técnico de segurança', 'Almoxarife',
-    'Pedreiro', 'Servente', 'Carpinteiro', 'Armador', 'Eletricista', 'Encanador', 'Pintor', 'Azulejista',
-    'Operador de máquinas', 'Motorista', 'Soldador', 'Ajudante',
+    'Engenheiro',
+    'Mestre de obras',
+    'Encarregado',
+    'Técnico em edificações',
+    'Técnico de segurança',
+    'Almoxarife',
+    'Pedreiro',
+    'Servente',
+    'Carpinteiro',
+    'Armador',
+    'Eletricista',
+    'Encanador',
+    'Pintor',
+    'Azulejista',
+    'Operador de máquinas',
+    'Motorista',
+    'Soldador',
+    'Ajudante',
   ],
   equipamentos: [
-    'Betoneira', 'Compactador (sapo)', 'Placa vibratória', 'Caminhão basculante', 'Caminhão betoneira', 'Retroescavadeira',
-    'Escavadeira hidráulica', 'Mini carregadeira', 'Rolo compactador', 'Guincho', 'Vibrador de imersão', 'Bomba de concreto',
-    'Serra circular', 'Gerador', 'Martelete',
+    'Betoneira',
+    'Compactador (sapo)',
+    'Placa vibratória',
+    'Caminhão basculante',
+    'Caminhão betoneira',
+    'Retroescavadeira',
+    'Escavadeira hidráulica',
+    'Mini carregadeira',
+    'Rolo compactador',
+    'Guincho',
+    'Vibrador de imersão',
+    'Bomba de concreto',
+    'Serra circular',
+    'Gerador',
+    'Martelete',
   ],
   servicos: [
     { nome: 'Locação e marcação', unidade: 'm²' },
@@ -291,11 +429,27 @@ export const CATALOGOS_PADRAO = {
     { nome: 'Limpeza da obra', unidade: 'vb' },
   ],
   materiais: [
-    'Cimento CP-II (saco 50 kg)', 'Areia média', 'Brita 1', 'Aço CA-50', 'Bloco cerâmico 9×19×19', 'Concreto usinado fck 30',
-    'Tubo PVC 100 mm', 'Argamassa colante', 'Cal hidratada', 'Madeira para formas',
+    'Cimento CP-II (saco 50 kg)',
+    'Areia média',
+    'Brita 1',
+    'Aço CA-50',
+    'Bloco cerâmico 9×19×19',
+    'Concreto usinado fck 30',
+    'Tubo PVC 100 mm',
+    'Argamassa colante',
+    'Cal hidratada',
+    'Madeira para formas',
   ],
   unidades: ['m', 'm²', 'm³', 'kg', 't', 'un', 'cj', 'vb', 'h', 'dia', 'l', 'saco', 'viagem'],
-  frentes: ['Pavimento térreo', '1º pavimento', '2º pavimento', 'Fundações', 'Área externa', 'Cobertura', 'Canteiro / almoxarifado'],
+  frentes: [
+    'Pavimento térreo',
+    '1º pavimento',
+    '2º pavimento',
+    'Fundações',
+    'Área externa',
+    'Cobertura',
+    'Canteiro / almoxarifado',
+  ],
   origensEmpresa: ['Equipe própria', 'Empreiteira terceirizada', 'Subcontratada'],
 };
 

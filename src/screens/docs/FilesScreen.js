@@ -45,7 +45,15 @@ export default function FilesScreen() {
         <View style={{ gap: 8, marginTop: 8 }}>
           <SearchBar onDark value={busca} onChangeText={setBusca} placeholder="Buscar arquivo ou obra" />
           {master ? (
-            <SegmentedTabs compact items={[{ key: 'pdf', label: 'PDFs dos RDOs', count: pdfs.length }, { key: 'export', label: 'Exportações', count: state.files.length }]} value={aba} onChange={setAba} />
+            <SegmentedTabs
+              compact
+              items={[
+                { key: 'pdf', label: 'PDFs dos RDOs', count: pdfs.length },
+                { key: 'export', label: 'Exportações', count: state.files.length },
+              ]}
+              value={aba}
+              onChange={setAba}
+            />
           ) : null}
         </View>
       }
@@ -56,13 +64,29 @@ export default function FilesScreen() {
             <View style={styles.chips}>
               <Chip label="Todas as obras" selected={!obraId} onPress={() => setObraId('')} />
               {obras.map((o) => (
-                <Chip key={o.id} label={o.nome} selected={obraId === o.id} onPress={() => setObraId(obraId === o.id ? '' : o.id)} />
+                <Chip
+                  key={o.id}
+                  label={o.nome}
+                  selected={obraId === o.id}
+                  onPress={() => setObraId(obraId === o.id ? '' : o.id)}
+                />
               ))}
             </View>
           ) : null}
-          {pdfs.length === 0 ? <EmptyState icon="file-pdf-box" title="Nenhum PDF ainda" message="O PDF final é gerado quando o cliente dá ciência/aceite e o RDO é finalizado." /> : null}
+          {pdfs.length === 0 ? (
+            <EmptyState
+              icon="file-pdf-box"
+              title="Nenhum PDF ainda"
+              message="O PDF final é gerado quando o cliente dá ciência/aceite e o RDO é finalizado."
+            />
+          ) : null}
           {pdfs.map(({ rdo, obra, nome }) => (
-            <Card key={rdo.id} onPress={() => nav.navigate('PdfViewer', { rdoId: rdo.id })} style={styles.arquivo} accessibilityLabel={`PDF ${nome}`}>
+            <Card
+              key={rdo.id}
+              onPress={() => nav.navigate('PdfViewer', { rdoId: rdo.id })}
+              style={styles.arquivo}
+              accessibilityLabel={`PDF ${nome}`}
+            >
               <View style={styles.pdf}>
                 <Icon name="file-pdf-box" size={32} color={colors.danger} />
               </View>
@@ -74,8 +98,30 @@ export default function FilesScreen() {
                   {obra?.nome} · RDO de {formatDate(rdo.data)} · finalizado {formatDateTime(rdo.finalizadoEm)}
                 </Txt>
                 <View style={styles.tags}>
-                  {rdo.assinaturas.cliente?.tipo === 'ressalva' ? <Badge label="Com ressalva" color={colors.warning} bg={colors.warningBg} icon="alert-decagram-outline" size="sm" /> : <Badge label="Aceite integral" color={colors.success} bg={colors.successBg} icon="check-decagram-outline" size="sm" />}
-                  <Badge label={`hash ${hashCurto(rdo.hashFinal, 8)}`} color={colors.navy700} bg={colors.blue100} icon="pound" size="sm" />
+                  {rdo.assinaturas.cliente?.tipo === 'ressalva' ? (
+                    <Badge
+                      label="Com ressalva"
+                      color={colors.warning}
+                      bg={colors.warningBg}
+                      icon="alert-decagram-outline"
+                      size="sm"
+                    />
+                  ) : (
+                    <Badge
+                      label="Aceite integral"
+                      color={colors.success}
+                      bg={colors.successBg}
+                      icon="check-decagram-outline"
+                      size="sm"
+                    />
+                  )}
+                  <Badge
+                    label={`hash ${hashCurto(rdo.hashFinal, 8)}`}
+                    color={colors.navy700}
+                    bg={colors.blue100}
+                    icon="pound"
+                    size="sm"
+                  />
                 </View>
               </View>
               <Icon name="chevron-right" size={22} color={colors.textSubtle} />
@@ -84,7 +130,15 @@ export default function FilesScreen() {
         </>
       ) : (
         <>
-          {state.files.length === 0 ? <EmptyState icon="table-arrow-right" title="Nenhuma exportação" message="Gere planilhas CSV/Excel em Mais → Relatórios e indicadores → Exportar." actionLabel="Abrir relatórios" onAction={() => nav.navigate('Reports')} /> : null}
+          {state.files.length === 0 ? (
+            <EmptyState
+              icon="table-arrow-right"
+              title="Nenhuma exportação"
+              message="Gere planilhas CSV/Excel em Mais → Relatórios e indicadores → Exportar."
+              actionLabel="Abrir relatórios"
+              onAction={() => nav.navigate('Reports')}
+            />
+          ) : null}
           {state.files.map((f) => (
             <Card key={f.id} style={styles.arquivo}>
               <View style={[styles.pdf, { backgroundColor: colors.successBg }]}>
@@ -109,6 +163,13 @@ export default function FilesScreen() {
 const styles = StyleSheet.create({
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   arquivo: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12 },
-  pdf: { width: 54, height: 54, borderRadius: radius.md, backgroundColor: colors.dangerBg, alignItems: 'center', justifyContent: 'center' },
+  pdf: {
+    width: 54,
+    height: 54,
+    borderRadius: radius.md,
+    backgroundColor: colors.dangerBg,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 2 },
 });

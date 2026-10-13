@@ -108,7 +108,12 @@ export function reaproveitarDoAnterior(rdo, anterior) {
     ...rdo,
     maoDeObra: anterior.maoDeObra.map(novoId),
     observacaoMaoDeObra: '',
-    equipamentos: anterior.equipamentos.map((e) => ({ ...novoId(e), horasParadas: '0', motivoParada: '', condicao: e.condicao === 'parado' ? 'operante' : e.condicao })),
+    equipamentos: anterior.equipamentos.map((e) => ({
+      ...novoId(e),
+      horasParadas: '0',
+      motivoParada: '',
+      condicao: e.condicao === 'parado' ? 'operante' : e.condicao,
+    })),
     atividades: anterior.atividades.map((a) => ({
       ...novoId(a),
       descricao: '',
@@ -182,7 +187,11 @@ export function acumuladoAnterior(rdos, obraId, servico, data, ignorarId) {
         r.data < data &&
         !['rascunho', 'cancelado', 'retificado'].includes(r.status),
     ),
-    (r) => sum(r.atividades.filter((a) => (a.servico || '').trim().toLowerCase() === alvo), (a) => toNumber(a.quantidadeDia)),
+    (r) =>
+      sum(
+        r.atividades.filter((a) => (a.servico || '').trim().toLowerCase() === alvo),
+        (a) => toNumber(a.quantidadeDia),
+      ),
   );
 }
 
@@ -215,8 +224,22 @@ export function minutosParaHoraTexto(min) {
 // como o vínculo `retificadoPor`, sem alterar o conteúdo técnico).
 export function conteudoTecnico(rdo) {
   const {
-    comentarios, auditoria, assinaturas, hashTecnico, hashFinal, status, sync, devolucao, submetidoEm,
-    liberadoAoClienteEm, finalizadoEm, cancelamento, esclarecimentoPendente, atualizadoEm, retificadoPor, ...conteudo
+    comentarios,
+    auditoria,
+    assinaturas,
+    hashTecnico,
+    hashFinal,
+    status,
+    sync,
+    devolucao,
+    submetidoEm,
+    liberadoAoClienteEm,
+    finalizadoEm,
+    cancelamento,
+    esclarecimentoPendente,
+    atualizadoEm,
+    retificadoPor,
+    ...conteudo
   } = rdo;
   return conteudo;
 }

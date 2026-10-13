@@ -12,7 +12,10 @@ const bonito = (max) => {
 
 // Pilha de uma coluna: do topo para a base, com vão de 2 px e só o segmento do topo arredondado.
 function Pilha({ valores, series, max, altura }) {
-  const partes = valores.map((v, si) => ({ v, si })).filter((p) => p.v > 0).reverse();
+  const partes = valores
+    .map((v, si) => ({ v, si }))
+    .filter((p) => p.v > 0)
+    .reverse();
   const nos = [];
   partes.forEach((p, idx) => {
     if (idx > 0) nos.push(<View key={`gap${p.si}`} style={{ height: 2 }} />);
@@ -20,7 +23,8 @@ function Pilha({ valores, series, max, altura }) {
       <View
         key={p.si}
         style={{
-          height: Math.max(2, (p.v / max) * (altura - 1)), backgroundColor: series[p.si].cor,
+          height: Math.max(2, (p.v / max) * (altura - 1)),
+          backgroundColor: series[p.si].cor,
           ...(idx === 0 ? { borderTopLeftRadius: 4, borderTopRightRadius: 4 } : null),
         }}
       />,
@@ -34,7 +38,13 @@ function Pilha({ valores, series, max, altura }) {
  * dados: [{ chave, rotulo, rotulo2, valores: [v1, v2…], descricao }] · series: [{ nome, cor }]
  * Toque numa coluna para ver os valores exatos; só o extremo (máximo) recebe rótulo fixo.
  */
-export default function ColumnChart({ dados, series, altura = 150, formatar = (v) => String(Math.round(v)), unidade = '' }) {
+export default function ColumnChart({
+  dados,
+  series,
+  altura = 150,
+  formatar = (v) => String(Math.round(v)),
+  unidade = '',
+}) {
   const [sel, setSel] = useState(null);
   const totais = dados.map((d) => d.valores.reduce((a, b) => a + b, 0));
   const maxTotal = Math.max(0, ...totais);
@@ -47,7 +57,9 @@ export default function ColumnChart({ dados, series, altura = 150, formatar = (v
     <View style={{ gap: 8 }}>
       <View style={styles.readout} accessibilityLiveRegion="polite">
         <Txt v="smallStrong" numberOfLines={2}>
-          {atual ? `${atual.descricao} · ${formatar(totais[sel])} ${unidade}` : `Toque numa coluna para ver o detalhe (máx.: ${formatar(maxTotal)} ${unidade})`}
+          {atual
+            ? `${atual.descricao} · ${formatar(totais[sel])} ${unidade}`
+            : `Toque numa coluna para ver o detalhe (máx.: ${formatar(maxTotal)} ${unidade})`}
         </Txt>
         {atual && series.length > 1 ? (
           <Txt v="caption" muted numberOfLines={2}>
@@ -56,7 +68,15 @@ export default function ColumnChart({ dados, series, altura = 150, formatar = (v
         ) : null}
       </View>
       <View style={{ flexDirection: 'row', height: altura + 30 }}>
-        <View style={{ width: 40, height: altura, justifyContent: 'space-between', alignItems: 'flex-end', paddingRight: 6 }}>
+        <View
+          style={{
+            width: 40,
+            height: altura,
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            paddingRight: 6,
+          }}
+        >
           {ticks.map((t, i) => (
             <Txt key={i} v="caption" muted style={{ fontSize: 10 }}>
               {formatar(t)}
@@ -66,11 +86,20 @@ export default function ColumnChart({ dados, series, altura = 150, formatar = (v
         <View style={{ flex: 1 }}>
           <View style={{ height: altura }}>
             {[0, 0.5, 1].map((p) => (
-              <View key={p} style={[styles.grade, { top: p * (altura - 1), backgroundColor: p === 1 ? chart.axis : chart.grid }]} />
+              <View
+                key={p}
+                style={[styles.grade, { top: p * (altura - 1), backgroundColor: p === 1 ? chart.axis : chart.grid }]}
+              />
             ))}
             <View style={styles.colunas}>
               {dados.map((d, i) => (
-                <Pressable key={d.chave} onPress={() => setSel(sel === i ? null : i)} accessibilityRole="button" accessibilityLabel={`${d.descricao}: ${formatar(totais[i])} ${unidade}`} style={styles.slot}>
+                <Pressable
+                  key={d.chave}
+                  onPress={() => setSel(sel === i ? null : i)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${d.descricao}: ${formatar(totais[i])} ${unidade}`}
+                  style={styles.slot}
+                >
                   {i === iMax && totais[i] > 0 ? (
                     <Txt v="caption" style={styles.topo} numberOfLines={1}>
                       {formatar(totais[i])}

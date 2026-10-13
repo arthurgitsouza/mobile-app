@@ -17,7 +17,9 @@ export default function useCriarRdo() {
   return useCallback(
     async (obra, data = hojeObra(), turno = 'diurno') => {
       const state = getState();
-      const existente = rdosAtivos(state.rdos).find((r) => r.obraId === obra.id && r.data === data && r.turno === turno);
+      const existente = rdosAtivos(state.rdos).find(
+        (r) => r.obraId === obra.id && r.data === data && r.turno === turno,
+      );
       if (existente) {
         const abrir = await confirm({
           icon: 'content-copy',
@@ -27,7 +29,9 @@ export default function useCriarRdo() {
           cancelLabel: 'Criar mesmo assim',
         });
         if (abrir) {
-          nav.navigate(podeEditarOperacional(existente, currentUser) ? 'RdoForm' : 'RdoDetail', { rdoId: existente.id });
+          nav.navigate(podeEditarOperacional(existente, currentUser) ? 'RdoForm' : 'RdoDetail', {
+            rdoId: existente.id,
+          });
           return null;
         }
       }

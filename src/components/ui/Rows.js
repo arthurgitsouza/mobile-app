@@ -5,7 +5,20 @@ import Icon from './Icon';
 import Txt from './Txt';
 
 // Linha de lista com ícone tonal, título, subtítulo e complemento à direita.
-export function ListRow({ icon, iconColor = colors.navy600, iconBg = colors.blue100, title, subtitle, right, onPress, chevron = true, danger, style, disabled, badge }) {
+export function ListRow({
+  icon,
+  iconColor = colors.navy600,
+  iconBg = colors.blue100,
+  title,
+  subtitle,
+  right,
+  onPress,
+  chevron = true,
+  danger,
+  style,
+  disabled,
+  badge,
+}) {
   const content = (
     <View style={[styles.row, style]}>
       {icon ? (
@@ -75,7 +88,13 @@ export function SectionTitle({ children, right, style }) {
 
 export function LinkButton({ title, onPress, icon, color = colors.blue500, style }) {
   return (
-    <Pressable onPress={onPress} accessibilityRole="link" accessibilityLabel={title} hitSlop={8} style={({ pressed }) => [styles.link, pressed && { opacity: 0.6 }, style]}>
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="link"
+      accessibilityLabel={title}
+      hitSlop={8}
+      style={({ pressed }) => [styles.link, pressed && { opacity: 0.6 }, style]}
+    >
       {icon ? <Icon name={icon} size={16} color={color} /> : null}
       <Txt v="smallStrong" color={color}>
         {title}
@@ -85,7 +104,14 @@ export function LinkButton({ title, onPress, icon, color = colors.blue500, style
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12, paddingHorizontal: 4, minHeight: 56 },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 4,
+    minHeight: 56,
+  },
   iconBox: { width: 40, height: 40, borderRadius: radius.md, alignItems: 'center', justifyContent: 'center' },
   kv: { gap: 2 },
   kvInline: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, justifyContent: 'space-between' },

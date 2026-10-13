@@ -12,11 +12,21 @@ export function Sparkline({ data = [], width = 64, height = 22 }) {
   const max = Math.max(...data);
   const span = max - min || 1;
   const pad = 4;
-  const pts = data.map((v, i) => [pad + (i * (width - pad * 2)) / (data.length - 1), height - pad - ((v - min) / span) * (height - pad * 2)]);
+  const pts = data.map((v, i) => [
+    pad + (i * (width - pad * 2)) / (data.length - 1),
+    height - pad - ((v - min) / span) * (height - pad * 2),
+  ]);
   const ult = pts[pts.length - 1];
   return (
     <Svg width={width} height={height} accessibilityElementsHidden>
-      <Polyline points={pts.map((p) => p.join(',')).join(' ')} fill="none" stroke={chart.neutral} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+      <Polyline
+        points={pts.map((p) => p.join(',')).join(' ')}
+        fill="none"
+        stroke={chart.neutral}
+        strokeWidth={2}
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
       <Circle cx={ult[0]} cy={ult[1]} r={4} fill={chart.seq[450]} stroke={colors.white} strokeWidth={2} />
     </Svg>
   );
@@ -62,7 +72,11 @@ export function StatTile({ label, value, unit, icon, delta, onPress, sparkline, 
             size={14}
             color={delta.bom == null ? colors.textMuted : delta.bom ? chart.deltaGood : chart.deltaBad}
           />
-          <Txt v="caption" color={delta.bom == null ? colors.textMuted : delta.bom ? chart.deltaGood : chart.deltaBad} style={{ fontWeight: '800' }}>
+          <Txt
+            v="caption"
+            color={delta.bom == null ? colors.textMuted : delta.bom ? chart.deltaGood : chart.deltaBad}
+            style={{ fontWeight: '800' }}
+          >
             {delta.valor}
           </Txt>
           <Txt v="caption" muted>
@@ -78,17 +92,37 @@ export function StatTile({ label, value, unit, icon, delta, onPress, sparkline, 
   );
   if (!onPress) return conteudo;
   return (
-    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`${label}: ${value}${unit ? ` ${unit}` : ''}`} style={({ pressed }) => pressed && { opacity: 0.88 }}>
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`${label}: ${value}${unit ? ` ${unit}` : ''}`}
+      style={({ pressed }) => pressed && { opacity: 0.88 }}
+    >
       {conteudo}
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  tile: { backgroundColor: colors.surface, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: 14, gap: 6, minHeight: 112 },
+  tile: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 14,
+    gap: 6,
+    minHeight: 112,
+  },
   destaque: { borderColor: colors.gold500, borderWidth: 2 },
   top: { flexDirection: 'row', alignItems: 'flex-start', gap: 8 },
-  icon: { width: 30, height: 30, borderRadius: 9, backgroundColor: colors.blue100, alignItems: 'center', justifyContent: 'center' },
+  icon: {
+    width: 30,
+    height: 30,
+    borderRadius: 9,
+    backgroundColor: colors.blue100,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   valueRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 4 },
   value: { fontSize: 32, lineHeight: 38 },
   delta: { flexDirection: 'row', alignItems: 'center', gap: 4, flexWrap: 'wrap' },

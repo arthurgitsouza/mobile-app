@@ -36,7 +36,9 @@ export function hashOf(value) {
 }
 
 export function updateById(list, id, patch) {
-  return list.map((item) => (item.id === id ? { ...item, ...(typeof patch === 'function' ? patch(item) : patch) } : item));
+  return list.map((item) =>
+    item.id === id ? { ...item, ...(typeof patch === 'function' ? patch(item) : patch) } : item,
+  );
 }
 
 export function upsertById(list, item) {
@@ -84,19 +86,38 @@ export function diffConteudo(antes, depois, rotulos = {}, caminho = []) {
     if (hasIds) {
       for (const item of b) {
         const prev = a.find((x) => x.id === item.id);
-        const nome = item.funcao || item.tipo || item.servico || item.material || item.fato || item.visitante || item.descricao || item.legenda || item.id;
+        const nome =
+          item.funcao ||
+          item.tipo ||
+          item.servico ||
+          item.material ||
+          item.fato ||
+          item.visitante ||
+          item.descricao ||
+          item.legenda ||
+          item.id;
         if (!prev) out.push({ caminho: `${label(caminho)} › ${nome}`, antes: '—', depois: 'item adicionado' });
         else out.push(...diffConteudo(prev, item, rotulos, [...caminho, String(nome)]));
       }
       for (const item of a) {
         if (!b.some((x) => x.id === item.id)) {
-          const nome = item.funcao || item.tipo || item.servico || item.material || item.fato || item.visitante || item.descricao || item.legenda || item.id;
+          const nome =
+            item.funcao ||
+            item.tipo ||
+            item.servico ||
+            item.material ||
+            item.fato ||
+            item.visitante ||
+            item.descricao ||
+            item.legenda ||
+            item.id;
           out.push({ caminho: `${label(caminho)} › ${nome}`, antes: 'item existente', depois: 'removido' });
         }
       }
       return out;
     }
-    if (canonicalStringify(a) !== canonicalStringify(b)) out.push({ caminho: label(caminho), antes: a.join(', '), depois: b.join(', ') });
+    if (canonicalStringify(a) !== canonicalStringify(b))
+      out.push({ caminho: label(caminho), antes: a.join(', '), depois: b.join(', ') });
     return out;
   }
 
@@ -107,7 +128,8 @@ export function diffConteudo(antes, depois, rotulos = {}, caminho = []) {
   }
 
   if (antes !== depois && !(antes == null && depois == null)) {
-    const show = (v) => (v === undefined || v === null || v === '' ? '—' : typeof v === 'boolean' ? (v ? 'sim' : 'não') : String(v));
+    const show = (v) =>
+      v === undefined || v === null || v === '' ? '—' : typeof v === 'boolean' ? (v ? 'sim' : 'não') : String(v);
     out.push({ caminho: label(caminho), antes: show(antes), depois: show(depois) });
   }
   return out;

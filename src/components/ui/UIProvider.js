@@ -43,14 +43,23 @@ export function UIProvider({ children }) {
   const prompt = useCallback((opts) => new Promise((resolve) => setDialog({ kind: 'prompt', opts, resolve })), []);
   const notice = useCallback((opts) => new Promise((resolve) => setDialog({ kind: 'notice', opts, resolve })), []);
 
-  const value = useMemo(() => ({ toast: { show, hide: hideToast }, confirm, prompt, notice }), [show, hideToast, confirm, prompt, notice]);
+  const value = useMemo(
+    () => ({ toast: { show, hide: hideToast }, confirm, prompt, notice }),
+    [show, hideToast, confirm, prompt, notice],
+  );
 
   return (
     <UIContext.Provider value={value}>
       <View style={{ flex: 1 }}>
         {children}
         <ToastView toast={toast} anim={anim} onClose={hideToast} />
-        <DialogHost dialog={dialog} close={(result) => { dialog?.resolve(result); setDialog(null); }} />
+        <DialogHost
+          dialog={dialog}
+          close={(result) => {
+            dialog?.resolve(result);
+            setDialog(null);
+          }}
+        />
       </View>
     </UIContext.Provider>
   );
@@ -68,7 +77,15 @@ function ToastView({ toast, anim, onClose }) {
   const tone = TOAST_TONES[toast.type] || TOAST_TONES.info;
   return (
     <Animated.View
-      style={[styles.toastWrap, { pointerEvents: 'box-none', top: insets.top + 8, opacity: anim, transform: [{ translateY: anim.interpolate({ inputRange: [0, 1], outputRange: [-24, 0] }) }] }]}
+      style={[
+        styles.toastWrap,
+        {
+          pointerEvents: 'box-none',
+          top: insets.top + 8,
+          opacity: anim,
+          transform: [{ translateY: anim.interpolate({ inputRange: [0, 1], outputRange: [-24, 0] }) }],
+        },
+      ]}
     >
       <Pressable
         onPress={() => {
@@ -115,16 +132,32 @@ function DialogHost({ dialog, close }) {
   const minLen = opts.minLength ?? (opts.required === false ? 0 : 3);
   const invalid = kind === 'prompt' && text.trim().length < minLen;
   // Rótulos longos não cabem lado a lado: empilha os botões (confirmar em cima).
-  const empilhar = kind !== 'notice' && (opts.confirmLabel || 'Confirmar').length + (opts.cancelLabel || 'Cancelar').length > 22;
+  const empilhar =
+    kind !== 'notice' && (opts.confirmLabel || 'Confirmar').length + (opts.cancelLabel || 'Cancelar').length > 22;
 
   return (
-    <Modal transparent visible animationType="fade" onRequestClose={() => close(kind === 'confirm' ? false : null)} statusBarTranslucent navigationBarTranslucent>
+    <Modal
+      transparent
+      visible
+      animationType="fade"
+      onRequestClose={() => close(kind === 'confirm' ? false : null)}
+      statusBarTranslucent
+      navigationBarTranslucent
+    >
       <KeyboardAvoidingView behavior="padding" style={styles.dialogRoot}>
-        <Pressable style={styles.backdrop} onPress={() => (kind === 'notice' ? close(true) : undefined)} accessibilityElementsHidden />
+        <Pressable
+          style={styles.backdrop}
+          onPress={() => (kind === 'notice' ? close(true) : undefined)}
+          accessibilityElementsHidden
+        />
         <View style={[styles.dialog, shadows.raised]} accessibilityViewIsModal>
           {opts.icon || destructive ? (
             <View style={[styles.dialogIcon, { backgroundColor: destructive ? colors.dangerBg : colors.blue100 }]}>
-              <Icon name={opts.icon || 'alert-outline'} size={26} color={destructive ? colors.danger : colors.navy600} />
+              <Icon
+                name={opts.icon || 'alert-outline'}
+                size={26}
+                color={destructive ? colors.danger : colors.navy600}
+              />
             </View>
           ) : null}
           <Txt v="h3" style={{ textAlign: opts.icon || destructive ? 'center' : 'left' }} accessibilityRole="header">
@@ -151,7 +184,11 @@ function DialogHost({ dialog, close }) {
                 keyboardType={opts.keyboardType}
                 maxLength={opts.maxLength || 600}
                 accessibilityLabel={opts.label || opts.title}
-                style={[styles.input, opts.multiline !== false && { minHeight: 96, textAlignVertical: 'top' }, touched && invalid && { borderColor: colors.danger }]}
+                style={[
+                  styles.input,
+                  opts.multiline !== false && { minHeight: 96, textAlignVertical: 'top' },
+                  touched && invalid && { borderColor: colors.danger },
+                ]}
               />
               {touched && invalid ? (
                 <Txt v="caption" color={colors.danger}>
@@ -163,7 +200,12 @@ function DialogHost({ dialog, close }) {
 
           <View style={[styles.dialogActions, empilhar && { flexDirection: 'column-reverse' }]}>
             {kind !== 'notice' ? (
-              <Button title={opts.cancelLabel || 'Cancelar'} variant="secondary" onPress={() => close(kind === 'confirm' ? false : null)} style={empilhar ? undefined : { flex: 1 }} />
+              <Button
+                title={opts.cancelLabel || 'Cancelar'}
+                variant="secondary"
+                onPress={() => close(kind === 'confirm' ? false : null)}
+                style={empilhar ? undefined : { flex: 1 }}
+              />
             ) : null}
             <Button
               title={opts.confirmLabel || (kind === 'notice' ? 'Entendi' : 'Confirmar')}
@@ -185,9 +227,22 @@ const styles = StyleSheet.create({
   backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: colors.overlay },
   dialogRoot: { flex: 1, justifyContent: 'center', padding: 20 },
   dialog: { backgroundColor: colors.surface, borderRadius: radius.xl, padding: 20, gap: 12, alignItems: 'stretch' },
-  dialogIcon: { width: 52, height: 52, borderRadius: 26, alignItems: 'center', justifyContent: 'center', alignSelf: 'center' },
+  dialogIcon: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+  },
   dialogActions: { flexDirection: 'row', gap: 10, marginTop: 6 },
   input: {
-    borderWidth: 1.5, borderColor: colors.borderStrong, borderRadius: radius.md, padding: 12, fontSize: 15, color: colors.text, backgroundColor: colors.white,
+    borderWidth: 1.5,
+    borderColor: colors.borderStrong,
+    borderRadius: radius.md,
+    padding: 12,
+    fontSize: 15,
+    color: colors.text,
+    backgroundColor: colors.white,
   },
 });

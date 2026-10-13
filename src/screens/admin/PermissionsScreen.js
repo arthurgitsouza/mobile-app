@@ -26,7 +26,14 @@ export default function PermissionsScreen({ navigation }) {
 
   return (
     <Screen title="Permissões" subtitle="Por perfil e por obra" back>
-      <SegmentedTabs items={[{ key: 'perfil', label: 'Por perfil', icon: 'shield-account-outline' }, { key: 'obra', label: 'Por obra', icon: 'office-building-outline' }]} value={aba} onChange={setAba} />
+      <SegmentedTabs
+        items={[
+          { key: 'perfil', label: 'Por perfil', icon: 'shield-account-outline' },
+          { key: 'obra', label: 'Por obra', icon: 'office-building-outline' },
+        ]}
+        value={aba}
+        onChange={setAba}
+      />
 
       {aba === 'perfil' ? (
         <>
@@ -57,7 +64,12 @@ export default function PermissionsScreen({ navigation }) {
                     ) : null}
                   </View>
                   {['master', 'operacional', 'cliente'].map((p) => (
-                    <View key={p} style={styles.col} accessible accessibilityLabel={`${PERFIS[p].label}: ${CELULA[it[p]].label}`}>
+                    <View
+                      key={p}
+                      style={styles.col}
+                      accessible
+                      accessibilityLabel={`${PERFIS[p].label}: ${CELULA[it[p]].label}`}
+                    >
                       <Icon name={CELULA[it[p]].icon} size={24} color={CELULA[it[p]].color} />
                     </View>
                   ))}
@@ -76,7 +88,8 @@ export default function PermissionsScreen({ navigation }) {
             ))}
           </View>
           <Txt v="caption" muted>
-            Princípio do menor privilégio: cada perfil recebe apenas o necessário. Segregação de funções: quem preenche, quem valida e quem acompanha têm permissões próprias.
+            Princípio do menor privilégio: cada perfil recebe apenas o necessário. Segregação de funções: quem preenche,
+            quem valida e quem acompanha têm permissões próprias.
           </Txt>
         </>
       ) : (
@@ -103,9 +116,20 @@ export default function PermissionsScreen({ navigation }) {
                 </View>
               ))}
               <Txt v="caption" muted>
-                O Master ({state.users.filter((u) => u.perfil === PERFIL.MASTER).map((u) => u.nome).join(', ')}) acessa todas as obras.
+                O Master (
+                {state.users
+                  .filter((u) => u.perfil === PERFIL.MASTER)
+                  .map((u) => u.nome)
+                  .join(', ')}
+                ) acessa todas as obras.
               </Txt>
-              <Button title="Editar vínculos desta obra" icon="account-multiple-plus-outline" variant="tonal" size="sm" onPress={() => navigation.navigate('ObraForm', { obraId: o.id })} />
+              <Button
+                title="Editar vínculos desta obra"
+                icon="account-multiple-plus-outline"
+                variant="tonal"
+                size="sm"
+                onPress={() => navigation.navigate('ObraForm', { obraId: o.id })}
+              />
             </Card>
           );
         })

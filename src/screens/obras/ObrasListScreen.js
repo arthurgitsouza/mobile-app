@@ -31,7 +31,9 @@ export default function ObrasListScreen() {
     const q = normalizar(busca);
     return obras
       .filter((o) => (filtro ? o.status === filtro : true))
-      .filter((o) => !q || normalizar(`${o.nome} ${o.descricao} ${o.contrato} ${o.clienteNome} ${o.endereco}`).includes(q));
+      .filter(
+        (o) => !q || normalizar(`${o.nome} ${o.descricao} ${o.contrato} ${o.clienteNome} ${o.endereco}`).includes(q),
+      );
   }, [obras, busca, filtro]);
 
   return (
@@ -41,17 +43,46 @@ export default function ObrasListScreen() {
       tab={isTab}
       back={!isTab}
       bell={isTab}
-      right={master ? <IconButton icon="plus-circle-outline" label="Cadastrar nova obra" color={colors.white} onPress={() => nav.navigate('ObraForm')} /> : undefined}
-      headerExtra={<SearchBar onDark value={busca} onChangeText={setBusca} placeholder="Buscar obra, contrato ou cliente" style={{ marginTop: 8 }} />}
+      right={
+        master ? (
+          <IconButton
+            icon="plus-circle-outline"
+            label="Cadastrar nova obra"
+            color={colors.white}
+            onPress={() => nav.navigate('ObraForm')}
+          />
+        ) : undefined
+      }
+      headerExtra={
+        <SearchBar
+          onDark
+          value={busca}
+          onChangeText={setBusca}
+          placeholder="Buscar obra, contrato ou cliente"
+          style={{ marginTop: 8 }}
+        />
+      }
     >
       <View style={styles.chips}>
         <Chip label="Todas" selected={!filtro} onPress={() => setFiltro('')} />
         {Object.entries(STATUS_OBRA).map(([k, m]) => (
-          <Chip key={k} label={m.label} icon={m.icon} selected={filtro === k} onPress={() => setFiltro(filtro === k ? '' : k)} />
+          <Chip
+            key={k}
+            label={m.label}
+            icon={m.icon}
+            selected={filtro === k}
+            onPress={() => setFiltro(filtro === k ? '' : k)}
+          />
         ))}
       </View>
 
-      {lista.length === 0 ? <EmptyState icon="office-building-outline" title="Nenhuma obra encontrada" message={master ? 'Cadastre uma obra pelo botão + no topo.' : 'Você ainda não foi vinculado a nenhuma obra.'} /> : null}
+      {lista.length === 0 ? (
+        <EmptyState
+          icon="office-building-outline"
+          title="Nenhuma obra encontrada"
+          message={master ? 'Cadastre uma obra pelo botão + no topo.' : 'Você ainda não foi vinculado a nenhuma obra.'}
+        />
+      ) : null}
 
       {lista.map((o) => {
         const meta = STATUS_OBRA[o.status];
@@ -60,7 +91,12 @@ export default function ObrasListScreen() {
         const equipe = state.users.filter((u) => (o.usuarioIds || []).includes(u.id));
         const dif = o.avancoFisico - o.avancoPrevisto;
         return (
-          <Card key={o.id} onPress={() => nav.navigate('ObraDetail', { obraId: o.id })} style={{ gap: 12 }} accessibilityLabel={`${o.nome}, ${meta.label}, avanço ${o.avancoFisico}%`}>
+          <Card
+            key={o.id}
+            onPress={() => nav.navigate('ObraDetail', { obraId: o.id })}
+            style={{ gap: 12 }}
+            accessibilityLabel={`${o.nome}, ${meta.label}, avanço ${o.avancoFisico}%`}
+          >
             <View style={styles.row}>
               <View style={styles.icon}>
                 <Icon name="office-building-outline" size={26} color={colors.navy600} />
@@ -92,7 +128,12 @@ export default function ObrasListScreen() {
               </Txt>
               <View style={{ flexDirection: 'row' }}>
                 {equipe.slice(0, 4).map((u, i) => (
-                  <Avatar key={u.id} nome={u.nome} size={26} style={{ marginLeft: i ? -8 : 0, borderWidth: 2, borderColor: colors.white }} />
+                  <Avatar
+                    key={u.id}
+                    nome={u.nome}
+                    size={26}
+                    style={{ marginLeft: i ? -8 : 0, borderWidth: 2, borderColor: colors.white }}
+                  />
                 ))}
               </View>
             </View>
@@ -109,5 +150,12 @@ export default function ObrasListScreen() {
 const styles = StyleSheet.create({
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  icon: { width: 46, height: 46, borderRadius: 14, backgroundColor: colors.blue100, alignItems: 'center', justifyContent: 'center' },
+  icon: {
+    width: 46,
+    height: 46,
+    borderRadius: 14,
+    backgroundColor: colors.blue100,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

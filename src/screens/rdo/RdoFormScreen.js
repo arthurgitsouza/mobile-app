@@ -12,7 +12,15 @@ import { CommentItem } from '../../components/rdo';
 import StepperBar from './StepperBar';
 import { STEP_COMPONENTS } from './steps';
 
-const PASSO_MASTER = { key: 'justificativa', letras: '✎', titulo: 'Justificativa e alterações', curto: 'Justificar', icone: 'pencil-lock-outline', ajuda: 'Toda edição pelo master exige justificativa e registra o antes/depois. Prefira devolver ao autor quando a mudança for técnica.' };
+const PASSO_MASTER = {
+  key: 'justificativa',
+  letras: '✎',
+  titulo: 'Justificativa e alterações',
+  curto: 'Justificar',
+  icone: 'pencil-lock-outline',
+  ajuda:
+    'Toda edição pelo master exige justificativa e registra o antes/depois. Prefira devolver ao autor quando a mudança for técnica.',
+};
 
 // Formulário do RDO por etapas (seção 13): salvamento automático, validações em tempo real e etapa final de revisão.
 export default function RdoFormScreen({ route, navigation }) {
@@ -22,7 +30,11 @@ export default function RdoFormScreen({ route, navigation }) {
   const obra = rdo ? state.obras.find((o) => o.id === rdo.obraId) : null;
   const master = modo === 'master';
   const permitido =
-    rdo && obra && (master ? currentUser.perfil === PERFIL.MASTER && [STATUS.SUBMETIDO, STATUS.EM_ANALISE].includes(rdo.status) : podeEditarOperacional(rdo, currentUser));
+    rdo &&
+    obra &&
+    (master
+      ? currentUser.perfil === PERFIL.MASTER && [STATUS.SUBMETIDO, STATUS.EM_ANALISE].includes(rdo.status)
+      : podeEditarOperacional(rdo, currentUser));
 
   if (!permitido) {
     return (
@@ -37,7 +49,16 @@ export default function RdoFormScreen({ route, navigation }) {
       </Screen>
     );
   }
-  return <RdoFormInner key={rdoId + modo} rdoInicial={rdo} obra={obra} modo={modo} passoParam={passo} navigation={navigation} />;
+  return (
+    <RdoFormInner
+      key={rdoId + modo}
+      rdoInicial={rdo}
+      obra={obra}
+      modo={modo}
+      passoParam={passo}
+      navigation={navigation}
+    />
+  );
 }
 
 function RdoFormInner({ rdoInicial, obra, modo, passoParam, navigation }) {
@@ -60,7 +81,11 @@ function RdoFormInner({ rdoInicial, obra, modo, passoParam, navigation }) {
     const idx = passos.findIndex((p) => p.key === passoParam);
     if (idx >= 0) return idx;
     if (rdoInicial.atualizadoEm === rdoInicial.criadoEm || master) return 0;
-    const primeiro = passos.findIndex((p, i) => i < passos.length - 1 && ['erro', 'vazio'].includes(validarRdo(rdoInicial, { obra, rdos: state.rdos }).porPasso[p.key]?.estado));
+    const primeiro = passos.findIndex(
+      (p, i) =>
+        i < passos.length - 1 &&
+        ['erro', 'vazio'].includes(validarRdo(rdoInicial, { obra, rdos: state.rdos }).porPasso[p.key]?.estado),
+    );
     return primeiro >= 0 ? primeiro : passos.length - 1;
   });
 
@@ -103,7 +128,10 @@ function RdoFormInner({ rdoInicial, obra, modo, passoParam, navigation }) {
     [actions, master],
   );
 
-  const update = useCallback((patch) => setDraft((d) => ({ ...d, ...(typeof patch === 'function' ? patch(d) : patch) })), []);
+  const update = useCallback(
+    (patch) => setDraft((d) => ({ ...d, ...(typeof patch === 'function' ? patch(d) : patch) })),
+    [],
+  );
 
   const irPara = useCallback(
     (i) => {
@@ -116,7 +144,13 @@ function RdoFormInner({ rdoInicial, obra, modo, passoParam, navigation }) {
 
   const sair = async () => {
     if (master && JSON.stringify(draft) !== JSON.stringify(original)) {
-      const ok = await confirm({ destructive: true, title: 'Descartar alterações?', message: 'As alterações feitas na edição do master ainda não foram salvas.', confirmLabel: 'Descartar', cancelLabel: 'Continuar editando' });
+      const ok = await confirm({
+        destructive: true,
+        title: 'Descartar alterações?',
+        message: 'As alterações feitas na edição do master ainda não foram salvas.',
+        confirmLabel: 'Descartar',
+        cancelLabel: 'Continuar editando',
+      });
       if (!ok) return;
     }
     navigation.goBack();
@@ -125,14 +159,28 @@ function RdoFormInner({ rdoInicial, obra, modo, passoParam, navigation }) {
   const errosDoPasso = v.erros.filter((e) => e.passo === passo.key);
   const avisosDoPasso = v.avisos.filter((e) => e.passo === passo.key);
   const mostrarErros = visitados.has(passo.key) && !ultimo;
-  const comentariosDoPasso = draft.comentarios.filter((c) => c.papel === PERFIL.MASTER && (c.contexto === passo.key || (passo.key === 'fotos' && c.contexto === 'fotos')));
+  const comentariosDoPasso = draft.comentarios.filter(
+    (c) => c.papel === PERFIL.MASTER && (c.contexto === passo.key || (passo.key === 'fotos' && c.contexto === 'fotos')),
+  );
 
-  const ctx = { catalogos: state.catalogos, rdos: state.rdos, usuarios: state.users, currentUser, online, modo, original };
+  const ctx = {
+    catalogos: state.catalogos,
+    rdos: state.rdos,
+    usuarios: state.users,
+    currentUser,
+    online,
+    modo,
+    original,
+  };
 
   return (
     <Screen
       title={`RDO nº ${numeroFormatado(draft)}${draft.versao > 1 ? ` · v${draft.versao}` : ''}`}
-      subtitle={master ? `${obra.nome} · edição do master` : `${obra.nome} · ${salvoEm ? `salvo às ${formatTime(salvoEm)}` : 'salvamento automático'}`}
+      subtitle={
+        master
+          ? `${obra.nome} · edição do master`
+          : `${obra.nome} · ${salvoEm ? `salvo às ${formatTime(salvoEm)}` : 'salvamento automático'}`
+      }
       back
       onBack={sair}
       right={
@@ -143,27 +191,68 @@ function RdoFormInner({ rdoInicial, obra, modo, passoParam, navigation }) {
             color={colors.white}
             onPress={() => {
               salvar(true);
-              toast.show({ type: 'success', title: 'Rascunho salvo', message: online ? 'Salvo no aparelho e na nuvem.' : 'Salvo no aparelho. Será sincronizado quando houver conexão.' });
+              toast.show({
+                type: 'success',
+                title: 'Rascunho salvo',
+                message: online
+                  ? 'Salvo no aparelho e na nuvem.'
+                  : 'Salvo no aparelho. Será sincronizado quando houver conexão.',
+              });
             }}
           />
         )
       }
-      headerExtra={<StepperBar passos={passos} indice={indice} porPasso={v.porPasso} visitados={visitados} progresso={v.progresso} onSelecionar={irPara} />}
+      headerExtra={
+        <StepperBar
+          passos={passos}
+          indice={indice}
+          porPasso={v.porPasso}
+          visitados={visitados}
+          progresso={v.progresso}
+          onSelecionar={irPara}
+        />
+      }
       keyboard
       scrollRef={scrollRef}
       scrollEnabled={rolagemAtiva}
       footer={
         rodape || (
           <View style={styles.rodape}>
-            {indice > 0 ? <Button title="Voltar" icon="chevron-left" variant="secondary" onPress={() => irPara(indice - 1)} style={{ flex: 1 }} /> : <Button title="Sair" variant="secondary" onPress={sair} style={{ flex: 1 }} />}
-            {!ultimo ? <Button title="Avançar" iconRight="chevron-right" onPress={() => irPara(indice + 1)} style={{ flex: 1.5 }} /> : null}
+            {indice > 0 ? (
+              <Button
+                title="Voltar"
+                icon="chevron-left"
+                variant="secondary"
+                onPress={() => irPara(indice - 1)}
+                style={{ flex: 1 }}
+              />
+            ) : (
+              <Button title="Sair" variant="secondary" onPress={sair} style={{ flex: 1 }} />
+            )}
+            {!ultimo ? (
+              <Button
+                title="Avançar"
+                iconRight="chevron-right"
+                onPress={() => irPara(indice + 1)}
+                style={{ flex: 1.5 }}
+              />
+            ) : null}
           </View>
         )
       }
       hideFooterOnKeyboard
     >
-      {master ? <Banner tone="gold" icon="pencil-lock-outline" title="Edição pelo master" message="As alterações exigem justificativa e ficam registradas (antes/depois) na trilha de auditoria. O autor é notificado." /> : null}
-      {draft.status === STATUS.DEVOLVIDO && draft.devolucao ? <Banner tone="warning" icon="undo-variant" title="Devolvido para correção" message={draft.devolucao.motivo} /> : null}
+      {master ? (
+        <Banner
+          tone="gold"
+          icon="pencil-lock-outline"
+          title="Edição pelo master"
+          message="As alterações exigem justificativa e ficam registradas (antes/depois) na trilha de auditoria. O autor é notificado."
+        />
+      ) : null}
+      {draft.status === STATUS.DEVOLVIDO && draft.devolucao ? (
+        <Banner tone="warning" icon="undo-variant" title="Devolvido para correção" message={draft.devolucao.motivo} />
+      ) : null}
 
       <View style={{ gap: 2 }}>
         <Txt v="label" color={colors.navy600}>
@@ -186,13 +275,22 @@ function RdoFormInner({ rdoInicial, obra, modo, passoParam, navigation }) {
             COMENTÁRIOS DO MASTER NESTA ETAPA
           </Txt>
           {comentariosDoPasso.map((c) => (
-            <CommentItem key={c.id} comentario={c} nome={state.users.find((u) => u.id === c.autorId)?.nome || 'Master'} fotos={draft.fotos} />
+            <CommentItem
+              key={c.id}
+              comentario={c}
+              nome={state.users.find((u) => u.id === c.autorId)?.nome || 'Master'}
+              fotos={draft.fotos}
+            />
           ))}
         </View>
       ) : null}
 
       {mostrarErros && errosDoPasso.length ? (
-        <Banner tone="danger" icon="alert-circle-outline" title={`${errosDoPasso.length} ${errosDoPasso.length === 1 ? 'pendência obrigatória' : 'pendências obrigatórias'} nesta etapa`}>
+        <Banner
+          tone="danger"
+          icon="alert-circle-outline"
+          title={`${errosDoPasso.length} ${errosDoPasso.length === 1 ? 'pendência obrigatória' : 'pendências obrigatórias'} nesta etapa`}
+        >
           {errosDoPasso.slice(0, 5).map((e, i) => (
             <Txt key={i} v="small" color={colors.danger}>
               • {e.mensagem}

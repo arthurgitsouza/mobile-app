@@ -5,7 +5,7 @@ const safe = (fn) => {
   try {
     const r = fn();
     if (r && typeof r.catch === 'function') r.catch(() => {});
-  } catch (e) {
+  } catch {
     // sem háptico
   }
 };

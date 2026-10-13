@@ -61,7 +61,17 @@ export default function ChartCard({ titulo, subtitulo, legenda, tabela, children
           </Txt>
         ) : null}
       </View>
-      {tabela ? <SegmentedTabs compact items={[{ key: 'grafico', label: 'Gráfico', icon: 'chart-bar' }, { key: 'tabela', label: 'Tabela', icon: 'table' }]} value={modo} onChange={setModo} /> : null}
+      {tabela ? (
+        <SegmentedTabs
+          compact
+          items={[
+            { key: 'grafico', label: 'Gráfico', icon: 'chart-bar' },
+            { key: 'tabela', label: 'Tabela', icon: 'table' },
+          ]}
+          value={modo}
+          onChange={setModo}
+        />
+      ) : null}
       {legenda && legenda.length > 1 && modo === 'grafico' ? <Legenda itens={legenda} /> : null}
       {modo === 'grafico' || !tabela ? children : <TabelaDados colunas={tabela.colunas} linhas={tabela.linhas} />}
     </Card>
@@ -72,6 +82,13 @@ const styles = StyleSheet.create({
   legenda: { flexDirection: 'row', flexWrap: 'wrap', gap: 14 },
   leg: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   swatch: { width: 12, height: 12, borderRadius: 3 },
-  tr: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 7, borderBottomWidth: 1, borderBottomColor: colors.divider },
+  tr: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 7,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
+  },
   num: { width: 76, textAlign: 'right' },
 });

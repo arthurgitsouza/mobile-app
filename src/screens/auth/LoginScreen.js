@@ -63,7 +63,9 @@ export default function LoginScreen({ navigation }) {
       setTentativas(0);
       setErro('Muitas tentativas. Por segurança, o acesso ficou bloqueado temporariamente.');
     } else {
-      setErro(`${mensagem} Restam ${MAX_TENTATIVAS - n} ${MAX_TENTATIVAS - n === 1 ? 'tentativa' : 'tentativas'} antes do bloqueio temporário.`);
+      setErro(
+        `${mensagem} Restam ${MAX_TENTATIVAS - n} ${MAX_TENTATIVAS - n === 1 ? 'tentativa' : 'tentativas'} antes do bloqueio temporário.`,
+      );
     }
   };
 
@@ -92,7 +94,8 @@ export default function LoginScreen({ navigation }) {
       const ativar = await confirm({
         icon: 'fingerprint',
         title: 'Ativar biometria?',
-        message: 'Nos próximos acessos você poderá entrar com a biometria do aparelho. Suas assinaturas continuarão exigindo confirmação adicional.',
+        message:
+          'Nos próximos acessos você poderá entrar com a biometria do aparelho. Suas assinaturas continuarão exigindo confirmação adicional.',
         confirmLabel: 'Ativar',
         cancelLabel: 'Agora não',
       });
@@ -141,7 +144,14 @@ export default function LoginScreen({ navigation }) {
           <Card style={styles.formCard}>
             <Txt v="h2">Entrar</Txt>
             {erro ? <Banner tone="danger" message={erro} /> : null}
-            {bloqueado ? <Banner tone="warning" icon="timer-sand" title={`Tente novamente em ${segundosRestantes}s`} message="Bloqueio temporário após várias tentativas incorretas." /> : null}
+            {bloqueado ? (
+              <Banner
+                tone="warning"
+                icon="timer-sand"
+                title={`Tente novamente em ${segundosRestantes}s`}
+                message="Bloqueio temporário após várias tentativas incorretas."
+              />
+            ) : null}
 
             <TextField
               label="E-mail"
@@ -179,9 +189,21 @@ export default function LoginScreen({ navigation }) {
               </View>
               <LinkButton title="Esqueci a senha" onPress={() => navigation.navigate('ForgotPassword')} />
             </View>
-            <Button title="Entrar" icon="login-variant" onPress={entrarComSenha} loading={carregando} disabled={bloqueado} size="lg" />
+            <Button
+              title="Entrar"
+              icon="login-variant"
+              onPress={entrarComSenha}
+              loading={carregando}
+              disabled={bloqueado}
+              size="lg"
+            />
             {podeBiometria ? (
-              <Button title={`Entrar com biometria (${primeiroNome(ultimo.nome)})`} icon="fingerprint" variant="secondary" onPress={entrarComBiometria} />
+              <Button
+                title={`Entrar com biometria (${primeiroNome(ultimo.nome)})`}
+                icon="fingerprint"
+                variant="secondary"
+                onPress={entrarComBiometria}
+              />
             ) : null}
           </Card>
 
@@ -196,7 +218,12 @@ export default function LoginScreen({ navigation }) {
               const u = state.users.find((x) => x.id === r.userId);
               if (!u) return null;
               return (
-                <Card key={r.userId} onPress={() => actions.entrar({ userId: u.id, manter: false })} accessibilityLabel={`Entrar como ${PERFIS[r.perfil].longo}: ${u.nome}`} style={styles.quick}>
+                <Card
+                  key={r.userId}
+                  onPress={() => actions.entrar({ userId: u.id, manter: false })}
+                  accessibilityLabel={`Entrar como ${PERFIS[r.perfil].longo}: ${u.nome}`}
+                  style={styles.quick}
+                >
                   <Avatar nome={u.nome} size={44} />
                   <View style={{ flex: 1, gap: 1 }}>
                     <Txt v="bodyStrong">{PERFIS[r.perfil].longo}</Txt>
@@ -214,7 +241,11 @@ export default function LoginScreen({ navigation }) {
           </View>
 
           <View style={styles.footer}>
-            <LinkButton title="Roteiro de demonstração" icon="map-marker-path" onPress={() => navigation.navigate('DemoGuide')} />
+            <LinkButton
+              title="Roteiro de demonstração"
+              icon="map-marker-path"
+              onPress={() => navigation.navigate('DemoGuide')}
+            />
             <Txt v="caption" subtle>
               v1.0.0 · protótipo de interface — dados fictícios
             </Txt>
@@ -227,10 +258,26 @@ export default function LoginScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
-  hero: { backgroundColor: colors.navy700, alignItems: 'center', gap: 6, paddingHorizontal: 24, paddingBottom: 64, borderBottomWidth: 4, borderBottomColor: colors.gold500 },
+  hero: {
+    backgroundColor: colors.navy700,
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 24,
+    paddingBottom: 64,
+    borderBottomWidth: 4,
+    borderBottomColor: colors.gold500,
+  },
   proto: {
-    flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 10, paddingHorizontal: 12, paddingVertical: 6, borderRadius: radius.pill,
-    backgroundColor: 'rgba(255,255,255,0.1)', borderWidth: 1, borderColor: 'rgba(243,221,166,0.4)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: radius.pill,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(243,221,166,0.4)',
   },
   body: { paddingHorizontal: 16, marginTop: -40, gap: 20 },
   formCard: { gap: 14, padding: 18 },

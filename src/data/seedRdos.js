@@ -37,7 +37,9 @@ export function assinaturaFake(seed) {
       const t = i / 26;
       pts.push({
         x: Math.round((x0 + t * (90 + rnd() * 30)) * 10) / 10,
-        y: Math.round((62 + Math.sin(t * Math.PI * (2 + s) + rnd()) * amp * (1 - t * 0.4) + (rnd() - 0.5) * 5) * 10) / 10,
+        y:
+          Math.round((62 + Math.sin(t * Math.PI * (2 + s) + rnd()) * amp * (1 - t * 0.4) + (rnd() - 0.5) * 5) * 10) /
+          10,
       });
     }
     traco.push(pts);
@@ -48,17 +50,43 @@ export function assinaturaFake(seed) {
 // Modelos por obra: efetivo, equipamentos e serviços típicos.
 export const MODELOS_OBRA = {
   obra_alfa: {
-    equipe: [['Engenheiro', 1], ['Encarregado', 1], ['Pedreiro', 4], ['Servente', 6]],
-    equipamentos: [['Betoneira', 1, 7], ['Compactador (sapo)', 1, 4], ['Caminhão basculante', 1, 4]],
+    equipe: [
+      ['Engenheiro', 1],
+      ['Encarregado', 1],
+      ['Pedreiro', 4],
+      ['Servente', 6],
+    ],
+    equipamentos: [
+      ['Betoneira', 1, 7],
+      ['Compactador (sapo)', 1, 4],
+      ['Caminhão basculante', 1, 4],
+    ],
     servicos: [
-      { nome: 'Alvenaria de vedação', un: 'm²', base: 42, frente: 'Pavimento térreo, eixos B–D', icone: 'wall', pct: 38 },
+      {
+        nome: 'Alvenaria de vedação',
+        un: 'm²',
+        base: 42,
+        frente: 'Pavimento térreo, eixos B–D',
+        icone: 'wall',
+        pct: 38,
+      },
       { nome: 'Concretagem', un: 'm³', base: 8.5, frente: 'Fundações — sapatas', icone: 'cube-outline', pct: 44 },
       { nome: 'Aterro compactado', un: 'm³', base: 55, frente: 'Área externa', icone: 'excavator', pct: 61 },
     ],
   },
   obra_beta: {
-    equipe: [['Engenheiro', 1], ['Encarregado', 1], ['Armador', 5], ['Carpinteiro', 4], ['Servente', 5]],
-    equipamentos: [['Bomba de concreto', 1, 5], ['Retroescavadeira', 1, 6], ['Vibrador de imersão', 2, 4]],
+    equipe: [
+      ['Engenheiro', 1],
+      ['Encarregado', 1],
+      ['Armador', 5],
+      ['Carpinteiro', 4],
+      ['Servente', 5],
+    ],
+    equipamentos: [
+      ['Bomba de concreto', 1, 5],
+      ['Retroescavadeira', 1, 6],
+      ['Vibrador de imersão', 2, 4],
+    ],
     servicos: [
       { nome: 'Armação de aço', un: 'kg', base: 1200, frente: 'Radier — módulo 2', icone: 'wrench', pct: 55 },
       { nome: 'Formas', un: 'm²', base: 160, frente: 'Pilares — eixo 3', icone: 'cube-outline', pct: 48 },
@@ -66,8 +94,16 @@ export const MODELOS_OBRA = {
     ],
   },
   obra_gama: {
-    equipe: [['Técnico em edificações', 1], ['Pedreiro', 3], ['Azulejista', 2], ['Pintor', 2]],
-    equipamentos: [['Serra circular', 1, 5], ['Gerador', 1, 6]],
+    equipe: [
+      ['Técnico em edificações', 1],
+      ['Pedreiro', 3],
+      ['Azulejista', 2],
+      ['Pintor', 2],
+    ],
+    equipamentos: [
+      ['Serra circular', 1, 5],
+      ['Gerador', 1, 6],
+    ],
     servicos: [
       { nome: 'Chapisco e reboco', un: 'm²', base: 60, frente: 'Ala leste — consultórios', icone: 'wall', pct: 22 },
       { nome: 'Revestimento cerâmico', un: 'm²', base: 28, frente: 'Sanitários', icone: 'view-grid-outline', pct: 15 },
@@ -98,8 +134,14 @@ export function construirRdo(spec) {
   // ---- B. Clima ----
   const choveu = rnd() < 0.25;
   rdo.clima.periodos = {
-    manha: { condicao: choveu ? 'nublado' : rnd() < 0.5 ? 'ensolarado' : 'parc_nublado', temperatura: String(25 + Math.floor(rnd() * 4)) },
-    tarde: { condicao: choveu ? 'chuva_moderada' : rnd() < 0.3 ? 'nublado' : 'ensolarado', temperatura: String(28 + Math.floor(rnd() * 5)) },
+    manha: {
+      condicao: choveu ? 'nublado' : rnd() < 0.5 ? 'ensolarado' : 'parc_nublado',
+      temperatura: String(25 + Math.floor(rnd() * 4)),
+    },
+    tarde: {
+      condicao: choveu ? 'chuva_moderada' : rnd() < 0.3 ? 'nublado' : 'ensolarado',
+      temperatura: String(28 + Math.floor(rnd() * 5)),
+    },
     noite: { condicao: '', temperatura: '' },
   };
   if (choveu) {
@@ -161,16 +203,54 @@ export function construirRdo(spec) {
 
   // ---- F/G. Materiais e qualidade ----
   rdo.materiais = [
-    { id: sid('ma'), movimento: 'utilizado', material: 'Cimento CP-II (saco 50 kg)', unidade: 'saco', quantidade: String(20 + Math.floor(rnd() * 30)), fornecedor: '', notaRomaneio: '', lote: '', localAplicacao: modelo.servicos[0].frente, inspecao: 'aceito', armazenamento: 'Almoxarife — sobre pallets' },
+    {
+      id: sid('ma'),
+      movimento: 'utilizado',
+      material: 'Cimento CP-II (saco 50 kg)',
+      unidade: 'saco',
+      quantidade: String(20 + Math.floor(rnd() * 30)),
+      fornecedor: '',
+      notaRomaneio: '',
+      lote: '',
+      localAplicacao: modelo.servicos[0].frente,
+      inspecao: 'aceito',
+      armazenamento: 'Almoxarife — sobre pallets',
+    },
   ];
   if (rnd() < 0.5) {
-    rdo.materiais.push({ id: sid('ma'), movimento: 'recebido', material: 'Bloco cerâmico 9×19×19', unidade: 'un', quantidade: '2000', fornecedor: 'Cerâmica Maranhão', notaRomaneio: `NF ${4000 + numero * 13}`, lote: `L${numero}`, localAplicacao: '', inspecao: 'aceito', armazenamento: 'Pátio coberto' });
+    rdo.materiais.push({
+      id: sid('ma'),
+      movimento: 'recebido',
+      material: 'Bloco cerâmico 9×19×19',
+      unidade: 'un',
+      quantidade: '2000',
+      fornecedor: 'Cerâmica Maranhão',
+      notaRomaneio: `NF ${4000 + numero * 13}`,
+      lote: `L${numero}`,
+      localAplicacao: '',
+      inspecao: 'aceito',
+      armazenamento: 'Pátio coberto',
+    });
   }
-  rdo.qualidade = [{ id: sid('qa'), tipo: 'inspecao', descricao: 'Verificação de prumo e nível dos serviços do dia.', resultado: 'conforme', documento: '', responsavel: obra.engenheiroRT?.split(' — ')[0] || '', observacao: '' }];
+  rdo.qualidade = [
+    {
+      id: sid('qa'),
+      tipo: 'inspecao',
+      descricao: 'Verificação de prumo e nível dos serviços do dia.',
+      resultado: 'conforme',
+      documento: '',
+      responsavel: obra.engenheiroRT?.split(' — ')[0] || '',
+      observacao: '',
+    },
+  ];
 
   // ---- H. Segurança ----
   rdo.seguranca = {
-    dds: { realizado: true, tema: ['Uso correto de EPI', 'Trabalho em altura', 'Organização e limpeza', 'Riscos elétricos'][numero % 4], participantes: String(rdo.maoDeObra.reduce((s, m) => s + Number(m.quantidade), 0)) },
+    dds: {
+      realizado: true,
+      tema: ['Uso correto de EPI', 'Trabalho em altura', 'Organização e limpeza', 'Riscos elétricos'][numero % 4],
+      participantes: String(rdo.maoDeObra.reduce((s, m) => s + Number(m.quantidade), 0)),
+    },
     epiEpc: { conferidos: true, observacao: '' },
     permissoes: '',
     inspecoes: 'Inspeção de rotina realizada pelo encarregado.',
@@ -184,9 +264,19 @@ export function construirRdo(spec) {
   // ---- I/J. Ocorrências e visitas ----
   if (choveu) {
     rdo.ocorrencias.push({
-      id: sid('oc'), codigo: 'OC-001', fato: `Chuva ${rdo.clima.impacto === 'total' ? 'forte' : 'moderada'} — serviços externos suspensos.`, horario: rdo.clima.chuvaInicio,
-      local: 'Frentes externas', partes: 'Encarregado', impactoPrazo: true, impactoCusto: false, impactoQualidade: false,
-      acaoImediata: 'Proteção de materiais e paralisação temporária.', responsavel: 'Encarregado', prazo: '', observacao: '',
+      id: sid('oc'),
+      codigo: 'OC-001',
+      fato: `Chuva ${rdo.clima.impacto === 'total' ? 'forte' : 'moderada'} — serviços externos suspensos.`,
+      horario: rdo.clima.chuvaInicio,
+      local: 'Frentes externas',
+      partes: 'Encarregado',
+      impactoPrazo: true,
+      impactoCusto: false,
+      impactoQualidade: false,
+      acaoImediata: 'Proteção de materiais e paralisação temporária.',
+      responsavel: 'Encarregado',
+      prazo: '',
+      observacao: '',
     });
   } else {
     rdo.semRegistro.ocorrencias = true;
@@ -222,14 +312,31 @@ export function construirRdo(spec) {
   rdo.declaracao = { aceita: true, dataHora: at('17:10') };
   if (obra.exigeAssinaturaOperacional) {
     rdo.assinaturaOperacional = {
-      usuarioId: autor.id, nome: autor.nome, dataHora: at('17:12'), ...assinaturaFake(`op-${obra.id}-${numero}`),
+      usuarioId: autor.id,
+      nome: autor.nome,
+      dataHora: at('17:12'),
+      ...assinaturaFake(`op-${obra.id}-${numero}`),
     };
   }
   rdo.criadoEm = at('07:15');
   rdo.atualizadoEm = at('17:12');
   rdo.auditoria = [
-    { id: sid('au'), dataHora: at('07:15'), evento: 'criacao', usuarioId: autor.id, versao: rdo.versao, detalhe: 'RDO criado a partir do RDO anterior.' },
-    { id: sid('au'), dataHora: at('16:40'), evento: 'rascunho_salvo', usuarioId: autor.id, versao: rdo.versao, detalhe: 'Salvamento automático.' },
+    {
+      id: sid('au'),
+      dataHora: at('07:15'),
+      evento: 'criacao',
+      usuarioId: autor.id,
+      versao: rdo.versao,
+      detalhe: 'RDO criado a partir do RDO anterior.',
+    },
+    {
+      id: sid('au'),
+      dataHora: at('16:40'),
+      evento: 'rascunho_salvo',
+      usuarioId: autor.id,
+      versao: rdo.versao,
+      detalhe: 'Salvamento automático.',
+    },
   ];
   rdo.comentarios = [];
 
@@ -256,26 +363,138 @@ export function aplicarExemploDocumento(rdo, { data }) {
     observacao: 'Concretagem externa suspensa por 35 min.',
   };
   rdo.maoDeObra = [
-    ['Equipe própria', 'Engenheiro', 1], ['Equipe própria', 'Encarregado', 1],
-    ['Empreiteira terceirizada', 'Pedreiro', 4], ['Empreiteira terceirizada', 'Servente', 6],
+    ['Equipe própria', 'Engenheiro', 1],
+    ['Equipe própria', 'Encarregado', 1],
+    ['Empreiteira terceirizada', 'Pedreiro', 4],
+    ['Empreiteira terceirizada', 'Servente', 6],
   ].map(([empresa, funcao, q], i) => ({
-    id: id(`mo${i}`), empresa, funcao, quantidade: String(q), horaInicio: '07:00', horaFim: '16:00', horas: '8', observacao: '',
+    id: id(`mo${i}`),
+    empresa,
+    funcao,
+    quantidade: String(q),
+    horaInicio: '07:00',
+    horaFim: '16:00',
+    horas: '8',
+    observacao: '',
   }));
   rdo.equipamentos = [
-    { id: id('eq0'), tipo: 'Betoneira', identificacao: 'BET-01', quantidade: '1', horasDisponiveis: '8', horasProdutivas: '7', horasParadas: '1', motivoParada: 'Chuva e limpeza do equipamento', operador: 'Servente treinado', condicao: 'operante', observacao: '' },
-    { id: id('eq1'), tipo: 'Compactador (sapo)', identificacao: 'CPT-02', quantidade: '1', horasDisponiveis: '8', horasProdutivas: '4', horasParadas: '4', motivoParada: 'Solo saturado após a chuva', operador: 'Operador da empreiteira', condicao: 'operante_restricao', observacao: '' },
-    { id: id('eq2'), tipo: 'Caminhão basculante', identificacao: 'CAM-05', quantidade: '1', horasDisponiveis: '8', horasProdutivas: '6', horasParadas: '0', motivoParada: '', operador: 'Motorista terceirizado', condicao: 'operante', observacao: '2 viagens de material de aterro.' },
+    {
+      id: id('eq0'),
+      tipo: 'Betoneira',
+      identificacao: 'BET-01',
+      quantidade: '1',
+      horasDisponiveis: '8',
+      horasProdutivas: '7',
+      horasParadas: '1',
+      motivoParada: 'Chuva e limpeza do equipamento',
+      operador: 'Servente treinado',
+      condicao: 'operante',
+      observacao: '',
+    },
+    {
+      id: id('eq1'),
+      tipo: 'Compactador (sapo)',
+      identificacao: 'CPT-02',
+      quantidade: '1',
+      horasDisponiveis: '8',
+      horasProdutivas: '4',
+      horasParadas: '4',
+      motivoParada: 'Solo saturado após a chuva',
+      operador: 'Operador da empreiteira',
+      condicao: 'operante_restricao',
+      observacao: '',
+    },
+    {
+      id: id('eq2'),
+      tipo: 'Caminhão basculante',
+      identificacao: 'CAM-05',
+      quantidade: '1',
+      horasDisponiveis: '8',
+      horasProdutivas: '6',
+      horasParadas: '0',
+      motivoParada: '',
+      operador: 'Motorista terceirizado',
+      condicao: 'operante',
+      observacao: '2 viagens de material de aterro.',
+    },
   ];
   rdo.atividades = [
-    { id: id('at0'), frente: 'Pavimento térreo, eixos B–D', servico: 'Alvenaria de vedação', descricao: 'Execução de alvenaria de vedação no pavimento térreo, eixos B–D: 42,00 m².', unidade: 'm²', quantidadeDia: '42', referenciaEAP: '3.2', percentual: '38', situacao: 'em_andamento', observacao: '' },
-    { id: id('at1'), frente: 'Fundações — sapatas', servico: 'Concretagem', descricao: 'Concretagem de sapatas com bomba; interrompida pela chuva por 35 min.', unidade: 'm³', quantidadeDia: '8,5', referenciaEAP: '2.4', percentual: '44', situacao: 'em_andamento', observacao: 'Concretagem externa suspensa por 35 min.' },
-    { id: id('at2'), frente: 'Área externa', servico: 'Aterro compactado', descricao: 'Aterro compactado em camadas de 20 cm.', unidade: 'm³', quantidadeDia: '55', referenciaEAP: '2.1', percentual: '61', situacao: 'em_andamento', observacao: '' },
+    {
+      id: id('at0'),
+      frente: 'Pavimento térreo, eixos B–D',
+      servico: 'Alvenaria de vedação',
+      descricao: 'Execução de alvenaria de vedação no pavimento térreo, eixos B–D: 42,00 m².',
+      unidade: 'm²',
+      quantidadeDia: '42',
+      referenciaEAP: '3.2',
+      percentual: '38',
+      situacao: 'em_andamento',
+      observacao: '',
+    },
+    {
+      id: id('at1'),
+      frente: 'Fundações — sapatas',
+      servico: 'Concretagem',
+      descricao: 'Concretagem de sapatas com bomba; interrompida pela chuva por 35 min.',
+      unidade: 'm³',
+      quantidadeDia: '8,5',
+      referenciaEAP: '2.4',
+      percentual: '44',
+      situacao: 'em_andamento',
+      observacao: 'Concretagem externa suspensa por 35 min.',
+    },
+    {
+      id: id('at2'),
+      frente: 'Área externa',
+      servico: 'Aterro compactado',
+      descricao: 'Aterro compactado em camadas de 20 cm.',
+      unidade: 'm³',
+      quantidadeDia: '55',
+      referenciaEAP: '2.1',
+      percentual: '61',
+      situacao: 'em_andamento',
+      observacao: '',
+    },
   ];
   rdo.materiais = [
-    { id: id('ma0'), movimento: 'utilizado', material: 'Cimento CP-II (saco 50 kg)', unidade: 'saco', quantidade: '32', fornecedor: '', notaRomaneio: '', lote: '', localAplicacao: 'Sapatas eixo D', inspecao: 'aceito', armazenamento: 'Almoxarife — sobre pallets' },
-    { id: id('ma1'), movimento: 'recebido', material: 'Bloco cerâmico 9×19×19', unidade: 'un', quantidade: '2000', fornecedor: 'Cerâmica Maranhão', notaRomaneio: 'NF 4587', lote: 'L-0715', localAplicacao: '', inspecao: 'aceito', armazenamento: 'Pátio coberto' },
+    {
+      id: id('ma0'),
+      movimento: 'utilizado',
+      material: 'Cimento CP-II (saco 50 kg)',
+      unidade: 'saco',
+      quantidade: '32',
+      fornecedor: '',
+      notaRomaneio: '',
+      lote: '',
+      localAplicacao: 'Sapatas eixo D',
+      inspecao: 'aceito',
+      armazenamento: 'Almoxarife — sobre pallets',
+    },
+    {
+      id: id('ma1'),
+      movimento: 'recebido',
+      material: 'Bloco cerâmico 9×19×19',
+      unidade: 'un',
+      quantidade: '2000',
+      fornecedor: 'Cerâmica Maranhão',
+      notaRomaneio: 'NF 4587',
+      lote: 'L-0715',
+      localAplicacao: '',
+      inspecao: 'aceito',
+      armazenamento: 'Pátio coberto',
+    },
   ];
-  rdo.qualidade = [{ id: id('qa0'), tipo: 'inspecao', descricao: 'Verificação de prumo e nível da alvenaria nos eixos B–D.', resultado: 'conforme', documento: 'FVS-012', responsavel: 'Encarregado', observacao: '' }];
+  rdo.qualidade = [
+    {
+      id: id('qa0'),
+      tipo: 'inspecao',
+      descricao: 'Verificação de prumo e nível da alvenaria nos eixos B–D.',
+      resultado: 'conforme',
+      documento: 'FVS-012',
+      responsavel: 'Encarregado',
+      observacao: '',
+    },
+  ];
   rdo.seguranca = {
     dds: { realizado: true, tema: 'Trabalho em altura e uso de EPI', participantes: '12' },
     epiEpc: { conferidos: true, observacao: 'Capacetes, luvas e botas conferidos na entrada.' },
@@ -289,19 +508,107 @@ export function aplicarExemploDocumento(rdo, { data }) {
   };
   rdo.semRegistro = { materiais: false, qualidade: false, ocorrencias: false, visitas: false, pendencias: false };
   rdo.ocorrencias = [
-    { id: id('oc0'), codigo: 'OC-001', fato: 'Chuva moderada das 14h10 às 14h45; precipitação registrada: 4 mm; concretagem externa suspensa por 35 min.', horario: '14:10', local: 'Fundações — sapatas', partes: 'Encarregado', impactoPrazo: true, impactoCusto: false, impactoQualidade: false, acaoImediata: 'Proteção do concreto fresco e retomada após a chuva.', responsavel: 'Encarregado', prazo: '', observacao: '' },
-    { id: id('oc1'), codigo: 'OC-002', fato: 'Interferência hidráulica não indicada no projeto, identificada às 10h20 no eixo C/4.', horario: '10:20', local: 'Eixo C/4', partes: 'Encarregado e Engenharia', impactoPrazo: true, impactoCusto: true, impactoQualidade: false, acaoImediata: 'Área isolada; solicitada orientação ao projetista.', responsavel: 'Eng. Carlos Lima', prazo: addDays(data, 1), observacao: '' },
+    {
+      id: id('oc0'),
+      codigo: 'OC-001',
+      fato: 'Chuva moderada das 14h10 às 14h45; precipitação registrada: 4 mm; concretagem externa suspensa por 35 min.',
+      horario: '14:10',
+      local: 'Fundações — sapatas',
+      partes: 'Encarregado',
+      impactoPrazo: true,
+      impactoCusto: false,
+      impactoQualidade: false,
+      acaoImediata: 'Proteção do concreto fresco e retomada após a chuva.',
+      responsavel: 'Encarregado',
+      prazo: '',
+      observacao: '',
+    },
+    {
+      id: id('oc1'),
+      codigo: 'OC-002',
+      fato: 'Interferência hidráulica não indicada no projeto, identificada às 10h20 no eixo C/4.',
+      horario: '10:20',
+      local: 'Eixo C/4',
+      partes: 'Encarregado e Engenharia',
+      impactoPrazo: true,
+      impactoCusto: true,
+      impactoQualidade: false,
+      acaoImediata: 'Área isolada; solicitada orientação ao projetista.',
+      responsavel: 'Eng. Carlos Lima',
+      prazo: addDays(data, 1),
+      observacao: '',
+    },
   ];
   rdo.visitas = [
-    { id: id('vi0'), visitante: 'Fernanda Albuquerque', empresaCargo: 'Grupo Horizonte — Gerente de Projetos', entrada: '09:30', saida: '10:15', motivo: 'Vistoria da alvenaria do térreo', orientacao: 'Solicitou registro fotográfico dos eixos B–D antes do chapisco.', atendidoPor: 'Encarregado' },
+    {
+      id: id('vi0'),
+      visitante: 'Fernanda Albuquerque',
+      empresaCargo: 'Grupo Horizonte — Gerente de Projetos',
+      entrada: '09:30',
+      saida: '10:15',
+      motivo: 'Vistoria da alvenaria do térreo',
+      orientacao: 'Solicitou registro fotográfico dos eixos B–D antes do chapisco.',
+      atendidoPor: 'Encarregado',
+    },
   ];
   rdo.fotos = [
-    { id: id('ft0'), numero: 1, uri: null, cor: 'blue', icone: 'wall', legenda: 'Alvenaria concluída nos eixos B–D', local: 'Pavimento térreo, eixos B–D', vinculo: { tipo: 'atividade', id: id('at0') }, autorId: rdo.autorId, dataHora: at('09:12'), coordenada: null, meta: { largura: 1600, altura: 1200, compressao: 80 }, envio: 'enviada' },
-    { id: id('ft1'), numero: 2, uri: null, cor: 'green', icone: 'cube-outline', legenda: 'Concretagem das sapatas com bomba', local: 'Obra', vinculo: { tipo: 'atividade', id: id('at1') }, autorId: rdo.autorId, dataHora: at('11:40'), coordenada: null, meta: { largura: 1600, altura: 1200, compressao: 80 }, envio: 'enviada' },
-    { id: id('ft2'), numero: 3, uri: null, cor: 'peach', icone: 'pipe', legenda: 'Tubulação encontrada no eixo C/4 antes da execução', local: 'Eixo C/4', vinculo: { tipo: 'ocorrencia', id: id('oc1') }, autorId: rdo.autorId, dataHora: at('10:24'), coordenada: null, meta: { largura: 1600, altura: 1200, compressao: 80 }, envio: 'enviada' },
+    {
+      id: id('ft0'),
+      numero: 1,
+      uri: null,
+      cor: 'blue',
+      icone: 'wall',
+      legenda: 'Alvenaria concluída nos eixos B–D',
+      local: 'Pavimento térreo, eixos B–D',
+      vinculo: { tipo: 'atividade', id: id('at0') },
+      autorId: rdo.autorId,
+      dataHora: at('09:12'),
+      coordenada: null,
+      meta: { largura: 1600, altura: 1200, compressao: 80 },
+      envio: 'enviada',
+    },
+    {
+      id: id('ft1'),
+      numero: 2,
+      uri: null,
+      cor: 'green',
+      icone: 'cube-outline',
+      legenda: 'Concretagem das sapatas com bomba',
+      local: 'Obra',
+      vinculo: { tipo: 'atividade', id: id('at1') },
+      autorId: rdo.autorId,
+      dataHora: at('11:40'),
+      coordenada: null,
+      meta: { largura: 1600, altura: 1200, compressao: 80 },
+      envio: 'enviada',
+    },
+    {
+      id: id('ft2'),
+      numero: 3,
+      uri: null,
+      cor: 'peach',
+      icone: 'pipe',
+      legenda: 'Tubulação encontrada no eixo C/4 antes da execução',
+      local: 'Eixo C/4',
+      vinculo: { tipo: 'ocorrencia', id: id('oc1') },
+      autorId: rdo.autorId,
+      dataHora: at('10:24'),
+      coordenada: null,
+      meta: { largura: 1600, altura: 1200, compressao: 80 },
+      envio: 'enviada',
+    },
   ];
   rdo.pendencias = [
-    { id: id('pe0'), descricao: 'Projetista deverá confirmar solução para a interferência hidráulica no eixo C/4.', origem: 'projeto', responsavel: 'Coordenação de Projetos', prazo: addDays(data, 1), prazoHora: '12:00', criticidade: 'alta', status: 'aberta' },
+    {
+      id: id('pe0'),
+      descricao: 'Projetista deverá confirmar solução para a interferência hidráulica no eixo C/4.',
+      origem: 'projeto',
+      responsavel: 'Coordenação de Projetos',
+      prazo: addDays(data, 1),
+      prazoHora: '12:00',
+      criticidade: 'alta',
+      status: 'aberta',
+    },
   ];
   rdo.planejamento = {
     proximoDia: 'Prosseguir alvenaria eixos D–F e concretagem das sapatas restantes; aguardar solução do eixo C/4.',
@@ -311,14 +618,36 @@ export function aplicarExemploDocumento(rdo, { data }) {
 }
 
 // Finaliza estados do fluxo (assinaturas, hashes, auditoria) conforme o status desejado.
-export function aplicarFluxo(rdo, { status, agora, autor, master, clienteUser, ressalva, horasDesdeSubmissao, horasDesdeEnvio, devolucao, esclarecimento }) {
+export function aplicarFluxo(
+  rdo,
+  {
+    status,
+    agora,
+    autor,
+    master,
+    clienteUser,
+    ressalva,
+    horasDesdeSubmissao,
+    horasDesdeEnvio,
+    devolucao,
+    esclarecimento,
+  },
+) {
   const data = rdo.data;
   const at = (hhmm, delta = 0) => {
     const t = new Date(combineDateTime(addDays(data, delta), hhmm)).getTime();
     return new Date(Math.min(t, agora - 10 * 60 * 1000)).toISOString();
   };
   const ago = (h) => new Date(agora - h * 3600 * 1000).toISOString();
-  const aud = (evento, usuarioId, dataHora, detalhe = '') => rdo.auditoria.push({ id: `${rdo.id}_au${rdo.auditoria.length + 1}`, dataHora, evento, usuarioId, versao: rdo.versao, detalhe });
+  const aud = (evento, usuarioId, dataHora, detalhe = '') =>
+    rdo.auditoria.push({
+      id: `${rdo.id}_au${rdo.auditoria.length + 1}`,
+      dataHora,
+      evento,
+      usuarioId,
+      versao: rdo.versao,
+      detalhe,
+    });
   const ipSim = '187.115.42.x (simulado)';
 
   rdo.status = status;
@@ -339,7 +668,14 @@ export function aplicarFluxo(rdo, { status, agora, autor, master, clienteUser, r
     rdo.devolucao = { ...devolucao, por: master.id, em: ago(3) };
     aud('devolucao', master.id, rdo.devolucao.em, devolucao.motivo);
     rdo.comentarios.push({
-      id: `${rdo.id}_cm1`, autorId: master.id, papel: 'master', tipo: 'devolucao', contexto: 'fotos', texto: devolucao.motivo, dataHora: rdo.devolucao.em, visibilidade: 'interno',
+      id: `${rdo.id}_cm1`,
+      autorId: master.id,
+      papel: 'master',
+      tipo: 'devolucao',
+      contexto: 'fotos',
+      texto: devolucao.motivo,
+      dataHora: rdo.devolucao.em,
+      visibilidade: 'interno',
     });
     return rdo;
   }
@@ -348,21 +684,39 @@ export function aplicarFluxo(rdo, { status, agora, autor, master, clienteUser, r
   const tValidacao = horasDesdeEnvio != null ? ago(horasDesdeEnvio + 0.1) : at('10:30', 1);
   rdo.hashTecnico = hashOf(conteudoTecnico(rdo));
   rdo.assinaturas.master = {
-    usuarioId: master.id, nome: master.nome, papel: 'master', dataHora: tValidacao, versao: rdo.versao,
-    ip: ipSim, dispositivo: 'Android 15 • Expo Go', metodo2fa: 'otp', declaracao: declaracaoMaster(`nº ${String(rdo.numero).padStart(4, '0')}`, rdo.versao),
-    hash: rdo.hashTecnico, ...assinaturaFake(`master-${rdo.id}`),
+    usuarioId: master.id,
+    nome: master.nome,
+    papel: 'master',
+    dataHora: tValidacao,
+    versao: rdo.versao,
+    ip: ipSim,
+    dispositivo: 'Android 15 • Expo Go',
+    metodo2fa: 'otp',
+    declaracao: declaracaoMaster(`nº ${String(rdo.numero).padStart(4, '0')}`, rdo.versao),
+    hash: rdo.hashTecnico,
+    ...assinaturaFake(`master-${rdo.id}`),
   };
   aud('analise_iniciada', master.id, new Date(new Date(tValidacao).getTime() - 20 * 60000).toISOString());
   aud('validacao', master.id, tValidacao, `Hash técnico ${rdo.hashTecnico.slice(0, 12)}…`);
   if (status === 'validado') return rdo;
 
-  rdo.liberadoAoClienteEm = horasDesdeEnvio != null ? ago(horasDesdeEnvio) : new Date(new Date(tValidacao).getTime() + 60000).toISOString();
+  rdo.liberadoAoClienteEm =
+    horasDesdeEnvio != null ? ago(horasDesdeEnvio) : new Date(new Date(tValidacao).getTime() + 60000).toISOString();
   aud('envio_cliente', master.id, rdo.liberadoAoClienteEm, 'Canais: app e e-mail.');
   if (status === 'enviado_cliente') {
     if (esclarecimento) {
       rdo.esclarecimentoPendente = true;
       const tc = ago(esclarecimento.horasAtras);
-      rdo.comentarios.push({ id: `${rdo.id}_cm1`, autorId: clienteUser.id, papel: 'cliente', tipo: 'esclarecimento', contexto: 'atividades', texto: esclarecimento.texto, dataHora: tc, visibilidade: 'cliente' });
+      rdo.comentarios.push({
+        id: `${rdo.id}_cm1`,
+        autorId: clienteUser.id,
+        papel: 'cliente',
+        tipo: 'esclarecimento',
+        contexto: 'atividades',
+        texto: esclarecimento.texto,
+        dataHora: tc,
+        visibilidade: 'cliente',
+      });
       aud('esclarecimento_cliente', clienteUser.id, tc, esclarecimento.texto);
     }
     return rdo;
@@ -373,17 +727,32 @@ export function aplicarFluxo(rdo, { status, agora, autor, master, clienteUser, r
   const tc = new Date(Math.min(tCliente.getTime(), agora - 15 * 60 * 1000)).toISOString();
   const tipo = ressalva ? 'ressalva' : 'ciencia';
   rdo.assinaturas.cliente = {
-    usuarioId: clienteUser.id, nome: clienteUser.nome, papel: 'cliente', dataHora: tc, versao: rdo.versao, tipo,
-    texto: ressalva || '', ip: '200.140.18.x (simulado)', dispositivo: 'iOS 18 • Expo Go', metodo2fa: 'otp',
-    declaracao: declaracaoCliente(tipo, `nº ${String(rdo.numero).padStart(4, '0')}`, rdo.versao), hash: rdo.hashTecnico, ...assinaturaFake(`cliente-${rdo.id}`),
+    usuarioId: clienteUser.id,
+    nome: clienteUser.nome,
+    papel: 'cliente',
+    dataHora: tc,
+    versao: rdo.versao,
+    tipo,
+    texto: ressalva || '',
+    ip: '200.140.18.x (simulado)',
+    dispositivo: 'iOS 18 • Expo Go',
+    metodo2fa: 'otp',
+    declaracao: declaracaoCliente(tipo, `nº ${String(rdo.numero).padStart(4, '0')}`, rdo.versao),
+    hash: rdo.hashTecnico,
+    ...assinaturaFake(`cliente-${rdo.id}`),
   };
   aud(ressalva ? 'ressalva_cliente' : 'ciencia_cliente', clienteUser.id, tc, ressalva || 'Ciente, sem ressalvas.');
   rdo.finalizadoEm = tc;
-  rdo.hashFinal = hashOf({ tecnico: rdo.hashTecnico, master: rdo.assinaturas.master.dataHora, cliente: rdo.assinaturas.cliente.dataHora, tipo, texto: ressalva || '' });
+  rdo.hashFinal = hashOf({
+    tecnico: rdo.hashTecnico,
+    master: rdo.assinaturas.master.dataHora,
+    cliente: rdo.assinaturas.cliente.dataHora,
+    tipo,
+    texto: ressalva || '',
+  });
   aud('finalizacao', 'sistema', tc, `PDF gerado. Hash final ${rdo.hashFinal.slice(0, 12)}…`);
   rdo.status = 'finalizado';
   if (status === 'retificado') rdo.status = 'retificado';
   if (status === 'cancelado') rdo.status = 'cancelado';
   return rdo;
 }
-

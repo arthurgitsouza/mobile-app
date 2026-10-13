@@ -4,7 +4,21 @@ import { SCHEMA_VERSION } from '../data/seed.js';
 // Persistência local do protótipo (offline-first). Uma chave por fatia para evitar linhas grandes
 // no AsyncStorage (limite de ~2 MB por valor no Android).
 const PREFIX = 'rdo:v1:';
-const SLICES = ['meta', 'empresa', 'clientes', 'users', 'obras', 'rdos', 'notifications', 'auditoriaGlobal', 'files', 'catalogos', 'settings', 'academico', 'session'];
+const SLICES = [
+  'meta',
+  'empresa',
+  'clientes',
+  'users',
+  'obras',
+  'rdos',
+  'notifications',
+  'auditoriaGlobal',
+  'files',
+  'catalogos',
+  'settings',
+  'academico',
+  'session',
+];
 
 function sliceValue(state, key) {
   if (key === 'meta') return { schemaVersion: state.schemaVersion, geradoEm: state.geradoEm };
@@ -27,7 +41,7 @@ export async function loadState() {
     if (data.meta?.schemaVersion !== SCHEMA_VERSION) return null;
     const { meta, ...rest } = data;
     return { ...rest, schemaVersion: meta.schemaVersion, geradoEm: meta.geradoEm };
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -40,7 +54,8 @@ export function persistState(prev, next) {
   const changed = SLICES.filter((k) => {
     if (!prev) return true;
     // session/meta são derivadas (novo objeto a cada leitura): compara por conteúdo.
-    if (k === 'session' || k === 'meta') return JSON.stringify(sliceValue(prev, k)) !== JSON.stringify(sliceValue(next, k));
+    if (k === 'session' || k === 'meta')
+      return JSON.stringify(sliceValue(prev, k)) !== JSON.stringify(sliceValue(next, k));
     return prev[k] !== next[k];
   });
   if (!changed.length) return;
@@ -59,7 +74,7 @@ export async function flushPersist() {
   if (!batch) return;
   try {
     await AsyncStorage.multiSet(Object.entries(batch).map(([k, v]) => [PREFIX + k, JSON.stringify(v)]));
-  } catch (e) {
+  } catch {
     // Falha de gravação não deve derrubar o app; o estado em memória segue válido.
   }
 }
@@ -69,7 +84,7 @@ export async function clearPersisted() {
   pending = null;
   try {
     await AsyncStorage.multiRemove(SLICES.map((k) => PREFIX + k));
-  } catch (e) {
+  } catch {
     // ignora
   }
 }

@@ -24,7 +24,7 @@ export async function fotosParaBase64(fotos = []) {
     if (!f.uri) continue;
     try {
       out[f.id] = await lerComoDataUri(f.uri);
-    } catch (e) {
+    } catch {
       // foto indisponível (cache limpo): o PDF usa o quadro de identificação no lugar
     }
   }
@@ -54,11 +54,15 @@ export async function compartilharPdf(html, nomeArquivo) {
     if (destino.exists) destino.delete();
     new File(uri).copy(destino);
     alvo = destino.uri;
-  } catch (e) {
+  } catch {
     // mantém o nome gerado pelo sistema
   }
   if (await Sharing.isAvailableAsync()) {
-    await Sharing.shareAsync(alvo, { mimeType: 'application/pdf', UTI: 'com.adobe.pdf', dialogTitle: 'Compartilhar RDO em PDF' });
+    await Sharing.shareAsync(alvo, {
+      mimeType: 'application/pdf',
+      UTI: 'com.adobe.pdf',
+      dialogTitle: 'Compartilhar RDO em PDF',
+    });
   }
   return { uri: alvo };
 }
@@ -80,10 +84,14 @@ export async function compartilharCsv(nomeArquivo, texto) {
     arquivo.create();
     arquivo.write(conteudo);
     if (await Sharing.isAvailableAsync()) {
-      await Sharing.shareAsync(arquivo.uri, { mimeType: 'text/csv', UTI: 'public.comma-separated-values-text', dialogTitle: 'Exportar dados do RDO' });
+      await Sharing.shareAsync(arquivo.uri, {
+        mimeType: 'text/csv',
+        UTI: 'public.comma-separated-values-text',
+        dialogTitle: 'Exportar dados do RDO',
+      });
     }
     return { uri: arquivo.uri };
-  } catch (e) {
+  } catch {
     await Share.share({ message: texto, title: nomeArquivo });
     return { texto: true };
   }

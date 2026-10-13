@@ -10,7 +10,9 @@ const LIBERADOS_AO_CLIENTE = [STATUS.ENVIADO_CLIENTE, STATUS.FINALIZADO];
 
 // Conteúdo bloqueado após a validação/assinatura do master.
 export function estaBloqueado(rdo) {
-  return [STATUS.VALIDADO, STATUS.ENVIADO_CLIENTE, STATUS.FINALIZADO, STATUS.RETIFICADO, STATUS.CANCELADO].includes(rdo.status);
+  return [STATUS.VALIDADO, STATUS.ENVIADO_CLIENTE, STATUS.FINALIZADO, STATUS.RETIFICADO, STATUS.CANCELADO].includes(
+    rdo.status,
+  );
 }
 
 export function estaAssinado(rdo) {
@@ -49,10 +51,16 @@ export function acoesDisponiveis(rdo, usuario, obra) {
 
   if (perfil === PERFIL.OPERACIONAL) {
     if (podeEditarOperacional(rdo, usuario)) {
-      add('revisar_enviar', s === STATUS.DEVOLVIDO ? 'Corrigir e reenviar' : 'Revisar e enviar', 'send-check-outline', 'accent');
+      add(
+        'revisar_enviar',
+        s === STATUS.DEVOLVIDO ? 'Corrigir e reenviar' : 'Revisar e enviar',
+        'send-check-outline',
+        'accent',
+      );
       add('editar', s === STATUS.DEVOLVIDO ? 'Corrigir' : 'Continuar preenchimento', 'pencil-outline', 'secondary');
     }
-    if (usuarioNaObra(usuario, obra) && !['cancelado'].includes(s)) add('comentar', 'Comentar', 'comment-text-outline', 'ghost');
+    if (usuarioNaObra(usuario, obra) && !['cancelado'].includes(s))
+      add('comentar', 'Comentar', 'comment-text-outline', 'ghost');
   }
 
   if (perfil === PERFIL.MASTER) {
@@ -65,11 +73,18 @@ export function acoesDisponiveis(rdo, usuario, obra) {
     if (s === STATUS.VALIDADO) add('enviar_cliente', 'Enviar ao cliente', 'account-arrow-right-outline', 'accent');
     if (s === STATUS.ENVIADO_CLIENTE) {
       add('reenviar', 'Reenviar notificação', 'bell-ring-outline', 'secondary');
-      add('comentar', rdo.esclarecimentoPendente ? 'Responder esclarecimento' : 'Comentar', 'comment-text-outline', rdo.esclarecimentoPendente ? 'accent' : 'ghost');
+      add(
+        'comentar',
+        rdo.esclarecimentoPendente ? 'Responder esclarecimento' : 'Comentar',
+        'comment-text-outline',
+        rdo.esclarecimentoPendente ? 'accent' : 'ghost',
+      );
     }
     if ([STATUS.RASCUNHO, STATUS.DEVOLVIDO].includes(s)) add('comentar', 'Comentar', 'comment-text-outline', 'ghost');
-    if ([STATUS.VALIDADO, STATUS.ENVIADO_CLIENTE, STATUS.FINALIZADO].includes(s)) add('retificar', 'Retificar', 'file-restore-outline', 'ghost');
-    if (![STATUS.CANCELADO, STATUS.RETIFICADO].includes(s)) add('cancelar', 'Cancelar RDO', 'file-cancel-outline', 'danger');
+    if ([STATUS.VALIDADO, STATUS.ENVIADO_CLIENTE, STATUS.FINALIZADO].includes(s))
+      add('retificar', 'Retificar', 'file-restore-outline', 'ghost');
+    if (![STATUS.CANCELADO, STATUS.RETIFICADO].includes(s))
+      add('cancelar', 'Cancelar RDO', 'file-cancel-outline', 'danger');
     if (NAO_ASSINADOS.includes(s)) add('excluir', 'Excluir (exceção)', 'delete-forever-outline', 'danger');
   }
 
@@ -82,7 +97,8 @@ export function acoesDisponiveis(rdo, usuario, obra) {
     }
   }
 
-  if (![STATUS.CANCELADO].includes(s)) add('pdf', s === STATUS.FINALIZADO ? 'PDF final' : 'Pré-visualizar PDF', 'file-pdf-box', 'ghost');
+  if (![STATUS.CANCELADO].includes(s))
+    add('pdf', s === STATUS.FINALIZADO ? 'PDF final' : 'Pré-visualizar PDF', 'file-pdf-box', 'ghost');
   return acoes;
 }
 
@@ -128,7 +144,11 @@ export function atrasoDeAcao(rdo, agoraMs, horas = { master: 24, cliente: 24 }) 
     if (dt >= limiteMs(horas.cliente)) return { responsavel: 'cliente', horas: Math.floor(dt / 3600000) };
   }
   if (rdo.status === STATUS.DEVOLVIDO && rdo.devolucao?.prazo) {
-    if (agoraMs > new Date(rdo.devolucao.prazo).getTime()) return { responsavel: 'operacional', horas: Math.floor((agoraMs - new Date(rdo.devolucao.prazo).getTime()) / 3600000) };
+    if (agoraMs > new Date(rdo.devolucao.prazo).getTime())
+      return {
+        responsavel: 'operacional',
+        horas: Math.floor((agoraMs - new Date(rdo.devolucao.prazo).getTime()) / 3600000),
+      };
   }
   return null;
 }

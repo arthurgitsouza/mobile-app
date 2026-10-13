@@ -92,7 +92,13 @@ export default function ForgotPasswordScreen({ navigation }) {
         passo === 1 ? (
           <Button title="Enviar código" icon="email-fast-outline" onPress={enviarCodigo} size="lg" />
         ) : passo === 2 ? (
-          <Button title="Confirmar código" icon="check" onPress={conferirCodigo} size="lg" disabled={codigo.length !== 6} />
+          <Button
+            title="Confirmar código"
+            icon="check"
+            onPress={conferirCodigo}
+            size="lg"
+            disabled={codigo.length !== 6}
+          />
         ) : passo === 3 ? (
           <Button title="Salvar nova senha" icon="lock-check-outline" onPress={salvarSenha} size="lg" />
         ) : (
@@ -125,7 +131,8 @@ export default function ForgotPasswordScreen({ navigation }) {
       {passo === 2 ? (
         <>
           <Txt v="body" muted>
-            Se o e-mail {mascararEmail(email.trim())} estiver cadastrado, enviamos um código de 6 dígitos válido por 10 minutos.
+            Se o e-mail {mascararEmail(email.trim())} estiver cadastrado, enviamos um código de 6 dígitos válido por 10
+            minutos.
           </Txt>
           {codigoGerado ? (
             <Card tone="gold" style={{ gap: 6 }}>
@@ -138,21 +145,45 @@ export default function ForgotPasswordScreen({ navigation }) {
               <Txt v="small" color={colors.goldText}>
                 Seu código RDO Mobile é:
               </Txt>
-              <Txt v="display" color={colors.goldText} style={{ letterSpacing: 6 }} accessibilityLabel={`Código ${codigoGerado.split('').join(' ')}`}>
+              <Txt
+                v="display"
+                color={colors.goldText}
+                style={{ letterSpacing: 6 }}
+                accessibilityLabel={`Código ${codigoGerado.split('').join(' ')}`}
+              >
                 {codigoGerado}
               </Txt>
             </Card>
           ) : (
-            <Banner tone="neutral" message="Modo demonstração: este e-mail não está cadastrado, então nenhum código foi gerado. Volte e tente master@planengen.com.br." />
+            <Banner
+              tone="neutral"
+              message="Modo demonstração: este e-mail não está cadastrado, então nenhum código foi gerado. Volte e tente master@planengen.com.br."
+            />
           )}
-          <CodeInput value={codigo} onChange={(t) => { setCodigo(t); setErroCodigo(''); }} error={erroCodigo} />
+          <CodeInput
+            value={codigo}
+            onChange={(t) => {
+              setCodigo(t);
+              setErroCodigo('');
+            }}
+            error={erroCodigo}
+          />
           <View style={{ alignItems: 'center' }}>
-            <Pressable onPress={reenviar} disabled={espera > 0} accessibilityRole="button" style={{ minHeight: 40, justifyContent: 'center' }}>
+            <Pressable
+              onPress={reenviar}
+              disabled={espera > 0}
+              accessibilityRole="button"
+              style={{ minHeight: 40, justifyContent: 'center' }}
+            >
               <Txt v="smallStrong" color={espera > 0 ? colors.textSubtle : colors.blue500}>
                 {espera > 0 ? `Reenviar código em ${espera}s` : 'Reenviar código'}
               </Txt>
             </Pressable>
-            <Pressable onPress={() => setPasso(1)} accessibilityRole="button" style={{ minHeight: 40, justifyContent: 'center' }}>
+            <Pressable
+              onPress={() => setPasso(1)}
+              accessibilityRole="button"
+              style={{ minHeight: 40, justifyContent: 'center' }}
+            >
               <Txt v="smallStrong" color={colors.blue500}>
                 Usar outro e-mail
               </Txt>
@@ -166,12 +197,35 @@ export default function ForgotPasswordScreen({ navigation }) {
           <Txt v="body" muted>
             Crie uma nova senha para {usuarioRef.current?.nome}.
           </Txt>
-          <PasswordField label="Nova senha" value={senha} onChangeText={(t) => { setSenha(t); setErroSenha(''); }} placeholder="Nova senha" required />
-          <PasswordField label="Confirmar nova senha" value={confirma} onChangeText={(t) => { setConfirma(t); setErroSenha(''); }} placeholder="Repita a senha" required error={erroSenha} />
+          <PasswordField
+            label="Nova senha"
+            value={senha}
+            onChangeText={(t) => {
+              setSenha(t);
+              setErroSenha('');
+            }}
+            placeholder="Nova senha"
+            required
+          />
+          <PasswordField
+            label="Confirmar nova senha"
+            value={confirma}
+            onChangeText={(t) => {
+              setConfirma(t);
+              setErroSenha('');
+            }}
+            placeholder="Repita a senha"
+            required
+            error={erroSenha}
+          />
           <Card style={{ gap: 8 }}>
             {regras.map((r) => (
               <View key={r.texto} style={styles.rule}>
-                <Icon name={r.ok ? 'check-circle' : 'circle-outline'} size={20} color={r.ok ? colors.success : colors.textSubtle} />
+                <Icon
+                  name={r.ok ? 'check-circle' : 'circle-outline'}
+                  size={20}
+                  color={r.ok ? colors.success : colors.textSubtle}
+                />
                 <Txt v="small" color={r.ok ? colors.success : colors.textMuted}>
                   {r.texto}
                 </Txt>
@@ -205,7 +259,10 @@ function CodeInput({ value, onChange, error }) {
     <View style={{ gap: 6 }}>
       <Pressable onPress={() => ref.current?.focus()} accessibilityRole="none" style={styles.codeRow}>
         {Array.from({ length: 6 }, (_, i) => (
-          <View key={i} style={[styles.codeBox, value.length === i && styles.codeActive, !!error && { borderColor: colors.danger }]}>
+          <View
+            key={i}
+            style={[styles.codeBox, value.length === i && styles.codeActive, !!error && { borderColor: colors.danger }]}
+          >
             <Txt v="h1">{value[i] || ''}</Txt>
           </View>
         ))}
@@ -234,10 +291,24 @@ function CodeInput({ value, onChange, error }) {
 const styles = StyleSheet.create({
   simHeader: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   rule: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  okIcon: { width: 80, height: 80, borderRadius: 40, backgroundColor: colors.successBg, alignItems: 'center', justifyContent: 'center' },
+  okIcon: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: colors.successBg,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   codeRow: { flexDirection: 'row', gap: 8, justifyContent: 'center' },
   codeBox: {
-    width: 48, height: 58, borderRadius: radius.md, borderWidth: 1.5, borderColor: colors.borderStrong, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center',
+    width: 48,
+    height: 58,
+    borderRadius: radius.md,
+    borderWidth: 1.5,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.white,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   codeActive: { borderColor: colors.navy600, borderWidth: 2.5 },
   hiddenInput: { position: 'absolute', opacity: 0.01, height: 1, width: 1 },

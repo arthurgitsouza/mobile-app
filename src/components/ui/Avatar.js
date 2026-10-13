@@ -14,7 +14,10 @@ function corDe(nome = '') {
 
 export default function Avatar({ nome, size = 40, style }) {
   return (
-    <View style={[styles.wrap, { width: size, height: size, borderRadius: size / 2, backgroundColor: corDe(nome) }, style]} accessible={false}>
+    <View
+      style={[styles.wrap, { width: size, height: size, borderRadius: size / 2, backgroundColor: corDe(nome) }, style]}
+      accessible={false}
+    >
       <Text style={[styles.text, { fontSize: size * 0.38 }]}>{iniciais(nome)}</Text>
     </View>
   );

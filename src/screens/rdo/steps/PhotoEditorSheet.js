@@ -39,7 +39,8 @@ export default function PhotoEditorSheet({ foto, rdo, catalogos, nomeAutor, onSa
   };
 
   const salvar = () => {
-    if (!d.legenda.trim()) return setErro('A legenda é obrigatória: ela transforma a imagem em evidência compreensível.');
+    if (!d.legenda.trim())
+      return setErro('A legenda é obrigatória: ela transforma a imagem em evidência compreensível.');
     return onSalvar({ ...d, legenda: d.legenda.trim() });
   };
 
@@ -56,7 +57,13 @@ export default function PhotoEditorSheet({ foto, rdo, catalogos, nomeAutor, onSa
             <Button title="Cancelar" variant="secondary" onPress={onClose} style={{ flex: 1 }} />
             <Button title="Salvar foto" icon="check" onPress={salvar} style={{ flex: 1.3 }} />
           </View>
-          <Button title="Remover foto" icon="trash-can-outline" variant="danger" size="sm" onPress={() => onRemover(d)} />
+          <Button
+            title="Remover foto"
+            icon="trash-can-outline"
+            variant="danger"
+            size="sm"
+            onPress={() => onRemover(d)}
+          />
         </View>
       }
     >
@@ -76,10 +83,22 @@ export default function PhotoEditorSheet({ foto, rdo, catalogos, nomeAutor, onSa
         placeholder="Ex.: Tubulação encontrada no eixo C/4 antes da execução"
         maxLength={200}
       />
-      <SelectField label="Local" value={d.local} onChange={(v) => setD({ ...d, local: v })} options={catalogos.frentes} allowCustom placeholder="Ex.: Eixo C/4, pavimento térreo" help="Local preciso: eixo, pavimento ou frente de serviço." />
+      <SelectField
+        label="Local"
+        value={d.local}
+        onChange={(v) => setD({ ...d, local: v })}
+        options={catalogos.frentes}
+        allowCustom
+        placeholder="Ex.: Eixo C/4, pavimento térreo"
+        help="Local preciso: eixo, pavimento ou frente de serviço."
+      />
       <ChipGroup
         label="Vincular a"
-        options={[{ value: '', label: 'Nenhum' }, { value: 'atividade', label: 'Atividade', disabled: !rdo.atividades.length }, { value: 'ocorrencia', label: 'Ocorrência', disabled: !rdo.ocorrencias.length }]}
+        options={[
+          { value: '', label: 'Nenhum' },
+          { value: 'atividade', label: 'Atividade', disabled: !rdo.atividades.length },
+          { value: 'ocorrencia', label: 'Ocorrência', disabled: !rdo.ocorrencias.length },
+        ]}
         value={tipoVinculo}
         onChange={setVinculoTipo}
         required
@@ -94,7 +113,11 @@ export default function PhotoEditorSheet({ foto, rdo, catalogos, nomeAutor, onSa
       ) : null}
       <SwitchField
         label="Registrar localização (GPS)"
-        description={d.coordenada ? `${d.coordenada.lat.toFixed(5)}, ${d.coordenada.lng.toFixed(5)} (±${Math.round(d.coordenada.precisao)} m)` : 'Opcional. Só é coletada com a sua autorização, foto a foto.'}
+        description={
+          d.coordenada
+            ? `${d.coordenada.lat.toFixed(5)}, ${d.coordenada.lng.toFixed(5)} (±${Math.round(d.coordenada.precisao)} m)`
+            : 'Opcional. Só é coletada com a sua autorização, foto a foto.'
+        }
         value={!!d.coordenada}
         onValueChange={alternarGps}
         disabled={buscandoGps}
@@ -102,9 +125,17 @@ export default function PhotoEditorSheet({ foto, rdo, catalogos, nomeAutor, onSa
       <View style={{ gap: 6, backgroundColor: colors.blue50, borderRadius: 12, padding: 12 }}>
         <KeyValue inline label="Data/hora" value={formatDateTime(d.dataHora)} />
         <KeyValue inline label="Autoria" value={nomeAutor(d.autorId)} />
-        <KeyValue inline label="Arquivo" value={d.meta ? `${d.meta.largura}×${d.meta.altura} px · compressão ${d.meta.compressao}%` : '—'} />
+        <KeyValue
+          inline
+          label="Arquivo"
+          value={d.meta ? `${d.meta.largura}×${d.meta.altura} px · compressão ${d.meta.compressao}%` : '—'}
+        />
       </View>
-      <Banner tone="neutral" icon="shield-check-outline" message="A compressão aplicada fica registrada e o arquivo original é preservado pelo servidor quando necessário." />
+      <Banner
+        tone="neutral"
+        icon="shield-check-outline"
+        message="A compressão aplicada fica registrada e o arquivo original é preservado pelo servidor quando necessário."
+      />
     </BottomSheet>
   );
 }

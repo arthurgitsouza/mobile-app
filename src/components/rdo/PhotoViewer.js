@@ -7,7 +7,16 @@ import { Badge, Button, IconButton, KeyValue, Txt } from '../ui';
 import PhotoTile from './PhotoTile';
 
 // Visualizador de foto com os metadados exigidos pelo grupo K (legenda, local, autoria, data/hora, vínculo…).
-export default function PhotoViewer({ fotos, indice, onClose, onIndice, nomeAutor, vinculoRotulo, onEditar, onComentar }) {
+export default function PhotoViewer({
+  fotos,
+  indice,
+  onClose,
+  onIndice,
+  nomeAutor,
+  vinculoRotulo,
+  onEditar,
+  onComentar,
+}) {
   const insets = useSafeAreaInsets();
   const [largura, setLargura] = useState(320);
   const foto = fotos?.[indice];
@@ -16,7 +25,14 @@ export default function PhotoViewer({ fotos, indice, onClose, onIndice, nomeAuto
   const vinculo = vinculoRotulo?.(foto);
 
   return (
-    <Modal visible transparent animationType="fade" onRequestClose={onClose} statusBarTranslucent navigationBarTranslucent>
+    <Modal
+      visible
+      transparent
+      animationType="fade"
+      onRequestClose={onClose}
+      statusBarTranslucent
+      navigationBarTranslucent
+    >
       <View style={[styles.root, { paddingTop: insets.top + 8, paddingBottom: insets.bottom + 8 }]}>
         <View style={styles.bar}>
           <Txt v="bodyStrong" color={colors.white} style={{ flex: 1 }}>
@@ -29,8 +45,24 @@ export default function PhotoViewer({ fotos, indice, onClose, onIndice, nomeAuto
             <PhotoTile foto={foto} width={largura} ratio={0.75} showState={false} />
           </View>
           <View style={styles.nav}>
-            <Button title="Anterior" icon="chevron-left" variant="onDark" size="sm" full={false} disabled={indice <= 0} onPress={() => onIndice(indice - 1)} />
-            <Button title="Próxima" iconRight="chevron-right" variant="onDark" size="sm" full={false} disabled={indice >= fotos.length - 1} onPress={() => onIndice(indice + 1)} />
+            <Button
+              title="Anterior"
+              icon="chevron-left"
+              variant="onDark"
+              size="sm"
+              full={false}
+              disabled={indice <= 0}
+              onPress={() => onIndice(indice - 1)}
+            />
+            <Button
+              title="Próxima"
+              iconRight="chevron-right"
+              variant="onDark"
+              size="sm"
+              full={false}
+              disabled={indice >= fotos.length - 1}
+              onPress={() => onIndice(indice + 1)}
+            />
           </View>
           <View style={styles.card}>
             <Txt v="bodyStrong">{foto.legenda || 'Sem legenda — obrigatória para o envio'}</Txt>
@@ -41,9 +73,21 @@ export default function PhotoViewer({ fotos, indice, onClose, onIndice, nomeAuto
             <KeyValue
               inline
               label="Coordenada"
-              value={foto.coordenada ? `${foto.coordenada.lat.toFixed(5)}, ${foto.coordenada.lng.toFixed(5)} (±${Math.round(foto.coordenada.precisao || 0)} m)` : 'Não registrada (opcional)'}
+              value={
+                foto.coordenada
+                  ? `${foto.coordenada.lat.toFixed(5)}, ${foto.coordenada.lng.toFixed(5)} (±${Math.round(foto.coordenada.precisao || 0)} m)`
+                  : 'Não registrada (opcional)'
+              }
             />
-            <KeyValue inline label="Arquivo" value={foto.meta ? `${foto.meta.largura}×${foto.meta.altura} px · compressão ${foto.meta.compressao}% registrada` : '—'} />
+            <KeyValue
+              inline
+              label="Arquivo"
+              value={
+                foto.meta
+                  ? `${foto.meta.largura}×${foto.meta.altura} px · compressão ${foto.meta.compressao}% registrada`
+                  : '—'
+              }
+            />
             <View style={{ flexDirection: 'row', gap: 6, flexWrap: 'wrap' }}>
               <Badge
                 label={foto.envio === 'local' ? 'Somente no aparelho' : 'Enviada ao servidor'}
@@ -55,8 +99,26 @@ export default function PhotoViewer({ fotos, indice, onClose, onIndice, nomeAuto
             </View>
             {onComentar || onEditar ? (
               <View style={{ flexDirection: 'row', gap: 10, marginTop: 4 }}>
-                {onEditar ? <Button title="Editar legenda" icon="pencil-outline" variant="secondary" size="sm" onPress={() => onEditar(foto)} style={{ flex: 1 }} /> : null}
-                {onComentar ? <Button title="Comentar foto" icon="comment-text-outline" variant="tonal" size="sm" onPress={() => onComentar(foto)} style={{ flex: 1 }} /> : null}
+                {onEditar ? (
+                  <Button
+                    title="Editar legenda"
+                    icon="pencil-outline"
+                    variant="secondary"
+                    size="sm"
+                    onPress={() => onEditar(foto)}
+                    style={{ flex: 1 }}
+                  />
+                ) : null}
+                {onComentar ? (
+                  <Button
+                    title="Comentar foto"
+                    icon="comment-text-outline"
+                    variant="tonal"
+                    size="sm"
+                    onPress={() => onComentar(foto)}
+                    style={{ flex: 1 }}
+                  />
+                ) : null}
               </View>
             ) : null}
           </View>

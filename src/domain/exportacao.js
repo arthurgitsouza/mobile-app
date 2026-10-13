@@ -33,8 +33,14 @@ export function csvRdos(rdos, obras, users) {
     { titulo: 'Fotos', chave: (r) => r.fotos.length },
     { titulo: 'Pendências abertas', chave: (r) => r.pendencias.filter((p) => p.status !== 'resolvida').length },
     { titulo: 'Enviado em', chave: (r) => (r.submetidoEm ? formatDateTime(r.submetidoEm) : '') },
-    { titulo: 'Validado em', chave: (r) => (r.assinaturas?.master ? formatDateTime(r.assinaturas.master.dataHora) : '') },
-    { titulo: 'Ciência do cliente em', chave: (r) => (r.assinaturas?.cliente ? formatDateTime(r.assinaturas.cliente.dataHora) : '') },
+    {
+      titulo: 'Validado em',
+      chave: (r) => (r.assinaturas?.master ? formatDateTime(r.assinaturas.master.dataHora) : ''),
+    },
+    {
+      titulo: 'Ciência do cliente em',
+      chave: (r) => (r.assinaturas?.cliente ? formatDateTime(r.assinaturas.cliente.dataHora) : ''),
+    },
     { titulo: 'Tipo de ciência', chave: (r) => r.assinaturas?.cliente?.tipo || '' },
     { titulo: 'Hash SHA-256', chave: (r) => r.hashFinal || r.hashTecnico || '' },
   ]);

@@ -21,7 +21,9 @@ export default function CatalogScreen({ route, navigation }) {
 
   const filtrados = useMemo(() => {
     const q = normalizar(busca);
-    return lista.map((item, indice) => ({ item, indice })).filter(({ item }) => !q || normalizar(servicos ? item.nome : item).includes(q));
+    return lista
+      .map((item, indice) => ({ item, indice }))
+      .filter(({ item }) => !q || normalizar(servicos ? item.nome : item).includes(q));
   }, [lista, busca, servicos]);
 
   if (!meta || currentUser.perfil !== PERFIL.MASTER) {
@@ -35,7 +37,8 @@ export default function CatalogScreen({ route, navigation }) {
   const salvar = () => {
     const nome = edit.nome.trim();
     if (!nome) return setEdit({ ...edit, erro: 'Informe o nome.' });
-    if (lista.some((x, i) => i !== edit.indice && normalizar(servicos ? x.nome : x) === normalizar(nome))) return setEdit({ ...edit, erro: 'Já existe um item com este nome.' });
+    if (lista.some((x, i) => i !== edit.indice && normalizar(servicos ? x.nome : x) === normalizar(nome)))
+      return setEdit({ ...edit, erro: 'Já existe um item com este nome.' });
     const novo = servicos ? { nome, unidade: edit.unidade || 'un' } : nome;
     const nova = edit.indice == null ? [...lista, novo] : lista.map((x, i) => (i === edit.indice ? novo : x));
     actions.salvarCatalogo({ chave, lista: nova });
@@ -45,7 +48,12 @@ export default function CatalogScreen({ route, navigation }) {
   };
 
   const remover = async (indice) => {
-    const ok = await confirm({ destructive: true, title: 'Remover item?', message: 'RDOs já registrados não são alterados; o item só deixa de aparecer nas sugestões.', confirmLabel: 'Remover' });
+    const ok = await confirm({
+      destructive: true,
+      title: 'Remover item?',
+      message: 'RDOs já registrados não são alterados; o item só deixa de aparecer nas sugestões.',
+      confirmLabel: 'Remover',
+    });
     if (ok) actions.salvarCatalogo({ chave, lista: lista.filter((_, i) => i !== indice) });
   };
 
@@ -55,15 +63,32 @@ export default function CatalogScreen({ route, navigation }) {
       subtitle={`${lista.length} itens`}
       back
       keyboard
-      right={<IconButton icon="plus-circle-outline" label="Adicionar item" color={colors.white} onPress={() => setEdit({ indice: null, nome: '', unidade: servicos ? 'm²' : '' })} />}
-      headerExtra={<SearchBar onDark value={busca} onChangeText={setBusca} placeholder="Buscar" style={{ marginTop: 8 }} />}
+      right={
+        <IconButton
+          icon="plus-circle-outline"
+          label="Adicionar item"
+          color={colors.white}
+          onPress={() => setEdit({ indice: null, nome: '', unidade: servicos ? 'm²' : '' })}
+        />
+      }
+      headerExtra={
+        <SearchBar onDark value={busca} onChangeText={setBusca} placeholder="Buscar" style={{ marginTop: 8 }} />
+      }
     >
       <Txt v="small" muted>
-        {meta.desc}. Estes itens aparecem como sugestões nos formulários do RDO. Valores digitados livremente pelo operacional valem só para aquele registro: o Master decide o que entra na biblioteca.
+        {meta.desc}. Estes itens aparecem como sugestões nos formulários do RDO. Valores digitados livremente pelo
+        operacional valem só para aquele registro: o Master decide o que entra na biblioteca.
       </Txt>
-      {filtrados.length === 0 ? <EmptyState icon={meta.icone} title="Nenhum item" message="Toque em + para adicionar." /> : null}
+      {filtrados.length === 0 ? (
+        <EmptyState icon={meta.icone} title="Nenhum item" message="Toque em + para adicionar." />
+      ) : null}
       {filtrados.map(({ item, indice }) => (
-        <Card key={`${indice}-${servicos ? item.nome : item}`} onPress={() => setEdit({ indice, nome: servicos ? item.nome : item, unidade: servicos ? item.unidade : '' })} style={styles.linha} padded={false}>
+        <Card
+          key={`${indice}-${servicos ? item.nome : item}`}
+          onPress={() => setEdit({ indice, nome: servicos ? item.nome : item, unidade: servicos ? item.unidade : '' })}
+          style={styles.linha}
+          padded={false}
+        >
           <View style={styles.conteudo}>
             <Icon name={meta.icone} size={20} color={colors.navy600} />
             <Txt v="body" style={{ flex: 1 }} numberOfLines={2}>
@@ -74,11 +99,22 @@ export default function CatalogScreen({ route, navigation }) {
                 {item.unidade}
               </Txt>
             ) : null}
-            <IconButton icon="trash-can-outline" label={`Remover ${servicos ? item.nome : item}`} color={colors.danger} onPress={() => remover(indice)} size={22} />
+            <IconButton
+              icon="trash-can-outline"
+              label={`Remover ${servicos ? item.nome : item}`}
+              color={colors.danger}
+              onPress={() => remover(indice)}
+              size={22}
+            />
           </View>
         </Card>
       ))}
-      <Button title="Adicionar item" icon="plus" variant="tonal" onPress={() => setEdit({ indice: null, nome: '', unidade: servicos ? 'm²' : '' })} />
+      <Button
+        title="Adicionar item"
+        icon="plus"
+        variant="tonal"
+        onPress={() => setEdit({ indice: null, nome: '', unidade: servicos ? 'm²' : '' })}
+      />
 
       <BottomSheet
         visible={!!edit}
@@ -93,8 +129,24 @@ export default function CatalogScreen({ route, navigation }) {
       >
         {edit ? (
           <>
-            <TextField label="Nome" required value={edit.nome} onChangeText={(t) => setEdit({ ...edit, nome: t, erro: undefined })} error={edit.erro} autoCapitalize="sentences" />
-            {servicos ? <SelectField label="Unidade padrão" required value={edit.unidade} onChange={(u) => setEdit({ ...edit, unidade: u })} options={state.catalogos.unidades} allowCustom /> : null}
+            <TextField
+              label="Nome"
+              required
+              value={edit.nome}
+              onChangeText={(t) => setEdit({ ...edit, nome: t, erro: undefined })}
+              error={edit.erro}
+              autoCapitalize="sentences"
+            />
+            {servicos ? (
+              <SelectField
+                label="Unidade padrão"
+                required
+                value={edit.unidade}
+                onChange={(u) => setEdit({ ...edit, unidade: u })}
+                options={state.catalogos.unidades}
+                allowCustom
+              />
+            ) : null}
           </>
         ) : null}
       </BottomSheet>

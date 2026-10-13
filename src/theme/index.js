@@ -91,7 +91,12 @@ export const statusMeta = {
   em_analise: { label: 'Em análise', color: colors.purple, bg: colors.purpleBg, icon: 'magnify' },
   devolvido: { label: 'Devolvido', color: colors.warning, bg: colors.warningBg, icon: 'undo-variant' },
   validado: { label: 'Validado', color: colors.teal, bg: colors.tealBg, icon: 'check-decagram-outline' },
-  enviado_cliente: { label: 'Enviado ao cliente', color: colors.info, bg: colors.infoBg, icon: 'account-arrow-right-outline' },
+  enviado_cliente: {
+    label: 'Enviado ao cliente',
+    color: colors.info,
+    bg: colors.infoBg,
+    icon: 'account-arrow-right-outline',
+  },
   finalizado: { label: 'Finalizado', color: colors.success, bg: colors.successBg, icon: 'check-circle-outline' },
   retificado: { label: 'Retificado', color: colors.goldText, bg: colors.gold100, icon: 'file-restore-outline' },
   cancelado: { label: 'Cancelado', color: colors.danger, bg: colors.dangerBg, icon: 'file-cancel-outline' },

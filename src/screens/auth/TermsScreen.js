@@ -47,7 +47,12 @@ export default function TermsScreen({ route, navigation }) {
         )
       }
     >
-      {!readOnly ? <Banner tone="info" message="Para usar o RDO Mobile você precisa ler e aceitar os termos abaixo. O aceite fica registrado com data e hora." /> : null}
+      {!readOnly ? (
+        <Banner
+          tone="info"
+          message="Para usar o RDO Mobile você precisa ler e aceitar os termos abaixo. O aceite fica registrado com data e hora."
+        />
+      ) : null}
       <SegmentedTabs
         items={[
           { key: 'termos', label: 'Termos de uso', icon: 'file-document-outline' },
@@ -103,7 +108,8 @@ export default function TermsScreen({ route, navigation }) {
         <Card tone="soft" style={{ flexDirection: 'row', gap: 10 }}>
           <Icon name="information-outline" size={20} color={colors.navy600} />
           <Txt v="small" muted style={{ flex: 1 }}>
-            Este é um texto de exemplo para o protótipo. Termos e base legal definitivos devem ser validados pelo controlador dos dados (empresa).
+            Este é um texto de exemplo para o protótipo. Termos e base legal definitivos devem ser validados pelo
+            controlador dos dados (empresa).
           </Txt>
         </Card>
       )}

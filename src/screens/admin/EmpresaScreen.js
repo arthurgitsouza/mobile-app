@@ -52,12 +52,42 @@ export default function EmpresaScreen({ navigation }) {
       }
       hideFooterOnKeyboard
     >
-      <Banner tone="info" message="Estes dados identificam a empresa em RDOs, PDFs e notificações. A segregação por empresa prepara a arquitetura para múltiplas empresas." />
-      <TextField label="Razão social" required value={f.nome} onChangeText={set('nome')} error={erros.nome} autoCapitalize="words" />
-      <TextField label="CNPJ" value={f.cnpj} onChangeText={set('cnpj')} keyboardType="number-pad" placeholder="00.000.000/0000-00" />
+      <Banner
+        tone="info"
+        message="Estes dados identificam a empresa em RDOs, PDFs e notificações. A segregação por empresa prepara a arquitetura para múltiplas empresas."
+      />
+      <TextField
+        label="Razão social"
+        required
+        value={f.nome}
+        onChangeText={set('nome')}
+        error={erros.nome}
+        autoCapitalize="words"
+      />
+      <TextField
+        label="CNPJ"
+        value={f.cnpj}
+        onChangeText={set('cnpj')}
+        keyboardType="number-pad"
+        placeholder="00.000.000/0000-00"
+      />
       <TextField label="Cidade / UF" value={f.cidade} onChangeText={set('cidade')} autoCapitalize="words" />
-      <TextField label="E-mail institucional" value={f.email} onChangeText={set('email')} error={erros.email} keyboardType="email-address" autoCapitalize="none" prefixIcon="email-outline" />
-      <TextField label="Telefone" value={f.telefone} onChangeText={(t) => set('telefone')(maskPhone(t))} keyboardType="phone-pad" prefixIcon="phone-outline" />
+      <TextField
+        label="E-mail institucional"
+        value={f.email}
+        onChangeText={set('email')}
+        error={erros.email}
+        keyboardType="email-address"
+        autoCapitalize="none"
+        prefixIcon="email-outline"
+      />
+      <TextField
+        label="Telefone"
+        value={f.telefone}
+        onChangeText={(t) => set('telefone')(maskPhone(t))}
+        keyboardType="phone-pad"
+        prefixIcon="phone-outline"
+      />
       <TextField label="Responsável" value={f.responsavel} onChangeText={set('responsavel')} autoCapitalize="words" />
     </Screen>
   );

@@ -10,9 +10,32 @@ import { numeroFormatado } from '../../domain/rdo';
 import { emailCliente } from '../../constants/texts';
 import { PERFIL } from '../../constants';
 import { dateFromISO, formatDate, formatDateTime, hojeObra, addDays, tempoRelativo } from '../../utils/date';
-import { Badge, Banner, BottomSheet, Button, Card, EmptyState, Icon, IconButton, KeyValue, Screen, SegmentedTabs, StatusBadge, Txt, useUI } from '../../components/ui';
+import {
+  Badge,
+  Banner,
+  BottomSheet,
+  Button,
+  Card,
+  EmptyState,
+  Icon,
+  IconButton,
+  KeyValue,
+  Screen,
+  SegmentedTabs,
+  StatusBadge,
+  Txt,
+  useUI,
+} from '../../components/ui';
 
-const COR = { info: [colors.info, colors.infoBg], warning: [colors.warning, colors.warningBg], teal: [colors.teal, colors.tealBg], success: [colors.success, colors.successBg], danger: [colors.danger, colors.dangerBg], gold: [colors.goldText, colors.gold100], gray: [colors.gray, colors.grayBg] };
+const COR = {
+  info: [colors.info, colors.infoBg],
+  warning: [colors.warning, colors.warningBg],
+  teal: [colors.teal, colors.tealBg],
+  success: [colors.success, colors.successBg],
+  danger: [colors.danger, colors.dangerBg],
+  gold: [colors.goldText, colors.gold100],
+  gray: [colors.gray, colors.grayBg],
+};
 
 // Notificações (seção 10): cada item indica obra, RDO, status, prazo e acesso direto ao registro.
 export default function NotificationsScreen() {
@@ -64,18 +87,36 @@ export default function NotificationsScreen() {
       subtitle={naoLidas ? `${naoLidas} não ${naoLidas === 1 ? 'lida' : 'lidas'}` : 'Tudo lido'}
       tab={isTab}
       back={!isTab}
-      right={naoLidas ? <IconButton icon="check-all" label="Marcar todas como lidas" color={colors.white} onPress={() => actions.marcarTodasLidas({ userId: currentUser.id })} /> : undefined}
+      right={
+        naoLidas ? (
+          <IconButton
+            icon="check-all"
+            label="Marcar todas como lidas"
+            color={colors.white}
+            onPress={() => actions.marcarTodasLidas({ userId: currentUser.id })}
+          />
+        ) : undefined
+      }
       headerExtra={
         <SegmentedTabs
           compact
           style={{ marginTop: 8 }}
-          items={[{ key: 'todas', label: 'Todas', count: todas.length }, { key: 'nao_lidas', label: 'Não lidas', count: naoLidas }]}
+          items={[
+            { key: 'todas', label: 'Todas', count: todas.length },
+            { key: 'nao_lidas', label: 'Não lidas', count: naoLidas },
+          ]}
           value={filtro}
           onChange={setFiltro}
         />
       }
     >
-      {lista.length === 0 ? <EmptyState icon="bell-check-outline" title={filtro === 'nao_lidas' ? 'Nenhuma notificação não lida' : 'Sem notificações'} message="Avisos sobre envio, análise, devolução, assinatura e prazos aparecem aqui e por push/e-mail." /> : null}
+      {lista.length === 0 ? (
+        <EmptyState
+          icon="bell-check-outline"
+          title={filtro === 'nao_lidas' ? 'Nenhuma notificação não lida' : 'Sem notificações'}
+          message="Avisos sobre envio, análise, devolução, assinatura e prazos aparecem aqui e por push/e-mail."
+        />
+      ) : null}
 
       {grupos.map((g) => (
         <View key={g.rotulo} style={{ gap: 8 }}>
@@ -100,7 +141,11 @@ export default function NotificationsScreen() {
                 </View>
                 <View style={{ flex: 1, gap: 4 }}>
                   <View style={styles.top}>
-                    <Txt v={n.lida ? 'bodyStrong' : 'bodyStrong'} style={{ flex: 1, fontWeight: n.lida ? '600' : '800' }} numberOfLines={2}>
+                    <Txt
+                      v={n.lida ? 'bodyStrong' : 'bodyStrong'}
+                      style={{ flex: 1, fontWeight: n.lida ? '600' : '800' }}
+                      numberOfLines={2}
+                    >
                       {n.titulo}
                     </Txt>
                     {!n.lida ? <View style={styles.dot} accessibilityLabel="Não lida" /> : null}
@@ -109,11 +154,43 @@ export default function NotificationsScreen() {
                     {n.mensagem}
                   </Txt>
                   <View style={styles.meta}>
-                    {n.obraId ? <Badge label={obraNome(n.obraId) || 'Obra'} color={colors.navy700} bg={colors.blue100} icon="office-building-outline" size="sm" /> : null}
-                    {rdo ? <Badge label={`RDO ${numeroFormatado(rdo)}`} color={colors.navy700} bg={colors.blue100} icon="file-document-outline" size="sm" /> : null}
+                    {n.obraId ? (
+                      <Badge
+                        label={obraNome(n.obraId) || 'Obra'}
+                        color={colors.navy700}
+                        bg={colors.blue100}
+                        icon="office-building-outline"
+                        size="sm"
+                      />
+                    ) : null}
+                    {rdo ? (
+                      <Badge
+                        label={`RDO ${numeroFormatado(rdo)}`}
+                        color={colors.navy700}
+                        bg={colors.blue100}
+                        icon="file-document-outline"
+                        size="sm"
+                      />
+                    ) : null}
                     {n.rdoStatus ? <StatusBadge status={rdo?.status || n.rdoStatus} size="sm" /> : null}
-                    {n.prazo ? <Badge label={`${vencido ? 'Prazo vencido' : 'Prazo'}: ${formatDateTime(n.prazo)}`} color={vencido ? colors.danger : colors.textMuted} bg={vencido ? colors.dangerBg : colors.grayBg} icon="clock-outline" size="sm" /> : null}
-                    {temFalhaDeEntrega(n) && !n.resolvida ? <Badge label="Falha de entrega" color={colors.danger} bg={colors.dangerBg} icon="email-alert-outline" size="sm" /> : null}
+                    {n.prazo ? (
+                      <Badge
+                        label={`${vencido ? 'Prazo vencido' : 'Prazo'}: ${formatDateTime(n.prazo)}`}
+                        color={vencido ? colors.danger : colors.textMuted}
+                        bg={vencido ? colors.dangerBg : colors.grayBg}
+                        icon="clock-outline"
+                        size="sm"
+                      />
+                    ) : null}
+                    {temFalhaDeEntrega(n) && !n.resolvida ? (
+                      <Badge
+                        label="Falha de entrega"
+                        color={colors.danger}
+                        bg={colors.dangerBg}
+                        icon="email-alert-outline"
+                        size="sm"
+                      />
+                    ) : null}
                   </View>
                   <Txt v="caption" subtle>
                     {tempoRelativo(n.dataHora, now)}
@@ -125,21 +202,40 @@ export default function NotificationsScreen() {
         </View>
       ))}
 
-      <BottomSheet visible={!!aberta} onClose={() => setAbertaId(null)} title={aberta?.titulo || ''} subtitle={aberta ? formatDateTime(aberta.dataHora) : undefined} fullHeight>
+      <BottomSheet
+        visible={!!aberta}
+        onClose={() => setAbertaId(null)}
+        title={aberta?.titulo || ''}
+        subtitle={aberta ? formatDateTime(aberta.dataHora) : undefined}
+        fullHeight
+      >
         {aberta ? (
           <>
             <Txt v="body">{aberta.mensagem}</Txt>
             <Card tone="soft" style={{ gap: 8 }}>
               <KeyValue inline label="Obra" value={obraNome(aberta.obraId)} />
-              <KeyValue inline label="RDO" value={rdoDe(aberta) ? `nº ${numeroFormatado(rdoDe(aberta))} · v${rdoDe(aberta).versao}` : '—'} />
+              <KeyValue
+                inline
+                label="RDO"
+                value={rdoDe(aberta) ? `nº ${numeroFormatado(rdoDe(aberta))} · v${rdoDe(aberta).versao}` : '—'}
+              />
               <KeyValue inline label="Situação" value={aberta.rdoStatus ? undefined : '—'}>
                 {aberta.rdoStatus ? <StatusBadge status={rdoDe(aberta)?.status || aberta.rdoStatus} size="sm" /> : null}
               </KeyValue>
-              <KeyValue inline label="Prazo" value={aberta.prazo ? formatDateTime(aberta.prazo) : 'Sem prazo definido'} />
+              <KeyValue
+                inline
+                label="Prazo"
+                value={aberta.prazo ? formatDateTime(aberta.prazo) : 'Sem prazo definido'}
+              />
             </Card>
 
             {aberta.tipo === 'falha_entrega' && !aberta.resolvida ? (
-              <Banner tone="danger" icon="email-alert-outline" title="Falha na entrega do e-mail" message="O push foi entregue, mas o e-mail não. Você pode reenviar agora.">
+              <Banner
+                tone="danger"
+                icon="email-alert-outline"
+                title="Falha na entrega do e-mail"
+                message="O push foi entregue, mas o e-mail não. Você pode reenviar agora."
+              >
                 <View style={{ marginTop: 8 }}>
                   <Button
                     title="Reenviar e-mail"
@@ -149,7 +245,11 @@ export default function NotificationsScreen() {
                     full={false}
                     onPress={() => {
                       actions.reenviarEntrega({ notificacaoId: aberta.id, userId: currentUser.id });
-                      toast.show({ type: 'success', title: 'E-mail reenviado', message: 'Entrega confirmada (simulada).' });
+                      toast.show({
+                        type: 'success',
+                        title: 'E-mail reenviado',
+                        message: 'Entrega confirmada (simulada).',
+                      });
                     }}
                   />
                 </View>
@@ -178,12 +278,29 @@ export default function NotificationsScreen() {
 
             {aberta.tipo === 'rdo_validado' && currentUser.perfil !== PERFIL.OPERACIONAL && rdoDe(aberta) ? (
               <View style={{ gap: 8 }}>
-                <Button title={email ? 'Ocultar e-mail simulado' : 'Ver e-mail enviado (simulado)'} icon="email-outline" variant="tonal" size="sm" onPress={() => setEmail((v) => !v)} />
-                {email ? <EmailPreview n={aberta} rdo={rdoDe(aberta)} obra={state.obras.find((o) => o.id === aberta.obraId)} destino={state.users.find((u) => u.id === aberta.usuarioId)} /> : null}
+                <Button
+                  title={email ? 'Ocultar e-mail simulado' : 'Ver e-mail enviado (simulado)'}
+                  icon="email-outline"
+                  variant="tonal"
+                  size="sm"
+                  onPress={() => setEmail((v) => !v)}
+                />
+                {email ? (
+                  <EmailPreview
+                    n={aberta}
+                    rdo={rdoDe(aberta)}
+                    obra={state.obras.find((o) => o.id === aberta.obraId)}
+                    destino={state.users.find((u) => u.id === aberta.usuarioId)}
+                  />
+                ) : null}
               </View>
             ) : null}
 
-            <Button title={aberta.rdoId ? 'Abrir o RDO' : 'Abrir a obra'} icon="open-in-new" onPress={() => irParaRegistro(aberta)} />
+            <Button
+              title={aberta.rdoId ? 'Abrir o RDO' : 'Abrir a obra'}
+              icon="open-in-new"
+              onPress={() => irParaRegistro(aberta)}
+            />
           </>
         ) : null}
       </BottomSheet>
@@ -213,12 +330,27 @@ function EmailPreview({ n, rdo, obra, destino }) {
 }
 
 const styles = StyleSheet.create({
-  item: { flexDirection: 'row', gap: 12, padding: 12, borderRadius: radius.lg, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border },
+  item: {
+    flexDirection: 'row',
+    gap: 12,
+    padding: 12,
+    borderRadius: radius.lg,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
   naoLida: { borderColor: colors.navy600, backgroundColor: colors.blue50 },
   icone: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
   top: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   dot: { width: 10, height: 10, borderRadius: 5, backgroundColor: colors.gold500 },
   meta: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
   canal: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 4 },
-  email: { borderWidth: 1, borderColor: colors.border, borderRadius: radius.md, padding: 12, gap: 4, backgroundColor: colors.white },
+  email: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    padding: 12,
+    gap: 4,
+    backgroundColor: colors.white,
+  },
 });

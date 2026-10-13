@@ -24,10 +24,29 @@ export default function ObraFormScreen({ route, navigation }) {
 
   const [f, setF] = useState(() =>
     existente
-      ? { ...existente, avancoFisico: String(existente.avancoFisico ?? 0), avancoPrevisto: String(existente.avancoPrevisto ?? 0) }
+      ? {
+          ...existente,
+          avancoFisico: String(existente.avancoFisico ?? 0),
+          avancoPrevisto: String(existente.avancoPrevisto ?? 0),
+        }
       : {
-          id: uid('obra'), nome: '', descricao: '', contrato: '', os: '', clienteId: state.clientes[0]?.id || '', endereco: '', inicio: hojeObra(), inicioRegistro: hojeObra(), fim: addDays(hojeObra(), 180),
-          engenheiroRTId: currentUser.id, diasUteis: [1, 2, 3, 4, 5, 6], exigeAssinaturaOperacional: false, status: 'ativa', avancoFisico: '0', avancoPrevisto: '0', usuarioIds: [],
+          id: uid('obra'),
+          nome: '',
+          descricao: '',
+          contrato: '',
+          os: '',
+          clienteId: state.clientes[0]?.id || '',
+          endereco: '',
+          inicio: hojeObra(),
+          inicioRegistro: hojeObra(),
+          fim: addDays(hojeObra(), 180),
+          engenheiroRTId: currentUser.id,
+          diasUteis: [1, 2, 3, 4, 5, 6],
+          exigeAssinaturaOperacional: false,
+          status: 'ativa',
+          avancoFisico: '0',
+          avancoPrevisto: '0',
+          usuarioIds: [],
         },
   );
   const [erros, setErros] = useState({});
@@ -42,7 +61,13 @@ export default function ObraFormScreen({ route, navigation }) {
   if (currentUser.perfil !== PERFIL.MASTER) {
     return (
       <Screen title="Obra" back>
-        <EmptyState icon="lock-outline" title="Acesso restrito" message="Somente o usuário Master cadastra e edita obras." actionLabel="Voltar" onAction={() => navigation.goBack()} />
+        <EmptyState
+          icon="lock-outline"
+          title="Acesso restrito"
+          message="Somente o usuário Master cadastra e edita obras."
+          actionLabel="Voltar"
+          onAction={() => navigation.goBack()}
+        />
       </Screen>
     );
   }
@@ -62,10 +87,19 @@ export default function ObraFormScreen({ route, navigation }) {
     }
     actions.salvarObra({
       userId: currentUser.id,
-      obra: { ...f, nome: f.nome.trim(), avancoFisico: Math.max(0, Math.min(100, toNumber(f.avancoFisico))), avancoPrevisto: Math.max(0, Math.min(100, toNumber(f.avancoPrevisto))) },
+      obra: {
+        ...f,
+        nome: f.nome.trim(),
+        avancoFisico: Math.max(0, Math.min(100, toNumber(f.avancoFisico))),
+        avancoPrevisto: Math.max(0, Math.min(100, toNumber(f.avancoPrevisto))),
+      },
     });
     haptic.success();
-    toast.show({ type: 'success', title: existente ? 'Obra atualizada' : 'Obra cadastrada', message: `${f.nome.trim()} · ${f.usuarioIds.length} usuário(s) vinculado(s).` });
+    toast.show({
+      type: 'success',
+      title: existente ? 'Obra atualizada' : 'Obra cadastrada',
+      message: `${f.nome.trim()} · ${f.usuarioIds.length} usuário(s) vinculado(s).`,
+    });
     navigation.goBack();
   };
 
@@ -78,7 +112,12 @@ export default function ObraFormScreen({ route, navigation }) {
       footer={
         <View style={{ flexDirection: 'row', gap: 10 }}>
           <Button title="Cancelar" variant="secondary" onPress={() => navigation.goBack()} style={{ flex: 1 }} />
-          <Button title={existente ? 'Salvar alterações' : 'Cadastrar obra'} icon="check" onPress={salvar} style={{ flex: 1.6 }} />
+          <Button
+            title={existente ? 'Salvar alterações' : 'Cadastrar obra'}
+            icon="check"
+            onPress={salvar}
+            style={{ flex: 1.6 }}
+          />
         </View>
       }
       hideFooterOnKeyboard
@@ -87,14 +126,41 @@ export default function ObraFormScreen({ route, navigation }) {
         Campos com * são obrigatórios.
       </Txt>
       <SectionTitle>Identificação</SectionTitle>
-      <TextField label="Nome da obra" required value={f.nome} onChangeText={set('nome')} error={erros.nome} placeholder="Ex.: Obra Alfa" autoCapitalize="words" />
-      <TextField label="Descrição" value={f.descricao} onChangeText={set('descricao')} placeholder="Ex.: Residencial Alfa — Bloco A" />
+      <TextField
+        label="Nome da obra"
+        required
+        value={f.nome}
+        onChangeText={set('nome')}
+        error={erros.nome}
+        placeholder="Ex.: Obra Alfa"
+        autoCapitalize="words"
+      />
+      <TextField
+        label="Descrição"
+        value={f.descricao}
+        onChangeText={set('descricao')}
+        placeholder="Ex.: Residencial Alfa — Bloco A"
+      />
       <View style={{ flexDirection: 'row', gap: 12 }}>
         <View style={{ flex: 1 }}>
-          <TextField label="Contrato" required value={f.contrato} onChangeText={set('contrato')} error={erros.contrato} placeholder="CT-014" autoCapitalize="characters" />
+          <TextField
+            label="Contrato"
+            required
+            value={f.contrato}
+            onChangeText={set('contrato')}
+            error={erros.contrato}
+            placeholder="CT-014"
+            autoCapitalize="characters"
+          />
         </View>
         <View style={{ flex: 1 }}>
-          <TextField label="OS" value={f.os} onChangeText={set('os')} placeholder="OS 021/2026" autoCapitalize="characters" />
+          <TextField
+            label="OS"
+            value={f.os}
+            onChangeText={set('os')}
+            placeholder="OS 021/2026"
+            autoCapitalize="characters"
+          />
         </View>
       </View>
       <SelectField
@@ -106,7 +172,15 @@ export default function ObraFormScreen({ route, navigation }) {
         error={erros.clienteId}
         help="Cadastre novos clientes em Mais → Cadastros → Clientes."
       />
-      <TextField label="Endereço" required value={f.endereco} onChangeText={set('endereco')} error={erros.endereco} multiline placeholder="Rua, número, bairro, cidade/UF" />
+      <TextField
+        label="Endereço"
+        required
+        value={f.endereco}
+        onChangeText={set('endereco')}
+        error={erros.endereco}
+        multiline
+        placeholder="Rua, número, bairro, cidade/UF"
+      />
 
       <SectionTitle>Prazo e responsável</SectionTitle>
       <View style={{ flexDirection: 'row', gap: 12 }}>
@@ -117,8 +191,19 @@ export default function ObraFormScreen({ route, navigation }) {
           <DateField label="Fim previsto" required value={f.fim} onChange={set('fim')} error={erros.fim} />
         </View>
       </View>
-      <DateField label="Registro digital a partir de" value={f.inicioRegistro || f.inicio} onChange={set('inicioRegistro')} help="Primeiro dia em que o RDO passa a ser exigido no aplicativo (base do cálculo de RDOs previstos e atrasados)." />
-      <SelectField label="Engenheiro / RT" required value={f.engenheiroRTId} onChange={set('engenheiroRTId')} options={masters.map((m) => ({ value: m.id, label: m.nome }))} />
+      <DateField
+        label="Registro digital a partir de"
+        value={f.inicioRegistro || f.inicio}
+        onChange={set('inicioRegistro')}
+        help="Primeiro dia em que o RDO passa a ser exigido no aplicativo (base do cálculo de RDOs previstos e atrasados)."
+      />
+      <SelectField
+        label="Engenheiro / RT"
+        required
+        value={f.engenheiroRTId}
+        onChange={set('engenheiroRTId')}
+        options={masters.map((m) => ({ value: m.id, label: m.nome }))}
+      />
       <ChipGroup
         label="Dias úteis da obra"
         required
@@ -142,10 +227,18 @@ export default function ObraFormScreen({ route, navigation }) {
       </View>
 
       <SectionTitle>Regras de assinatura</SectionTitle>
-      <SwitchField label="Exigir assinatura do operacional" description="O responsável pelo preenchimento assina o RDO na revisão antes do envio ao master." value={f.exigeAssinaturaOperacional} onValueChange={set('exigeAssinaturaOperacional')} />
+      <SwitchField
+        label="Exigir assinatura do operacional"
+        description="O responsável pelo preenchimento assina o RDO na revisão antes do envio ao master."
+        value={f.exigeAssinaturaOperacional}
+        onValueChange={set('exigeAssinaturaOperacional')}
+      />
 
       <SectionTitle>Usuários vinculados (permissão por obra)</SectionTitle>
-      <Banner tone="info" message="Operacionais preenchem os RDOs desta obra; clientes visualizam e assinam apenas os RDOs liberados. O Master acessa todas as obras." />
+      <Banner
+        tone="info"
+        message="Operacionais preenchem os RDOs desta obra; clientes visualizam e assinam apenas os RDOs liberados. O Master acessa todas as obras."
+      />
       <Card style={{ gap: 4 }}>
         {vinculaveis.map((u) => {
           const on = f.usuarioIds.includes(u.id);
@@ -155,13 +248,19 @@ export default function ObraFormScreen({ route, navigation }) {
                 label={u.nome}
                 description={`${PERFIS[u.perfil].label} · ${u.cargo}`}
                 value={on}
-                onValueChange={(v) => set('usuarioIds')(v ? [...f.usuarioIds, u.id] : f.usuarioIds.filter((x) => x !== u.id))}
+                onValueChange={(v) =>
+                  set('usuarioIds')(v ? [...f.usuarioIds, u.id] : f.usuarioIds.filter((x) => x !== u.id))
+                }
                 style={{ borderWidth: 0, backgroundColor: on ? colors.blue50 : colors.white }}
               />
             </View>
           );
         })}
-        <LinkButton title="Cadastrar novo usuário" icon="account-plus-outline" onPress={() => navigation.navigate('UserForm')} />
+        <LinkButton
+          title="Cadastrar novo usuário"
+          icon="account-plus-outline"
+          onPress={() => navigation.navigate('UserForm')}
+        />
       </Card>
     </Screen>
   );

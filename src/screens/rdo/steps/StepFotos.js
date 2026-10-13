@@ -78,7 +78,12 @@ export default function StepFotos({ rdo, update, ctx, mostrarErros }) {
   };
 
   const removerFoto = async (f) => {
-    const ok = await confirm({ destructive: true, title: 'Remover foto?', message: `A Foto ${String(f.numero).padStart(2, '0')} será removida deste RDO.`, confirmLabel: 'Remover' });
+    const ok = await confirm({
+      destructive: true,
+      title: 'Remover foto?',
+      message: `A Foto ${String(f.numero).padStart(2, '0')} será removida deste RDO.`,
+      confirmLabel: 'Remover',
+    });
     if (!ok) return;
     update((d) => ({ fotos: renumerar(d.fotos.filter((x) => x.id !== f.id)) }));
     setFila((q) => q.filter((id) => id !== f.id));
@@ -91,7 +96,13 @@ export default function StepFotos({ rdo, update, ctx, mostrarErros }) {
     <View style={{ gap: 14 }}>
       <View style={styles.acoes}>
         <Button title="Tirar foto" icon="camera-outline" onPress={tirar} style={{ flex: 1 }} />
-        <Button title="Galeria" icon="image-multiple-outline" variant="secondary" onPress={galeria} style={{ flex: 1 }} />
+        <Button
+          title="Galeria"
+          icon="image-multiple-outline"
+          variant="secondary"
+          onPress={galeria}
+          style={{ flex: 1 }}
+        />
       </View>
 
       {rdo.fotos.length === 0 ? (
@@ -101,7 +112,8 @@ export default function StepFotos({ rdo, update, ctx, mostrarErros }) {
             Nenhuma foto ainda
           </Txt>
           <Txt v="small" muted style={{ textAlign: 'center' }}>
-            Recomendado: ao menos 3 fotos com legenda, local e vínculo à atividade ou ocorrência. Funciona offline: as fotos ficam no aparelho até a sincronização.
+            Recomendado: ao menos 3 fotos com legenda, local e vínculo à atividade ou ocorrência. Funciona offline: as
+            fotos ficam no aparelho até a sincronização.
           </Txt>
           <LinkButton title="Sem câmera à mão? Usar imagem de exemplo" icon="image-outline" onPress={exemplo} />
         </Card>
@@ -111,7 +123,12 @@ export default function StepFotos({ rdo, update, ctx, mostrarErros }) {
             {rdo.fotos.map((f) => (
               <View key={f.id} style={{ width: tile, gap: 4 }}>
                 <PhotoTile foto={f} width={tile} onPress={() => setEditandoId(f.id)} />
-                <Txt v="caption" color={f.legenda ? colors.textMuted : colors.danger} numberOfLines={2} style={!f.legenda ? { fontWeight: '800' } : undefined}>
+                <Txt
+                  v="caption"
+                  color={f.legenda ? colors.textMuted : colors.danger}
+                  numberOfLines={2}
+                  style={!f.legenda ? { fontWeight: '800' } : undefined}
+                >
                   {f.legenda || 'Sem legenda (obrigatória)'}
                 </Txt>
               </View>
@@ -121,8 +138,18 @@ export default function StepFotos({ rdo, update, ctx, mostrarErros }) {
         </>
       )}
 
-      {semLegenda > 0 && mostrarErros ? <Banner tone="danger" message={`${semLegenda} ${semLegenda === 1 ? 'foto sem legenda' : 'fotos sem legenda'}: toque na miniatura para completar.`} /> : null}
-      <Banner tone="neutral" icon="shield-lock-outline" title="Privacidade" message="Evite fotografar pessoas identificáveis sem necessidade. A localização é opcional e só é registrada com a sua autorização, foto a foto." />
+      {semLegenda > 0 && mostrarErros ? (
+        <Banner
+          tone="danger"
+          message={`${semLegenda} ${semLegenda === 1 ? 'foto sem legenda' : 'fotos sem legenda'}: toque na miniatura para completar.`}
+        />
+      ) : null}
+      <Banner
+        tone="neutral"
+        icon="shield-lock-outline"
+        title="Privacidade"
+        message="Evite fotografar pessoas identificáveis sem necessidade. A localização é opcional e só é registrada com a sua autorização, foto a foto."
+      />
 
       <PhotoEditorSheet
         foto={foto}

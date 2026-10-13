@@ -11,7 +11,9 @@ export default function Header({ title, subtitle, onBack, right, children, style
   return (
     <View style={[styles.wrap, { paddingTop: insets.top + 8 }, style]}>
       <View style={styles.row}>
-        {onBack ? <IconButton icon="arrow-left" label="Voltar" onPress={onBack} color={colors.white} style={styles.back} /> : null}
+        {onBack ? (
+          <IconButton icon="arrow-left" label="Voltar" onPress={onBack} color={colors.white} style={styles.back} />
+        ) : null}
         <View style={styles.titles}>
           {subtitle ? (
             <Txt v="caption" color={colors.textOnDarkMuted} numberOfLines={1}>

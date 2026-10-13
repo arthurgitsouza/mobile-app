@@ -37,9 +37,18 @@ export default function StepIdentificacao({ rdo, update, obra, erros, mostrarErr
         error={msgErro(erros, 'data', mostrarErros)}
       />
       <KeyValue inline label="Dia da semana" value={nomeDiaSemana(rdo.data)} />
-      {duplicado ? <Banner tone="warning" icon="content-copy" title="Possível RDO duplicado" message={duplicado.mensagem} /> : null}
+      {duplicado ? (
+        <Banner tone="warning" icon="content-copy" title="Possível RDO duplicado" message={duplicado.mensagem} />
+      ) : null}
 
-      <ChipGroup label="Turno" required options={TURNOS} value={rdo.turno} onChange={(turno) => update({ turno })} error={msgErro(erros, 'turno', mostrarErros)} />
+      <ChipGroup
+        label="Turno"
+        required
+        options={TURNOS}
+        value={rdo.turno}
+        onChange={(turno) => update({ turno })}
+        error={msgErro(erros, 'turno', mostrarErros)}
+      />
       <TextField
         label="Responsável pelo preenchimento"
         required

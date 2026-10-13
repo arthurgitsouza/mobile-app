@@ -8,6 +8,8 @@ const escapa = (v) => {
 // colunas: [{ chave, titulo }]
 export function paraCsv(linhas, colunas) {
   const cab = colunas.map((c) => escapa(c.titulo)).join(';');
-  const corpo = linhas.map((l) => colunas.map((c) => escapa(typeof c.chave === 'function' ? c.chave(l) : l[c.chave])).join(';'));
+  const corpo = linhas.map((l) =>
+    colunas.map((c) => escapa(typeof c.chave === 'function' ? c.chave(l) : l[c.chave])).join(';'),
+  );
   return [cab, ...corpo].join('\r\n');
 }

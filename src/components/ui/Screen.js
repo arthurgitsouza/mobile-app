@@ -14,8 +14,28 @@ import HeaderBell from './HeaderBell';
  * - keyboard: evita que o teclado cubra campos (iOS: ajuste de inset do ScrollView; Android: KeyboardAvoidingView).
  */
 export default function Screen({
-  title, subtitle, back, onBack, right, bell, headerExtra, scroll = true, children, footer, hideFooterOnKeyboard,
-  contentContainerStyle, keyboard, refreshing, onRefresh, bg = colors.bg, tab, padded = true, scrollRef, floating, onScroll, scrollEnabled = true,
+  title,
+  subtitle,
+  back,
+  onBack,
+  right,
+  bell,
+  headerExtra,
+  scroll = true,
+  children,
+  footer,
+  hideFooterOnKeyboard,
+  contentContainerStyle,
+  keyboard,
+  refreshing,
+  onRefresh,
+  bg = colors.bg,
+  tab,
+  padded = true,
+  scrollRef,
+  floating,
+  onScroll,
+  scrollEnabled = true,
 }) {
   const nav = useNavigation();
   const insets = useSafeAreaInsets();
@@ -36,7 +56,11 @@ export default function Screen({
       scrollEnabled={scrollEnabled}
       onScroll={onScroll}
       scrollEventThrottle={onScroll ? 16 : undefined}
-      refreshControl={onRefresh ? <RefreshControl refreshing={!!refreshing} onRefresh={onRefresh} tintColor={colors.navy700} /> : undefined}
+      refreshControl={
+        onRefresh ? (
+          <RefreshControl refreshing={!!refreshing} onRefresh={onRefresh} tintColor={colors.navy700} />
+        ) : undefined
+      }
     >
       {children}
     </ScrollView>
@@ -55,7 +79,17 @@ export default function Screen({
   return (
     <View style={[styles.flex, { backgroundColor: bg }]}>
       <StatusBar style="light" />
-      <Header title={title} subtitle={subtitle} onBack={back || onBack ? goBack : undefined} right={<>{right}{bell ? <HeaderBell /> : null}</>}>
+      <Header
+        title={title}
+        subtitle={subtitle}
+        onBack={back || onBack ? goBack : undefined}
+        right={
+          <>
+            {right}
+            {bell ? <HeaderBell /> : null}
+          </>
+        }
+      >
         {headerExtra}
       </Header>
       {keyboard && Platform.OS !== 'ios' ? (
@@ -73,6 +107,11 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   pad: { padding: 16, gap: 14 },
   footer: {
-    backgroundColor: colors.surface, borderTopWidth: 1, borderTopColor: colors.border, paddingHorizontal: 16, paddingTop: 12, gap: 10,
+    backgroundColor: colors.surface,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    gap: 10,
   },
 });

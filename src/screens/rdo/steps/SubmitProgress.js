@@ -38,10 +38,21 @@ export default function SubmitProgress({ visible, fotos, online, onConcluir }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
-  const total = fotos.length ? Math.round(fotos.reduce((s, f) => s + (progresso[f.id] || 0), 0) / fotos.length) : etapa === 'final' ? 100 : 30;
+  const total = fotos.length
+    ? Math.round(fotos.reduce((s, f) => s + (progresso[f.id] || 0), 0) / fotos.length)
+    : etapa === 'final'
+      ? 100
+      : 30;
 
   return (
-    <Modal visible={visible} transparent animationType="fade" statusBarTranslucent navigationBarTranslucent onRequestClose={() => {}}>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      statusBarTranslucent
+      navigationBarTranslucent
+      onRequestClose={() => {}}
+    >
       <View style={styles.root}>
         <View style={[styles.card, shadows.raised]} accessibilityViewIsModal>
           <View style={styles.icon}>
@@ -51,13 +62,19 @@ export default function SubmitProgress({ visible, fotos, online, onConcluir }) {
             {online ? 'Enviando RDO ao master…' : 'Salvando no aparelho…'}
           </Txt>
           <Txt v="small" muted style={{ textAlign: 'center' }}>
-            {online ? 'Dados e fotos estão sendo enviados com segurança.' : 'Sem conexão: o RDO será enviado automaticamente quando a rede voltar.'}
+            {online
+              ? 'Dados e fotos estão sendo enviados com segurança.'
+              : 'Sem conexão: o RDO será enviado automaticamente quando a rede voltar.'}
           </Txt>
           {online ? <ProgressBar value={total} height={10} label="Progresso do envio" /> : null}
           {online
             ? fotos.map((f) => (
                 <View key={f.id} style={styles.row}>
-                  <Icon name={(progresso[f.id] || 0) >= 100 ? 'check-circle' : 'image-outline'} size={18} color={(progresso[f.id] || 0) >= 100 ? colors.success : colors.textMuted} />
+                  <Icon
+                    name={(progresso[f.id] || 0) >= 100 ? 'check-circle' : 'image-outline'}
+                    size={18}
+                    color={(progresso[f.id] || 0) >= 100 ? colors.success : colors.textMuted}
+                  />
                   <Txt v="caption" muted style={{ flex: 1 }} numberOfLines={1}>
                     Foto {String(f.numero).padStart(2, '0')} — {f.legenda}
                   </Txt>
@@ -76,6 +93,14 @@ export default function SubmitProgress({ visible, fotos, online, onConcluir }) {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.overlay, justifyContent: 'center', padding: 24 },
   card: { backgroundColor: colors.surface, borderRadius: radius.xl, padding: 20, gap: 12 },
-  icon: { alignSelf: 'center', width: 60, height: 60, borderRadius: 30, backgroundColor: colors.blue100, alignItems: 'center', justifyContent: 'center' },
+  icon: {
+    alignSelf: 'center',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: colors.blue100,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
 });

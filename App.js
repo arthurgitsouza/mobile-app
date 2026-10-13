@@ -14,7 +14,14 @@ import AppWatchers from './src/store/AppWatchers';
 
 const navTheme = {
   ...DefaultTheme,
-  colors: { ...DefaultTheme.colors, background: colors.bg, card: colors.surface, text: colors.text, border: colors.border, primary: colors.navy700 },
+  colors: {
+    ...DefaultTheme.colors,
+    background: colors.bg,
+    card: colors.surface,
+    text: colors.text,
+    border: colors.border,
+    primary: colors.navy700,
+  },
 };
 
 function Splash() {

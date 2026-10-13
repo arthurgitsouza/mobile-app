@@ -9,13 +9,30 @@ import { Icon, Txt } from '../ui';
 export function SignatureView({ dados, height = 80, color = colors.navy800, style }) {
   if (!dados?.tracos?.length) return null;
   return (
-    <View style={[{ height, width: '100%' }, style]} accessibilityLabel="Assinatura desenhada (representação visual)" accessible>
-      <Svg width="100%" height="100%" viewBox={`0 0 ${dados.largura || 300} ${dados.altura || 120}`} preserveAspectRatio="xMidYMid meet">
+    <View
+      style={[{ height, width: '100%' }, style]}
+      accessibilityLabel="Assinatura desenhada (representação visual)"
+      accessible
+    >
+      <Svg
+        width="100%"
+        height="100%"
+        viewBox={`0 0 ${dados.largura || 300} ${dados.altura || 120}`}
+        preserveAspectRatio="xMidYMid meet"
+      >
         {dados.tracos.map((t, i) =>
           t.length === 1 ? (
             <Circle key={i} cx={t[0].x} cy={t[0].y} r={1.6} fill={color} />
           ) : (
-            <Path key={i} d={tracoParaPath(t)} stroke={color} strokeWidth={2.4} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            <Path
+              key={i}
+              d={tracoParaPath(t)}
+              stroke={color}
+              strokeWidth={2.4}
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           ),
         )}
       </Svg>
@@ -46,7 +63,11 @@ export default function SignaturePad({ value, onChange, height = 190, onDrawingC
   const emitir = (lista) => {
     tracosRef.current = lista;
     setTracos(lista);
-    onChange?.(lista.length ? { tracos: lista, largura: Math.round(dimRef.current.w), altura: Math.round(dimRef.current.h) } : null);
+    onChange?.(
+      lista.length
+        ? { tracos: lista, largura: Math.round(dimRef.current.w), altura: Math.round(dimRef.current.h) }
+        : null,
+    );
   };
 
   const pan = useMemo(
@@ -103,12 +124,28 @@ export default function SignaturePad({ value, onChange, height = 190, onDrawingC
       >
         <View style={[StyleSheet.absoluteFill, { pointerEvents: 'none' }]}>
           <Svg width="100%" height="100%">
-            <Line x1={16} y1={height * 0.74} x2={Math.max(dim.w - 16, 16)} y2={height * 0.74} stroke={colors.borderStrong} strokeWidth={1.5} strokeDasharray="4 4" />
+            <Line
+              x1={16}
+              y1={height * 0.74}
+              x2={Math.max(dim.w - 16, 16)}
+              y2={height * 0.74}
+              stroke={colors.borderStrong}
+              strokeWidth={1.5}
+              strokeDasharray="4 4"
+            />
             {todos.map((t, i) =>
               t.length === 1 ? (
                 <Circle key={i} cx={t[0].x} cy={t[0].y} r={1.6} fill={colors.navy800} />
               ) : (
-                <Path key={i} d={tracoParaPath(t)} stroke={colors.navy800} strokeWidth={2.6} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                <Path
+                  key={i}
+                  d={tracoParaPath(t)}
+                  stroke={colors.navy800}
+                  strokeWidth={2.6}
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               ),
             )}
           </Svg>
@@ -158,7 +195,13 @@ function ActionLink({ icon, label, onPress, disabled }) {
 }
 
 const styles = StyleSheet.create({
-  pad: { borderRadius: radius.md, borderWidth: 1.5, borderColor: colors.borderStrong, backgroundColor: '#FBFCFE', overflow: 'hidden' },
+  pad: {
+    borderRadius: radius.md,
+    borderWidth: 1.5,
+    borderColor: colors.borderStrong,
+    backgroundColor: '#FBFCFE',
+    overflow: 'hidden',
+  },
   hint: { alignItems: 'center', justifyContent: 'center', gap: 4 },
   x: { position: 'absolute', left: 12, bottom: 34 },
   actions: { flexDirection: 'row', alignItems: 'center', gap: 16 },

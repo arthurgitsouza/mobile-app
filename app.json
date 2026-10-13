@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "mobile-app",
+    "name": "RDO Mobile",
     "slug": "mobile-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,9 +20,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-sharing",
-      "expo-font"
-    ]
+    "plugins": ["expo-sharing", "expo-font"]
   }
 }

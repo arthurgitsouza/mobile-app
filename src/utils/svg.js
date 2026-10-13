@@ -40,7 +40,11 @@ export function tracoParaPath(pontos) {
 export function assinaturaSvg(dados, largura = 180, altura = 72, cor = '#0C2038') {
   if (!dados?.tracos?.length) return '';
   const paths = dados.tracos
-    .map((t) => (t.length === 1 ? `<circle cx="${t[0].x}" cy="${t[0].y}" r="1.6" fill="${cor}"/>` : `<path d="${tracoParaPath(t)}" stroke="${cor}" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`))
+    .map((t) =>
+      t.length === 1
+        ? `<circle cx="${t[0].x}" cy="${t[0].y}" r="1.6" fill="${cor}"/>`
+        : `<path d="${tracoParaPath(t)}" stroke="${cor}" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+    )
     .join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${largura}" height="${altura}" viewBox="0 0 ${dados.largura || 300} ${dados.altura || 120}" preserveAspectRatio="xMidYMid meet">${paths}</svg>`;
 }

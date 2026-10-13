@@ -76,11 +76,7 @@ export function primeiroNome(nome = '') {
 }
 
 export function normalizar(texto = '') {
-  return String(texto)
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .toLowerCase()
-    .trim();
+  return String(texto).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
 }
 
 export function mascararEmail(email = '') {

@@ -16,8 +16,21 @@ import { SwitchField } from './pickers';
  * - semRegistro: { value, onChange, label, descricao } — marca explícita de "sem itens" (ex.: sem visitas).
  */
 export default function ItemListEditor({
-  items = [], onChange, fields, novoItem, resumo, validar, onDraft, ctx = {}, tituloItem = 'Item', rotuloAdicionar = 'Adicionar',
-  vazio, semRegistro, max, erros = {}, rodape,
+  items = [],
+  onChange,
+  fields,
+  novoItem,
+  resumo,
+  validar,
+  onDraft,
+  ctx = {},
+  tituloItem = 'Item',
+  rotuloAdicionar = 'Adicionar',
+  vazio,
+  semRegistro,
+  max,
+  erros = {},
+  rodape,
 }) {
   const { confirm } = useUI();
   const [edit, setEdit] = useState(null); // { item, novo }
@@ -52,7 +65,12 @@ export default function ItemListEditor({
   };
 
   const excluir = async (item) => {
-    const ok = await confirm({ title: 'Excluir item?', message: 'O item será removido deste RDO.', confirmLabel: 'Excluir', destructive: true });
+    const ok = await confirm({
+      title: 'Excluir item?',
+      message: 'O item será removido deste RDO.',
+      confirmLabel: 'Excluir',
+      destructive: true,
+    });
     if (ok) {
       onChange(items.filter((x) => x.id !== item.id));
       setEdit(null);
@@ -65,16 +83,28 @@ export default function ItemListEditor({
   return (
     <View style={{ gap: 10 }}>
       {semRegistro ? (
-        <SwitchField label={semRegistro.label} description={semRegistro.descricao} value={!!semRegistro.value} onValueChange={semRegistro.onChange} />
+        <SwitchField
+          label={semRegistro.label}
+          description={semRegistro.descricao}
+          value={!!semRegistro.value}
+          onValueChange={semRegistro.onChange}
+        />
       ) : null}
 
       {ocultarLista ? null : (
         <>
-          {items.length === 0 && vazio ? <EmptyState icon={vazio.icone} title={vazio.titulo} message={vazio.mensagem} /> : null}
+          {items.length === 0 && vazio ? (
+            <EmptyState icon={vazio.icone} title={vazio.titulo} message={vazio.mensagem} />
+          ) : null}
           {items.map((item, i) => {
             const r = resumo(item, i, ctx);
             return (
-              <Card key={item.id} onPress={() => abrir(item)} accessibilityLabel={`${r.titulo}. Toque para editar.`} style={styles.item}>
+              <Card
+                key={item.id}
+                onPress={() => abrir(item)}
+                accessibilityLabel={`${r.titulo}. Toque para editar.`}
+                style={styles.item}
+              >
                 <View style={styles.itemRow}>
                   {r.icone ? (
                     <View style={styles.itemIcon}>
@@ -106,14 +136,27 @@ export default function ItemListEditor({
                       </View>
                     ) : null}
                   </View>
-                  <Pressable onPress={() => excluir(item)} hitSlop={10} accessibilityRole="button" accessibilityLabel={`Excluir ${r.titulo}`} style={styles.del}>
+                  <Pressable
+                    onPress={() => excluir(item)}
+                    hitSlop={10}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Excluir ${r.titulo}`}
+                    style={styles.del}
+                  >
                     <Icon name="trash-can-outline" size={22} color={colors.danger} />
                   </Pressable>
                 </View>
               </Card>
             );
           })}
-          {podeAdicionar ? <Button title={rotuloAdicionar} icon="plus" variant="tonal" onPress={() => abrir({ id: uid('it'), ...novoItem(ctx) }, true)} /> : null}
+          {podeAdicionar ? (
+            <Button
+              title={rotuloAdicionar}
+              icon="plus"
+              variant="tonal"
+              onPress={() => abrir({ id: uid('it'), ...novoItem(ctx) }, true)}
+            />
+          ) : null}
           {erros.lista ? (
             <View style={styles.alert}>
               <Icon name="alert-circle-outline" size={15} color={colors.danger} />
@@ -137,7 +180,15 @@ export default function ItemListEditor({
               <Button title="Cancelar" variant="secondary" onPress={() => setEdit(null)} style={{ flex: 1 }} />
               <Button title={edit?.novo ? 'Adicionar' : 'Salvar'} icon="check" onPress={salvar} style={{ flex: 1.3 }} />
             </View>
-            {edit && !edit.novo ? <Button title="Excluir item" variant="danger" size="sm" icon="trash-can-outline" onPress={() => excluir(edit.item)} /> : null}
+            {edit && !edit.novo ? (
+              <Button
+                title="Excluir item"
+                variant="danger"
+                size="sm"
+                icon="trash-can-outline"
+                onPress={() => excluir(edit.item)}
+              />
+            ) : null}
           </View>
         }
       >
@@ -150,7 +201,14 @@ export default function ItemListEditor({
 const styles = StyleSheet.create({
   item: { padding: 12 },
   itemRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
-  itemIcon: { width: 40, height: 40, borderRadius: radius.md, backgroundColor: colors.blue100, alignItems: 'center', justifyContent: 'center' },
+  itemIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: radius.md,
+    backgroundColor: colors.blue100,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 2 },
   alert: { flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 2 },
   del: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },

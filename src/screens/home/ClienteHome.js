@@ -20,7 +20,9 @@ export default function ClienteHome() {
   const cfg = state.settings.lembretes;
   const obras = obrasVisiveis(state, currentUser);
   const rdos = rdosVisiveis(state, currentUser);
-  const aguardando = rdos.filter((r) => r.status === 'enviado_cliente').sort((a, b) => (a.liberadoAoClienteEm > b.liberadoAoClienteEm ? 1 : -1));
+  const aguardando = rdos
+    .filter((r) => r.status === 'enviado_cliente')
+    .sort((a, b) => (a.liberadoAoClienteEm > b.liberadoAoClienteEm ? 1 : -1));
   const finalizados = rdos.filter((r) => r.status === 'finalizado').sort((a, b) => (a.data < b.data ? 1 : -1));
   const obraDe = (r) => state.obras.find((o) => o.id === r.obraId);
   const comRessalva = finalizados.filter((r) => r.assinaturas.cliente?.tipo === 'ressalva').length;
@@ -39,7 +41,12 @@ export default function ClienteHome() {
           AGUARDANDO SUA CIÊNCIA/ACEITE
         </Txt>
         <View style={styles.heroRow}>
-          <Txt v="display" color={colors.white} style={styles.heroNum} accessibilityLabel={`${aguardando.length} RDOs aguardando sua ciência`}>
+          <Txt
+            v="display"
+            color={colors.white}
+            style={styles.heroNum}
+            accessibilityLabel={`${aguardando.length} RDOs aguardando sua ciência`}
+          >
             {aguardando.length}
           </Txt>
           <Txt v="body" color={colors.white} style={{ flex: 1 }}>
@@ -54,19 +61,46 @@ export default function ClienteHome() {
 
       {aguardando.map((r) => (
         <View key={r.id} style={{ gap: 8 }}>
-          <RdoCard rdo={r} obra={obraDe(r)} agora={now} config={cfg} onPress={() => nav.navigate('RdoDetail', { rdoId: r.id })} />
-          <Button title="Revisar e dar ciência" icon="draw-pen" variant="accent" onPress={() => nav.navigate('SignClient', { rdoId: r.id })} />
+          <RdoCard
+            rdo={r}
+            obra={obraDe(r)}
+            agora={now}
+            config={cfg}
+            onPress={() => nav.navigate('RdoDetail', { rdoId: r.id })}
+          />
+          <Button
+            title="Revisar e dar ciência"
+            icon="draw-pen"
+            variant="accent"
+            onPress={() => nav.navigate('SignClient', { rdoId: r.id })}
+          />
         </View>
       ))}
 
       <Grade>
-        <StatTile label="RDOs finalizados" value={finalizados.length} icon="file-pdf-box" onPress={() => nav.navigate('Rdos', { status: 'finalizado' })} hint="Com PDF e hash de verificação" />
-        <StatTile label="Com sua ressalva" value={comRessalva} icon="alert-decagram-outline" hint="Integram o PDF final" />
+        <StatTile
+          label="RDOs finalizados"
+          value={finalizados.length}
+          icon="file-pdf-box"
+          onPress={() => nav.navigate('Rdos', { status: 'finalizado' })}
+          hint="Com PDF e hash de verificação"
+        />
+        <StatTile
+          label="Com sua ressalva"
+          value={comRessalva}
+          icon="alert-decagram-outline"
+          hint="Integram o PDF final"
+        />
       </Grade>
 
       <TituloSecao>Suas obras</TituloSecao>
       {obras.map((o) => (
-        <Card key={o.id} onPress={() => nav.navigate('ObraDetail', { obraId: o.id })} style={{ gap: 10 }} accessibilityLabel={`${o.nome}, avanço ${o.avancoFisico}%`}>
+        <Card
+          key={o.id}
+          onPress={() => nav.navigate('ObraDetail', { obraId: o.id })}
+          style={{ gap: 10 }}
+          accessibilityLabel={`${o.nome}, avanço ${o.avancoFisico}%`}
+        >
           <View style={styles.row}>
             <View style={{ flex: 1 }}>
               <Txt v="bodyStrong">{o.nome}</Txt>
@@ -97,7 +131,14 @@ export default function ClienteHome() {
             Últimos RDOs finalizados
           </TituloSecao>
           {finalizados.slice(0, 2).map((r) => (
-            <RdoCard key={r.id} rdo={r} obra={obraDe(r)} agora={now} config={cfg} onPress={() => nav.navigate('RdoDetail', { rdoId: r.id })} />
+            <RdoCard
+              key={r.id}
+              rdo={r}
+              obra={obraDe(r)}
+              agora={now}
+              config={cfg}
+              onPress={() => nav.navigate('RdoDetail', { rdoId: r.id })}
+            />
           ))}
         </>
       ) : null}
@@ -125,15 +166,32 @@ export default function ClienteHome() {
         </>
       ) : null}
 
-      <Banner tone="info" message="Você visualiza apenas os RDOs liberados pelo responsável técnico. Ciência/aceite e ressalvas ficam registradas com data, hora e trilha de auditoria." />
+      <Banner
+        tone="info"
+        message="Você visualiza apenas os RDOs liberados pelo responsável técnico. Ciência/aceite e ressalvas ficam registradas com data, hora e trilha de auditoria."
+      />
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  hero: { backgroundColor: colors.navy700, borderRadius: radius.xl, padding: 18, gap: 8, borderWidth: 1, borderColor: colors.navy600 },
+  hero: {
+    backgroundColor: colors.navy700,
+    borderRadius: radius.xl,
+    padding: 18,
+    gap: 8,
+    borderWidth: 1,
+    borderColor: colors.navy600,
+  },
   heroRow: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   heroNum: { fontSize: 64, lineHeight: 70, letterSpacing: -2 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  evento: { width: 34, height: 34, borderRadius: 17, backgroundColor: colors.blue100, alignItems: 'center', justifyContent: 'center' },
+  evento: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: colors.blue100,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

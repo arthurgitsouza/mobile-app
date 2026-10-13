@@ -9,7 +9,19 @@ import { diasSemRdo, nomeUsuario, rdoDaData, rdosAguardandoAnalise } from '../..
 import { numeroFormatado } from '../../domain/rdo';
 import { combineDateTime, formatDate, hojeObra, tempoRelativo, addHours } from '../../utils/date';
 import { contar } from '../../utils/format';
-import { Avatar, Banner, Button, Card, CriticidadeBadge, Icon, ProgressBar, Screen, StatusBadge, SyncBanner, Txt } from '../../components/ui';
+import {
+  Avatar,
+  Banner,
+  Button,
+  Card,
+  CriticidadeBadge,
+  Icon,
+  ProgressBar,
+  Screen,
+  StatusBadge,
+  SyncBanner,
+  Txt,
+} from '../../components/ui';
 import { StatTile } from '../../components/charts/StatTile';
 import { Grade, TituloSecao, DataDeHoje, tituloBoasVindas } from './shared';
 
@@ -48,7 +60,9 @@ export default function MasterHome() {
       comCliente,
       esclarecimentos: comCliente.filter((r) => r.esclarecimentoPendente),
       finalizados: state.rdos.filter((r) => r.status === 'finalizado' && r.finalizadoEm >= desde30),
-      semRdo: state.obras.filter((o) => o.status === 'ativa').reduce((n, o) => n + diasSemRdo(state, o, hoje, 7).length, 0),
+      semRdo: state.obras
+        .filter((o) => o.status === 'ativa')
+        .reduce((n, o) => n + diasSemRdo(state, o, hoje, 7).length, 0),
       criticas: criticas.slice(0, 4),
       eventos,
     };
@@ -64,7 +78,12 @@ export default function MasterHome() {
           AGUARDANDO SUA ANÁLISE
         </Txt>
         <View style={styles.heroRow}>
-          <Txt v="display" color={colors.white} style={styles.heroNum} accessibilityLabel={`${d.aguardando.length} RDOs aguardando análise`}>
+          <Txt
+            v="display"
+            color={colors.white}
+            style={styles.heroNum}
+            accessibilityLabel={`${d.aguardando.length} RDOs aguardando análise`}
+          >
             {d.aguardando.length}
           </Txt>
           <View style={{ flex: 1, gap: 4 }}>
@@ -85,14 +104,49 @@ export default function MasterHome() {
             )}
           </View>
         </View>
-        <Button title="Abrir caixa de análise" icon="clipboard-check-outline" variant="accent" onPress={() => nav.navigate('Analysis')} />
+        <Button
+          title="Abrir caixa de análise"
+          icon="clipboard-check-outline"
+          variant="accent"
+          onPress={() => nav.navigate('Analysis')}
+        />
       </View>
 
       <Grade>
-        <StatTile label="Devolvidos para correção" value={d.devolvidos.length} icon="undo-variant" onPress={() => nav.navigate('Rdos', { status: 'devolvido' })} hint={d.devolvidos.length ? 'Aguardando o operacional' : 'Nenhum pendente'} />
-        <StatTile label="Aguardando o cliente" value={d.comCliente.length} icon="account-clock-outline" onPress={() => nav.navigate('Rdos', { status: 'enviado_cliente' })} hint={d.esclarecimentos.length ? `${contar(d.esclarecimentos.length, 'esclarecimento')} para responder` : 'Sem esclarecimentos'} destaque={d.esclarecimentos.length > 0} />
-        <StatTile label="Finalizados em 30 dias" value={d.finalizados.length} icon="file-pdf-box" onPress={() => nav.navigate('Rdos', { status: 'finalizado' })} hint="PDF final e hash disponíveis" />
-        <StatTile label="Dias úteis sem RDO (7 dias)" value={d.semRdo} icon="calendar-alert" onPress={() => nav.navigate('Reports')} hint={d.semRdo ? 'Registros atrasados nas obras' : 'Cobertura completa'} destaque={d.semRdo > 0} />
+        <StatTile
+          label="Devolvidos para correção"
+          value={d.devolvidos.length}
+          icon="undo-variant"
+          onPress={() => nav.navigate('Rdos', { status: 'devolvido' })}
+          hint={d.devolvidos.length ? 'Aguardando o operacional' : 'Nenhum pendente'}
+        />
+        <StatTile
+          label="Aguardando o cliente"
+          value={d.comCliente.length}
+          icon="account-clock-outline"
+          onPress={() => nav.navigate('Rdos', { status: 'enviado_cliente' })}
+          hint={
+            d.esclarecimentos.length
+              ? `${contar(d.esclarecimentos.length, 'esclarecimento')} para responder`
+              : 'Sem esclarecimentos'
+          }
+          destaque={d.esclarecimentos.length > 0}
+        />
+        <StatTile
+          label="Finalizados em 30 dias"
+          value={d.finalizados.length}
+          icon="file-pdf-box"
+          onPress={() => nav.navigate('Rdos', { status: 'finalizado' })}
+          hint="PDF final e hash disponíveis"
+        />
+        <StatTile
+          label="Dias úteis sem RDO (7 dias)"
+          value={d.semRdo}
+          icon="calendar-alert"
+          onPress={() => nav.navigate('Reports')}
+          hint={d.semRdo ? 'Registros atrasados nas obras' : 'Cobertura completa'}
+          destaque={d.semRdo > 0}
+        />
       </Grade>
 
       <TituloSecao acao="Ver obras" onAcao={() => nav.navigate('Obras')}>
@@ -102,7 +156,12 @@ export default function MasterHome() {
         const rdoHoje = rdoDaData(state, obra.id, hoje);
         const defasagem = obra.avancoFisico - obra.avancoPrevisto;
         return (
-          <Card key={obra.id} onPress={() => nav.navigate('ObraDetail', { obraId: obra.id })} style={{ gap: 10 }} accessibilityLabel={`${obra.nome}, avanço ${obra.avancoFisico}%`}>
+          <Card
+            key={obra.id}
+            onPress={() => nav.navigate('ObraDetail', { obraId: obra.id })}
+            style={{ gap: 10 }}
+            accessibilityLabel={`${obra.nome}, avanço ${obra.avancoFisico}%`}
+          >
             <View style={styles.row}>
               <View style={{ flex: 1 }}>
                 <Txt v="bodyStrong">{obra.nome}</Txt>
@@ -110,7 +169,13 @@ export default function MasterHome() {
                   {obra.descricao} · {obra.contrato}
                 </Txt>
               </View>
-              {rdoHoje ? <StatusBadge status={rdoHoje.status} size="sm" /> : <Txt v="caption" color={colors.warning} style={{ fontWeight: '800' }}>Sem RDO hoje</Txt>}
+              {rdoHoje ? (
+                <StatusBadge status={rdoHoje.status} size="sm" />
+              ) : (
+                <Txt v="caption" color={colors.warning} style={{ fontWeight: '800' }}>
+                  Sem RDO hoje
+                </Txt>
+              )}
             </View>
             <View style={{ gap: 4 }}>
               <View style={styles.row}>
@@ -131,9 +196,15 @@ export default function MasterHome() {
       <TituloSecao>Pendências críticas</TituloSecao>
       {d.criticas.length ? (
         d.criticas.map(({ p, rdo, obra }) => {
-          const vencida = new Date(combineDateTime(p.prazo, p.prazoHora || '23:59')).getTime() < new Date(now).getTime();
+          const vencida =
+            new Date(combineDateTime(p.prazo, p.prazoHora || '23:59')).getTime() < new Date(now).getTime();
           return (
-            <Card key={p.id} onPress={() => nav.navigate('RdoDetail', { rdoId: rdo.id })} style={{ gap: 6 }} accessibilityLabel={`Pendência ${p.criticidade}: ${p.descricao}`}>
+            <Card
+              key={p.id}
+              onPress={() => nav.navigate('RdoDetail', { rdoId: rdo.id })}
+              style={{ gap: 6 }}
+              accessibilityLabel={`Pendência ${p.criticidade}: ${p.descricao}`}
+            >
               <View style={styles.row}>
                 <CriticidadeBadge nivel={p.criticidade} size="sm" />
                 <Txt v="caption" muted style={{ flex: 1 }} numberOfLines={1}>
@@ -174,7 +245,12 @@ export default function MasterHome() {
       </TituloSecao>
       <Card style={{ gap: 12 }}>
         {d.eventos.map((e) => (
-          <Pressable key={e.id} onPress={() => nav.navigate('RdoDetail', { rdoId: e.rdo.id, tab: 'historico' })} accessibilityRole="button" style={styles.evento}>
+          <Pressable
+            key={e.id}
+            onPress={() => nav.navigate('RdoDetail', { rdoId: e.rdo.id, tab: 'historico' })}
+            accessibilityRole="button"
+            style={styles.evento}
+          >
             <Avatar nome={nomeUsuario(state, e.usuarioId)} size={32} />
             <View style={{ flex: 1 }}>
               <Txt v="smallStrong" numberOfLines={1}>
@@ -193,7 +269,12 @@ export default function MasterHome() {
 
 function Atalho({ icon, label, onPress }) {
   return (
-    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={label} style={({ pressed }) => [styles.atalho, pressed && { opacity: 0.85 }]}>
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      style={({ pressed }) => [styles.atalho, pressed && { opacity: 0.85 }]}
+    >
       <View style={styles.atalhoIcon}>
         <Icon name={icon} size={24} color={colors.navy700} />
       </View>
@@ -205,13 +286,45 @@ function Atalho({ icon, label, onPress }) {
 }
 
 const styles = StyleSheet.create({
-  hero: { backgroundColor: colors.navy700, borderRadius: radius.xl, padding: 18, gap: 12, borderWidth: 1, borderColor: colors.navy600 },
+  hero: {
+    backgroundColor: colors.navy700,
+    borderRadius: radius.xl,
+    padding: 18,
+    gap: 12,
+    borderWidth: 1,
+    borderColor: colors.navy600,
+  },
   heroRow: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   heroNum: { fontSize: 64, lineHeight: 70, letterSpacing: -2 },
   heroAlert: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  vencida: { flexDirection: 'row', alignItems: 'center', gap: 3, backgroundColor: colors.dangerBg, borderRadius: 999, paddingHorizontal: 8, paddingVertical: 2 },
+  vencida: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    backgroundColor: colors.dangerBg,
+    borderRadius: 999,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
   evento: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 44 },
-  atalho: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: colors.surface, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: 12, minHeight: 64 },
-  atalhoIcon: { width: 40, height: 40, borderRadius: 12, backgroundColor: colors.blue100, alignItems: 'center', justifyContent: 'center' },
+  atalho: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 12,
+    minHeight: 64,
+  },
+  atalhoIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: colors.blue100,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

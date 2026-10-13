@@ -25,7 +25,11 @@ export function rdosVisiveis(state, user) {
 
 export function notificacoesDe(state, user) {
   if (!user) return [];
-  return sortBy(state.notifications.filter((n) => n.usuarioId === user.id), (n) => n.dataHora, 'desc');
+  return sortBy(
+    state.notifications.filter((n) => n.usuarioId === user.id),
+    (n) => n.dataHora,
+    'desc',
+  );
 }
 
 export function naoLidas(state, user) {
@@ -47,11 +51,15 @@ export function ehDiaUtil(obra, ymd) {
 
 // RDO "de hoje" (não cancelado/retificado) da obra, mais recente versão.
 export function rdoDaData(state, obraId, ymd) {
-  return sortBy(
-    state.rdos.filter((r) => r.obraId === obraId && r.data === ymd && ![STATUS.CANCELADO, STATUS.RETIFICADO].includes(r.status)),
-    (r) => r.versao,
-    'desc',
-  )[0] || null;
+  return (
+    sortBy(
+      state.rdos.filter(
+        (r) => r.obraId === obraId && r.data === ymd && ![STATUS.CANCELADO, STATUS.RETIFICADO].includes(r.status),
+      ),
+      (r) => r.versao,
+      'desc',
+    )[0] || null
+  );
 }
 
 export function rdosAguardandoAnalise(state) {

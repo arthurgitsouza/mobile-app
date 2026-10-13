@@ -51,7 +51,13 @@ export function TituloSecao({ children, acao, onAcao }) {
         {children}
       </Txt>
       {acao ? (
-        <Txt v="smallStrong" color={colors.blue500} onPress={onAcao} accessibilityRole="link" style={{ paddingVertical: 8 }}>
+        <Txt
+          v="smallStrong"
+          color={colors.blue500}
+          onPress={onAcao}
+          accessibilityRole="link"
+          style={{ paddingVertical: 8 }}
+        >
           {acao}
         </Txt>
       ) : null}

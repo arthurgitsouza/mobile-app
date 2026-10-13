@@ -4,7 +4,18 @@ import { colors } from '../../theme';
 import { useApp } from '../../store/AppContext';
 import { numeroFormatado } from '../../domain/rdo';
 import { formatDateTime, tempoRelativo } from '../../utils/date';
-import { Banner, Button, Card, EmptyState, Icon, Screen, StatusBadge, SectionTitle, Txt, useUI } from '../../components/ui';
+import {
+  Banner,
+  Button,
+  Card,
+  EmptyState,
+  Icon,
+  Screen,
+  StatusBadge,
+  SectionTitle,
+  Txt,
+  useUI,
+} from '../../components/ui';
 import { SwitchField } from '../../components/form';
 
 // Central de sincronização (RNF-03): mostra claramente o que ainda não foi enviado e permite sincronizar.
@@ -12,17 +23,29 @@ export default function SyncScreen({ navigation }) {
   const { state, actions, currentUser, online } = useApp();
   const { toast } = useUI();
   const [sincronizando, setSincronizando] = useState(false);
-  const pendentes = state.rdos.filter((r) => r.sync?.pendente && (currentUser.perfil === 'master' || r.autorId === currentUser.id));
-  const fotosLocais = state.rdos.flatMap((r) => (r.autorId === currentUser.id ? r.fotos.filter((f) => f.envio === 'local').map((f) => ({ f, r })) : []));
+  const pendentes = state.rdos.filter(
+    (r) => r.sync?.pendente && (currentUser.perfil === 'master' || r.autorId === currentUser.id),
+  );
+  const fotosLocais = state.rdos.flatMap((r) =>
+    r.autorId === currentUser.id ? r.fotos.filter((f) => f.envio === 'local').map((f) => ({ f, r })) : [],
+  );
   const rascunhos = state.rdos.filter((r) => r.status === 'rascunho' && r.autorId === currentUser.id);
-  const ultimo = state.rdos.map((r) => r.sync?.ultimoEm).filter(Boolean).sort().pop();
+  const ultimo = state.rdos
+    .map((r) => r.sync?.ultimoEm)
+    .filter(Boolean)
+    .sort()
+    .pop();
 
   const sincronizar = async () => {
     setSincronizando(true);
     await new Promise((r) => setTimeout(r, 1200));
     actions.sincronizarPendentes();
     setSincronizando(false);
-    toast.show({ type: 'success', title: 'Sincronização concluída', message: pendentes.length ? `${pendentes.length} RDO(s) enviado(s) ao master.` : 'Nada pendente.' });
+    toast.show({
+      type: 'success',
+      title: 'Sincronização concluída',
+      message: pendentes.length ? `${pendentes.length} RDO(s) enviado(s) ao master.` : 'Nada pendente.',
+    });
   };
 
   return (
@@ -36,12 +59,22 @@ export default function SyncScreen({ navigation }) {
             {online ? 'Conectado' : 'Sem conexão'}
           </Txt>
           <Txt v="small" color={online ? colors.success : colors.warning}>
-            {online ? (pendentes.length ? 'Há itens aguardando envio.' : 'Tudo sincronizado.') : 'Você pode continuar preenchendo. Rascunhos, fotos e envios ficam salvos no aparelho.'}
+            {online
+              ? pendentes.length
+                ? 'Há itens aguardando envio.'
+                : 'Tudo sincronizado.'
+              : 'Você pode continuar preenchendo. Rascunhos, fotos e envios ficam salvos no aparelho.'}
           </Txt>
         </View>
       </Card>
 
-      <SwitchField label="Simular modo offline" description="Para testar o comportamento sem rede (RF-05)." value={state.settings.forceOffline} onValueChange={(v) => actions.atualizarConfiguracoes({ patch: { forceOffline: v } })} tone="gold" />
+      <SwitchField
+        label="Simular modo offline"
+        description="Para testar o comportamento sem rede (RF-05)."
+        value={state.settings.forceOffline}
+        onValueChange={(v) => actions.atualizarConfiguracoes({ patch: { forceOffline: v } })}
+        tone="gold"
+      />
 
       <SectionTitle>Aguardando envio ({pendentes.length})</SectionTitle>
       {pendentes.length ? (
@@ -55,12 +88,17 @@ export default function SyncScreen({ navigation }) {
               <StatusBadge status={r.status} size="sm" />
             </View>
             <Txt v="caption" muted>
-              Enviado no aparelho {tempoRelativo(r.submetidoEm)} · {r.fotos.length} fotos ({r.fotos.filter((f) => f.envio === 'local').length} ainda locais)
+              Enviado no aparelho {tempoRelativo(r.submetidoEm)} · {r.fotos.length} fotos (
+              {r.fotos.filter((f) => f.envio === 'local').length} ainda locais)
             </Txt>
           </Card>
         ))
       ) : (
-        <EmptyState icon="cloud-check-outline" title="Nada pendente" message="Todos os RDOs enviados já chegaram ao servidor." />
+        <EmptyState
+          icon="cloud-check-outline"
+          title="Nada pendente"
+          message="Todos os RDOs enviados já chegaram ao servidor."
+        />
       )}
 
       {rascunhos.length ? (
@@ -77,11 +115,23 @@ export default function SyncScreen({ navigation }) {
         </>
       ) : null}
 
-      {fotosLocais.length ? <Banner tone="info" icon="image-multiple-outline" message={`${fotosLocais.length} foto(s) só estão no aparelho e serão enviadas com o RDO.`} /> : null}
+      {fotosLocais.length ? (
+        <Banner
+          tone="info"
+          icon="image-multiple-outline"
+          message={`${fotosLocais.length} foto(s) só estão no aparelho e serão enviadas com o RDO.`}
+        />
+      ) : null}
       <Txt v="caption" muted style={{ textAlign: 'center' }}>
         Última sincronização: {ultimo ? formatDateTime(ultimo) : '—'}
       </Txt>
-      <Button title="Sincronizar agora" icon="sync" onPress={sincronizar} loading={sincronizando} disabled={!online || pendentes.length === 0} />
+      <Button
+        title="Sincronizar agora"
+        icon="sync"
+        onPress={sincronizar}
+        loading={sincronizando}
+        disabled={!online || pendentes.length === 0}
+      />
       {!online ? (
         <Txt v="caption" muted style={{ textAlign: 'center' }}>
           Reconecte-se para sincronizar. O app envia automaticamente quando a rede voltar.

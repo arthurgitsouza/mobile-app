@@ -73,7 +73,8 @@ export default function SecondFactor({ usuario, verificado, onVerificado }) {
             Identidade confirmada
           </Txt>
           <Txt v="small" color={colors.success}>
-            {verificado.metodo === 'biometria' ? 'Biometria do aparelho' : 'Código de uso único'} às {formatTime(verificado.em)}
+            {verificado.metodo === 'biometria' ? 'Biometria do aparelho' : 'Código de uso único'} às{' '}
+            {formatTime(verificado.em)}
           </Txt>
         </View>
       </Card>
@@ -102,7 +103,12 @@ export default function SecondFactor({ usuario, verificado, onVerificado }) {
             <Txt v="small" color={colors.goldText}>
               Seu código de assinatura RDO Mobile (válido por 5 minutos):
             </Txt>
-            <Txt v="display" color={colors.goldText} style={{ letterSpacing: 6 }} accessibilityLabel={`Código ${codigo.split('').join(' ')}`}>
+            <Txt
+              v="display"
+              color={colors.goldText}
+              style={{ letterSpacing: 6 }}
+              accessibilityLabel={`Código ${codigo.split('').join(' ')}`}
+            >
               {codigo}
             </Txt>
           </Card>
@@ -126,7 +132,13 @@ export default function SecondFactor({ usuario, verificado, onVerificado }) {
             </Txt>
           ) : null}
           <Button title="Confirmar código" icon="check" onPress={conferir} disabled={digitado.length !== 6} />
-          <Button title={espera > 0 ? `Reenviar código em ${espera}s` : 'Reenviar código'} variant="ghost" size="sm" disabled={espera > 0} onPress={enviar} />
+          <Button
+            title={espera > 0 ? `Reenviar código em ${espera}s` : 'Reenviar código'}
+            variant="ghost"
+            size="sm"
+            disabled={espera > 0}
+            onPress={enviar}
+          />
         </>
       ) : (
         <>
@@ -134,7 +146,9 @@ export default function SecondFactor({ usuario, verificado, onVerificado }) {
           <Button title="Enviar código por e-mail" icon="email-fast-outline" onPress={enviar} />
         </>
       )}
-      {bio ? <Button title="Usar biometria do aparelho" icon="fingerprint" variant="secondary" onPress={usarBiometria} /> : null}
+      {bio ? (
+        <Button title="Usar biometria do aparelho" icon="fingerprint" variant="secondary" onPress={usarBiometria} />
+      ) : null}
     </Card>
   );
 }
@@ -143,6 +157,15 @@ const styles = StyleSheet.create({
   head: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   ok: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   input: {
-    borderWidth: 1.5, borderColor: colors.borderStrong, borderRadius: radius.md, minHeight: 54, fontSize: 24, fontWeight: '800', letterSpacing: 8, textAlign: 'center', color: colors.text, backgroundColor: colors.white,
+    borderWidth: 1.5,
+    borderColor: colors.borderStrong,
+    borderRadius: radius.md,
+    minHeight: 54,
+    fontSize: 24,
+    fontWeight: '800',
+    letterSpacing: 8,
+    textAlign: 'center',
+    color: colors.text,
+    backgroundColor: colors.white,
   },
 });

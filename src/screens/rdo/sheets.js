@@ -33,25 +33,69 @@ export function ComentarSheet({ visible, onClose, onEnviar, inicial, fotos = [],
       footer={
         <View style={{ flexDirection: 'row', gap: 10 }}>
           <Button title="Cancelar" variant="secondary" onPress={onClose} style={{ flex: 1 }} />
-          <Button title="Enviar" icon="send-outline" disabled={texto.trim().length < 3} onPress={() => onEnviar({ texto, contexto, contextoRef: ref, visibilidade: aoCliente || respondendo ? 'cliente' : 'interno' })} style={{ flex: 1.3 }} />
+          <Button
+            title="Enviar"
+            icon="send-outline"
+            disabled={texto.trim().length < 3}
+            onPress={() =>
+              onEnviar({
+                texto,
+                contexto,
+                contextoRef: ref,
+                visibilidade: aoCliente || respondendo ? 'cliente' : 'interno',
+              })
+            }
+            style={{ flex: 1.3 }}
+          />
         </View>
       }
     >
-      <SelectField label="Sobre" value={contexto} onChange={(v) => { setContexto(v); if (v !== 'fotos') setRef(null); }} options={CONTEXTOS_COMENTARIO} />
+      <SelectField
+        label="Sobre"
+        value={contexto}
+        onChange={(v) => {
+          setContexto(v);
+          if (v !== 'fotos') setRef(null);
+        }}
+        options={CONTEXTOS_COMENTARIO}
+      />
       {contexto === 'fotos' && fotos.length ? (
         <SelectField
           label="Foto"
           value={ref || ''}
           onChange={setRef}
-          options={[{ value: '', label: 'Todas as fotos' }, ...fotos.map((f) => ({ value: f.id, label: `Foto ${String(f.numero).padStart(2, '0')} — ${f.legenda || 'sem legenda'}` }))]}
+          options={[
+            { value: '', label: 'Todas as fotos' },
+            ...fotos.map((f) => ({
+              value: f.id,
+              label: `Foto ${String(f.numero).padStart(2, '0')} — ${f.legenda || 'sem legenda'}`,
+            })),
+          ]}
         />
       ) : null}
       {foto ? (
-        <Banner tone="info" icon="image-outline" message={`Comentário vinculado à Foto ${String(foto.numero).padStart(2, '0')}.`} />
+        <Banner
+          tone="info"
+          icon="image-outline"
+          message={`Comentário vinculado à Foto ${String(foto.numero).padStart(2, '0')}.`}
+        />
       ) : null}
-      <TextField label="Comentário" required value={texto} onChangeText={setTexto} multiline placeholder="Descreva sua observação de forma objetiva…" maxLength={600} />
+      <TextField
+        label="Comentário"
+        required
+        value={texto}
+        onChangeText={setTexto}
+        multiline
+        placeholder="Descreva sua observação de forma objetiva…"
+        maxLength={600}
+      />
       {podeCliente && !respondendo ? (
-        <SwitchField label="Visível ao cliente" description="Por padrão, comentários do master são internos (master e operacional)." value={aoCliente} onValueChange={setAoCliente} />
+        <SwitchField
+          label="Visível ao cliente"
+          description="Por padrão, comentários do master são internos (master e operacional)."
+          value={aoCliente}
+          onValueChange={setAoCliente}
+        />
       ) : null}
     </BottomSheet>
   );
@@ -91,19 +135,44 @@ export function DevolverSheet({ visible, onClose, onConfirmar, comentariosNestaA
         </View>
       }
     >
-      <TextField label="Motivo da devolução" required value={motivo} onChangeText={(t) => { setMotivo(t); setErro(''); }} multiline error={erro} placeholder="Ex.: Foto 03 sem local preciso; informe o eixo/pavimento e reenvie." maxLength={500} />
+      <TextField
+        label="Motivo da devolução"
+        required
+        value={motivo}
+        onChangeText={(t) => {
+          setMotivo(t);
+          setErro('');
+        }}
+        multiline
+        error={erro}
+        placeholder="Ex.: Foto 03 sem local preciso; informe o eixo/pavimento e reenvie."
+        maxLength={500}
+      />
       <View style={{ flexDirection: 'row', gap: 12 }}>
         <View style={{ flex: 1.4 }}>
-          <DateField label="Prazo de correção" required value={data} onChange={setData} min={hojeObra()} max={addDays(hojeObra(), 15)} />
+          <DateField
+            label="Prazo de correção"
+            required
+            value={data}
+            onChange={setData}
+            min={hojeObra()}
+            max={addDays(hojeObra(), 15)}
+          />
         </View>
         <View style={{ flex: 1 }}>
           <TimeField label="Hora" value={hora} onChangeText={setHora} />
         </View>
       </View>
       {comentariosNestaAnalise ? (
-        <Banner tone="info" message={`${comentariosNestaAnalise} ${comentariosNestaAnalise === 1 ? 'comentário' : 'comentários'} em contexto acompanham a devolução.`} />
+        <Banner
+          tone="info"
+          message={`${comentariosNestaAnalise} ${comentariosNestaAnalise === 1 ? 'comentário' : 'comentários'} em contexto acompanham a devolução.`}
+        />
       ) : (
-        <Banner tone="neutral" message="Dica: comente antes as seções/fotos específicas (ícone de balão em cada bloco) para orientar a correção." />
+        <Banner
+          tone="neutral"
+          message="Dica: comente antes as seções/fotos específicas (ícone de balão em cada bloco) para orientar a correção."
+        />
       )}
     </BottomSheet>
   );
@@ -131,7 +200,12 @@ export function EnviarClienteSheet({ visible, onClose, onConfirmar, clientes = [
       footer={
         <View style={{ flexDirection: 'row', gap: 10 }}>
           <Button title="Cancelar" variant="secondary" onPress={onClose} style={{ flex: 1 }} />
-          <Button title="Enviar" icon="account-arrow-right-outline" onPress={() => onConfirmar(['app', ...(email ? ['email'] : []), ...(whats ? ['whatsapp'] : [])])} style={{ flex: 1.3 }} />
+          <Button
+            title="Enviar"
+            icon="account-arrow-right-outline"
+            onPress={() => onConfirmar(['app', ...(email ? ['email'] : []), ...(whats ? ['whatsapp'] : [])])}
+            style={{ flex: 1.3 }}
+          />
         </View>
       }
     >
@@ -141,16 +215,31 @@ export function EnviarClienteSheet({ visible, onClose, onConfirmar, clientes = [
           clientes.map((c) => (
             <View key={c.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
               <Icon name="account-tie-outline" size={18} color={colors.navy600} />
-              <Txt v="small">{c.nome} · {c.email}</Txt>
+              <Txt v="small">
+                {c.nome} · {c.email}
+              </Txt>
             </View>
           ))
         ) : (
-          <Banner tone="warning" message="Nenhum usuário cliente vinculado a esta obra. Vincule um cliente em Obras → Editar." />
+          <Banner
+            tone="warning"
+            message="Nenhum usuário cliente vinculado a esta obra. Vincule um cliente em Obras → Editar."
+          />
         )}
       </View>
       <CheckboxField label="Notificação no aplicativo (push)" description="Sempre ativa." value disabled />
       <CheckboxField label="E-mail com link seguro" value={email} onValueChange={setEmail} />
-      <CheckboxField label="WhatsApp (opcional)" description={temWhats ? 'Integração opcional; depende de provedor, custo e consentimento.' : 'Nenhum destinatário consentiu com este canal.'} value={whats} onValueChange={setWhats} disabled={!temWhats} />
+      <CheckboxField
+        label="WhatsApp (opcional)"
+        description={
+          temWhats
+            ? 'Integração opcional; depende de provedor, custo e consentimento.'
+            : 'Nenhum destinatário consentiu com este canal.'
+        }
+        value={whats}
+        onValueChange={setWhats}
+        disabled={!temWhats}
+      />
     </BottomSheet>
   );
 }

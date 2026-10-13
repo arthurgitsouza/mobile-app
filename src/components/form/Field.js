@@ -11,7 +11,11 @@ export default function Field({ label, required, help, error, right, children, s
         <View style={styles.labelRow}>
           <Txt v="smallStrong" style={{ flex: 1 }}>
             {label}
-            {required ? <Txt v="smallStrong" color={colors.danger}>{' *'}</Txt> : null}
+            {required ? (
+              <Txt v="smallStrong" color={colors.danger}>
+                {' *'}
+              </Txt>
+            ) : null}
           </Txt>
           {right}
         </View>

@@ -1,7 +1,15 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../../theme';
-import { addMonths, daysInMonth, diaDaSemana, formatMonthYear, hojeObra, nomesDiasCurtos, ymOf } from '../../utils/date';
+import {
+  addMonths,
+  daysInMonth,
+  diaDaSemana,
+  formatMonthYear,
+  hojeObra,
+  nomesDiasCurtos,
+  ymOf,
+} from '../../utils/date';
 import { capitalizar } from '../../utils/format';
 import IconButton from './IconButton';
 import Txt from './Txt';
@@ -12,7 +20,17 @@ const INICIAIS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
  * Calendário mensal. marks: { 'YYYY-MM-DD': [cor, cor, ...] } (até 3 pontos por dia).
  * Datas fora de [min, max] ficam desabilitadas. `faltando`: datas destacadas como "sem RDO".
  */
-export default function CalendarMonth({ month, onMonthChange, selected, onSelect, marks = {}, min, max, faltando = [], style }) {
+export default function CalendarMonth({
+  month,
+  onMonthChange,
+  selected,
+  onSelect,
+  marks = {},
+  min,
+  max,
+  faltando = [],
+  style,
+}) {
   const hoje = hojeObra();
   const total = daysInMonth(month);
   const primeiro = diaDaSemana(`${month}-01`);
@@ -56,8 +74,22 @@ export default function CalendarMonth({ month, onMonthChange, selected, onSelect
                 accessibilityState={{ selected: sel, disabled: !!bloqueado }}
                 style={styles.cell}
               >
-                <View style={[styles.day, ehHoje && styles.today, semRdo.has(ymd) && !sel && styles.missing, sel && styles.selected]}>
-                  <Text style={[styles.dayText, bloqueado && { color: colors.borderStrong }, ci === 0 && !bloqueado && { color: colors.textSubtle }, sel && { color: colors.white, fontWeight: '800' }]}>
+                <View
+                  style={[
+                    styles.day,
+                    ehHoje && styles.today,
+                    semRdo.has(ymd) && !sel && styles.missing,
+                    sel && styles.selected,
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.dayText,
+                      bloqueado && { color: colors.borderStrong },
+                      ci === 0 && !bloqueado && { color: colors.textSubtle },
+                      sel && { color: colors.white, fontWeight: '800' },
+                    ]}
+                  >
                     {dia}
                   </Text>
                 </View>
@@ -80,7 +112,14 @@ export const mesDe = ymOf;
 const styles = StyleSheet.create({
   head: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 },
   week: { flexDirection: 'row', marginBottom: 2 },
-  weekText: { flex: 1, textAlign: 'center', fontSize: 12, fontWeight: '800', color: colors.textMuted, paddingVertical: 6 },
+  weekText: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 12,
+    fontWeight: '800',
+    color: colors.textMuted,
+    paddingVertical: 6,
+  },
   row: { flexDirection: 'row' },
   cell: { flex: 1, height: 50, alignItems: 'center', justifyContent: 'flex-start', paddingTop: 2 },
   day: { width: 34, height: 34, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },

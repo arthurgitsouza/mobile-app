@@ -20,7 +20,11 @@ export default function RootNavigator() {
   return (
     <Stack.Navigator
       key={currentUser?.id || 'anon'}
-      screenOptions={{ headerShown: false, animation: 'slide_from_right', contentStyle: { backgroundColor: colors.bg } }}
+      screenOptions={{
+        headerShown: false,
+        animation: 'slide_from_right',
+        contentStyle: { backgroundColor: colors.bg },
+      }}
     >
       {!currentUser ? (
         <Stack.Group>

@@ -9,7 +9,18 @@ import { numeroFormatado } from '../../domain/rdo';
 import { nowISO } from '../../utils/date';
 import { montarHtmlRdo, nomeArquivoPdf } from '../../utils/pdf';
 import { compartilharPdf, fotosParaBase64, imprimir } from '../../services/arquivos';
-import { Banner, Button, Card, EmptyState, Icon, Screen, SectionTitle, StatusBadge, Txt, useUI } from '../../components/ui';
+import {
+  Banner,
+  Button,
+  Card,
+  EmptyState,
+  Icon,
+  Screen,
+  SectionTitle,
+  StatusBadge,
+  Txt,
+  useUI,
+} from '../../components/ui';
 import { AuditItem, QRCodeView, RdoSections } from '../../components/rdo';
 import { nomeUsuario, perfilUsuario } from '../../domain/selectors';
 import { podeVerRdo } from '../../domain/workflow';
@@ -27,7 +38,12 @@ export default function PdfViewerScreen({ route, navigation }) {
   if (!rdo || !obra || !podeVerRdo(rdo, currentUser, obra)) {
     return (
       <Screen title="PDF do RDO" back>
-        <EmptyState icon="file-question-outline" title="Documento indisponível" actionLabel="Voltar" onAction={() => navigation.goBack()} />
+        <EmptyState
+          icon="file-question-outline"
+          title="Documento indisponível"
+          actionLabel="Voltar"
+          onAction={() => navigation.goBack()}
+        />
       </Screen>
     );
   }
@@ -50,9 +66,17 @@ export default function PdfViewerScreen({ route, navigation }) {
       if (modo === 'imprimir') await imprimir(html);
       else await compartilharPdf(html, nomeArquivo);
       actions.registrarPdf({ rdoId, userId: currentUser.id });
-      toast.show({ type: 'success', title: modo === 'imprimir' ? 'Impressão iniciada' : 'PDF gerado', message: finalizado ? nomeArquivo : 'Minuta gerada (sem valor de assinatura completa).' });
-    } catch (e) {
-      await notice({ icon: 'file-alert-outline', title: 'Não foi possível gerar o PDF', message: 'Tente novamente. Se o problema persistir, verifique o espaço livre do aparelho.' });
+      toast.show({
+        type: 'success',
+        title: modo === 'imprimir' ? 'Impressão iniciada' : 'PDF gerado',
+        message: finalizado ? nomeArquivo : 'Minuta gerada (sem valor de assinatura completa).',
+      });
+    } catch {
+      await notice({
+        icon: 'file-alert-outline',
+        title: 'Não foi possível gerar o PDF',
+        message: 'Tente novamente. Se o problema persistir, verifique o espaço livre do aparelho.',
+      });
     } finally {
       setGerando(null);
     }
@@ -62,17 +86,31 @@ export default function PdfViewerScreen({ route, navigation }) {
     try {
       await Clipboard.setStringAsync(hash);
       toast.show({ type: 'success', title: 'Hash copiado' });
-    } catch (e) {
+    } catch {
       toast.show({ type: 'info', title: 'Hash', message: hash });
     }
   };
 
   return (
-    <Screen title={finalizado ? 'PDF final' : 'PDF (minuta)'} subtitle={`RDO nº ${numeroFormatado(rdo)} · ${obra.nome}`} back>
+    <Screen
+      title={finalizado ? 'PDF final' : 'PDF (minuta)'}
+      subtitle={`RDO nº ${numeroFormatado(rdo)} · ${obra.nome}`}
+      back
+    >
       {!finalizado ? (
-        <Banner tone="warning" icon="watermark" title="Minuta — sem valor de assinatura completa" message="O PDF oficial (com hash e QR de verificação) é gerado ao final do fluxo, depois da ciência/aceite do cliente." />
+        <Banner
+          tone="warning"
+          icon="watermark"
+          title="Minuta — sem valor de assinatura completa"
+          message="O PDF oficial (com hash e QR de verificação) é gerado ao final do fluxo, depois da ciência/aceite do cliente."
+        />
       ) : (
-        <Banner tone="success" icon="check-decagram-outline" title="PDF final disponível" message="Documento com dados, fotos, comentários, assinaturas, datas e identificadores de verificação." />
+        <Banner
+          tone="success"
+          icon="check-decagram-outline"
+          title="PDF final disponível"
+          message="Documento com dados, fotos, comentários, assinaturas, datas e identificadores de verificação."
+        />
       )}
 
       <Card style={styles.arquivo}>
@@ -91,8 +129,21 @@ export default function PdfViewerScreen({ route, navigation }) {
       </Card>
 
       <View style={{ gap: 10 }}>
-        <Button title={finalizado ? 'Compartilhar / salvar PDF' : 'Gerar minuta em PDF'} icon="share-variant-outline" onPress={() => gerar('compartilhar')} loading={gerando === 'compartilhar'} disabled={!!gerando} />
-        <Button title="Imprimir" icon="printer-outline" variant="secondary" onPress={() => gerar('imprimir')} loading={gerando === 'imprimir'} disabled={!!gerando} />
+        <Button
+          title={finalizado ? 'Compartilhar / salvar PDF' : 'Gerar minuta em PDF'}
+          icon="share-variant-outline"
+          onPress={() => gerar('compartilhar')}
+          loading={gerando === 'compartilhar'}
+          disabled={!!gerando}
+        />
+        <Button
+          title="Imprimir"
+          icon="printer-outline"
+          variant="secondary"
+          onPress={() => gerar('imprimir')}
+          loading={gerando === 'imprimir'}
+          disabled={!!gerando}
+        />
       </View>
 
       {hash ? (
@@ -107,14 +158,40 @@ export default function PdfViewerScreen({ route, navigation }) {
               {hash}
             </Txt>
             <View style={{ flexDirection: 'row', gap: 10, width: '100%' }}>
-              <Button title="Copiar hash" icon="content-copy" variant="secondary" size="sm" onPress={copiar} style={{ flex: 1 }} />
-              <Button title="Verificar integridade" icon="shield-search" variant="tonal" size="sm" onPress={() => setCheck(verificarIntegridade(rdo))} style={{ flex: 1 }} />
+              <Button
+                title="Copiar hash"
+                icon="content-copy"
+                variant="secondary"
+                size="sm"
+                onPress={copiar}
+                style={{ flex: 1 }}
+              />
+              <Button
+                title="Verificar integridade"
+                icon="shield-search"
+                variant="tonal"
+                size="sm"
+                onPress={() => setCheck(verificarIntegridade(rdo))}
+                style={{ flex: 1 }}
+              />
             </View>
             {check ? (
               check.ok ? (
-                <Banner tone="success" icon="shield-check" title="Documento íntegro" message={`Hash recalculado ${hashCurto(check.calculado, 12)} confere com a assinatura.`} style={{ alignSelf: 'stretch' }} />
+                <Banner
+                  tone="success"
+                  icon="shield-check"
+                  title="Documento íntegro"
+                  message={`Hash recalculado ${hashCurto(check.calculado, 12)} confere com a assinatura.`}
+                  style={{ alignSelf: 'stretch' }}
+                />
               ) : (
-                <Banner tone="danger" icon="shield-alert" title="Divergência detectada" message="O conteúdo não corresponde ao hash assinado." style={{ alignSelf: 'stretch' }} />
+                <Banner
+                  tone="danger"
+                  icon="shield-alert"
+                  title="Divergência detectada"
+                  message="O conteúdo não corresponde ao hash assinado."
+                  style={{ alignSelf: 'stretch' }}
+                />
               )
             ) : null}
           </Card>
@@ -122,14 +199,27 @@ export default function PdfViewerScreen({ route, navigation }) {
       ) : null}
 
       <SectionTitle>Pré-visualização do conteúdo</SectionTitle>
-      <RdoSections rdo={rdo} obra={obra} rdos={state.rdos} nomeDe={nomeDe} comentarios={[]} onVerAssinatura={(quem) => navigation.navigate('Receipt', { rdoId, quem })} />
+      <RdoSections
+        rdo={rdo}
+        obra={obra}
+        rdos={state.rdos}
+        nomeDe={nomeDe}
+        comentarios={[]}
+        onVerAssinatura={(quem) => navigation.navigate('Receipt', { rdoId, quem })}
+      />
 
       {trilha.length ? (
         <>
           <SectionTitle>Trilha de aprovação</SectionTitle>
           <Card>
             {trilha.map((a, i) => (
-              <AuditItem key={a.id} evento={a} nome={nomeDe(a.usuarioId)} papel={perfilUsuario(state, a.usuarioId)} ultimo={i === trilha.length - 1} />
+              <AuditItem
+                key={a.id}
+                evento={a}
+                nome={nomeDe(a.usuarioId)}
+                papel={perfilUsuario(state, a.usuarioId)}
+                ultimo={i === trilha.length - 1}
+              />
             ))}
           </Card>
         </>
@@ -140,5 +230,12 @@ export default function PdfViewerScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   arquivo: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  pdfIcon: { width: 60, height: 60, borderRadius: radius.md, backgroundColor: colors.dangerBg, alignItems: 'center', justifyContent: 'center' },
+  pdfIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: radius.md,
+    backgroundColor: colors.dangerBg,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

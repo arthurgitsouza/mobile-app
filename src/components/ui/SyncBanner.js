@@ -16,7 +16,9 @@ export default function SyncBanner({ style }) {
   if (online && pendentes === 0) return null;
 
   const offline = !online;
-  const tone = offline ? { bg: colors.warningBg, fg: colors.warning, icon: 'cloud-off-outline' } : { bg: colors.infoBg, fg: colors.info, icon: 'cloud-sync-outline' };
+  const tone = offline
+    ? { bg: colors.warningBg, fg: colors.warning, icon: 'cloud-off-outline' }
+    : { bg: colors.infoBg, fg: colors.info, icon: 'cloud-sync-outline' };
   const texto = offline
     ? pendentes
       ? `Sem conexão — ${contar(pendentes, 'RDO')} salvo${pendentes > 1 ? 's' : ''} no aparelho aguardando envio.`
@@ -42,5 +44,12 @@ export default function SyncBanner({ style }) {
 }
 
 const styles = StyleSheet.create({
-  wrap: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 12, paddingVertical: 10, borderRadius: radius.md },
+  wrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: radius.md,
+  },
 });

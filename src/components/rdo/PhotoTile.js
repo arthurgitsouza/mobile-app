@@ -17,9 +17,27 @@ export default function PhotoTile({ foto, width = 110, ratio = 0.75, onPress, se
   const local = foto.envio === 'local';
 
   const conteudo = (
-    <View style={[styles.tile, { width, height: width * ratio, backgroundColor: p.bg, borderColor: selected ? colors.gold500 : p.border, borderWidth: selected ? 3 : 1 }, style]}>
+    <View
+      style={[
+        styles.tile,
+        {
+          width,
+          height: width * ratio,
+          backgroundColor: p.bg,
+          borderColor: selected ? colors.gold500 : p.border,
+          borderWidth: selected ? 3 : 1,
+        },
+        style,
+      ]}
+    >
       {foto.uri && !falhou ? (
-        <Image source={{ uri: foto.uri }} style={StyleSheet.absoluteFill} resizeMode="cover" onError={() => setFalhou(true)} accessibilityLabel={foto.legenda || `Foto ${num}`} />
+        <Image
+          source={{ uri: foto.uri }}
+          style={StyleSheet.absoluteFill}
+          resizeMode="cover"
+          onError={() => setFalhou(true)}
+          accessibilityLabel={foto.legenda || `Foto ${num}`}
+        />
       ) : (
         <View style={styles.center}>
           <Icon name={foto.icone || 'image-outline'} size={Math.max(22, width * 0.26)} color={p.fg} />
@@ -57,7 +75,12 @@ export default function PhotoTile({ foto, width = 110, ratio = 0.75, onPress, se
 
   if (!onPress) return conteudo;
   return (
-    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`Foto ${num}${foto.legenda ? `: ${foto.legenda}` : ', sem legenda'}`} style={({ pressed }) => pressed && { opacity: 0.85 }}>
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`Foto ${num}${foto.legenda ? `: ${foto.legenda}` : ', sem legenda'}`}
+      style={({ pressed }) => pressed && { opacity: 0.85 }}
+    >
       {conteudo}
     </Pressable>
   );
@@ -66,7 +89,15 @@ export default function PhotoTile({ foto, width = 110, ratio = 0.75, onPress, se
 const styles = StyleSheet.create({
   tile: { borderRadius: radius.md, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' },
   center: { alignItems: 'center', gap: 4 },
-  num: { position: 'absolute', top: 6, left: 6, backgroundColor: 'rgba(12,32,56,0.78)', borderRadius: 6, paddingHorizontal: 6, paddingVertical: 1 },
+  num: {
+    position: 'absolute',
+    top: 6,
+    left: 6,
+    backgroundColor: 'rgba(12,32,56,0.78)',
+    borderRadius: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+  },
   badges: { position: 'absolute', bottom: 6, right: 6, flexDirection: 'row', gap: 4 },
   mini: { width: 20, height: 20, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
 });

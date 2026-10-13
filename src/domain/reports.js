@@ -38,15 +38,23 @@ export function calcularIndicadores(state, { obraIds, de, ate }) {
     preenchidos: enviados.length,
     pendentes: rdos.filter((r) => [STATUS.SUBMETIDO, STATUS.EM_ANALISE].includes(r.status)).length,
     devolvidos: rdos.filter((r) => r.status === STATUS.DEVOLVIDO).length,
-    validados: rdos.filter((r) => [STATUS.VALIDADO, STATUS.ENVIADO_CLIENTE, STATUS.FINALIZADO].includes(r.status)).length,
+    validados: rdos.filter((r) => [STATUS.VALIDADO, STATUS.ENVIADO_CLIENTE, STATUS.FINALIZADO].includes(r.status))
+      .length,
     assinados: rdos.filter((r) => r.status === STATUS.FINALIZADO).length,
     rascunhos: rdos.filter((r) => r.status === STATUS.RASCUNHO).length,
   };
-  const distribuicao = Object.entries(groupBy(noPeriodo, (r) => r.status)).map(([status, l]) => ({ status, n: l.length }));
+  const distribuicao = Object.entries(groupBy(noPeriodo, (r) => r.status)).map(([status, l]) => ({
+    status,
+    n: l.length,
+  }));
 
   // --- tempos médios (h) ---
-  const t1 = rdos.filter((r) => r.submetidoEm && r.assinaturas?.master).map((r) => hoursBetween(r.submetidoEm, r.assinaturas.master.dataHora));
-  const t2 = rdos.filter((r) => r.assinaturas?.master && r.assinaturas?.cliente).map((r) => hoursBetween(r.assinaturas.master.dataHora, r.assinaturas.cliente.dataHora));
+  const t1 = rdos
+    .filter((r) => r.submetidoEm && r.assinaturas?.master)
+    .map((r) => hoursBetween(r.submetidoEm, r.assinaturas.master.dataHora));
+  const t2 = rdos
+    .filter((r) => r.assinaturas?.master && r.assinaturas?.cliente)
+    .map((r) => hoursBetween(r.assinaturas.master.dataHora, r.assinaturas.cliente.dataHora));
   const tempos = { envioAteValidacaoH: media(t1), validacaoAteAceiteH: media(t2), n1: t1.length, n2: t2.length };
 
   // --- efetivo e homem-hora ---
@@ -56,9 +64,13 @@ export function calcularIndicadores(state, { obraIds, de, ate }) {
     data,
     hh: sum(porData[data], totalHomemHora),
     efetivo: sum(porData[data], totalTrabalhadores),
-    porObra: Object.fromEntries(Object.entries(groupBy(porData[data], (r) => r.obraId)).map(([id, l]) => [id, sum(l, totalHomemHora)])),
+    porObra: Object.fromEntries(
+      Object.entries(groupBy(porData[data], (r) => r.obraId)).map(([id, l]) => [id, sum(l, totalHomemHora)]),
+    ),
   }));
-  const linhasMO = rdos.flatMap((r) => r.maoDeObra.map((m) => ({ ...m, hh: toNumber(m.quantidade) * toNumber(m.horas), obraId: r.obraId })));
+  const linhasMO = rdos.flatMap((r) =>
+    r.maoDeObra.map((m) => ({ ...m, hh: toNumber(m.quantidade) * toNumber(m.horas), obraId: r.obraId })),
+  );
   const agrupar = (lista, chave) =>
     Object.entries(groupBy(lista, (x) => x[chave] || 'Não informado'))
       .map(([nome, l]) => ({ nome, hh: sum(l, (x) => x.hh) }))
@@ -67,7 +79,15 @@ export function calcularIndicadores(state, { obraIds, de, ate }) {
   const hhPorEmpresa = agrupar(linhasMO, 'empresa');
 
   // --- equipamentos ---
-  const linhasEq = rdos.flatMap((r) => r.equipamentos.map((e) => ({ tipo: e.tipo, mult: Math.max(1, toNumber(e.quantidade)), disp: toNumber(e.horasDisponiveis), prod: toNumber(e.horasProdutivas), par: toNumber(e.horasParadas) })));
+  const linhasEq = rdos.flatMap((r) =>
+    r.equipamentos.map((e) => ({
+      tipo: e.tipo,
+      mult: Math.max(1, toNumber(e.quantidade)),
+      disp: toNumber(e.horasDisponiveis),
+      prod: toNumber(e.horasProdutivas),
+      par: toNumber(e.horasParadas),
+    })),
+  );
   const equipamentos = Object.entries(groupBy(linhasEq, (x) => x.tipo))
     .map(([tipo, l]) => ({
       tipo,
@@ -78,13 +98,28 @@ export function calcularIndicadores(state, { obraIds, de, ate }) {
     .sort((a, b) => b.produtivas + b.paradas - (a.produtivas + a.paradas));
 
   // --- quantidades por serviço ---
-  const linhasAt = rdos.flatMap((r) => r.atividades.map((a) => ({ servico: a.servico, unidade: a.unidade, qtd: toNumber(a.quantidadeDia), data: r.data, obraId: r.obraId })));
+  const linhasAt = rdos.flatMap((r) =>
+    r.atividades.map((a) => ({
+      servico: a.servico,
+      unidade: a.unidade,
+      qtd: toNumber(a.quantidadeDia),
+      data: r.data,
+      obraId: r.obraId,
+    })),
+  );
   const servicos = Object.entries(groupBy(linhasAt, (x) => `${x.servico}|${x.unidade}`))
     .map(([k, l]) => {
       const [servico, unidade] = k.split('|');
-      const porDia = Object.entries(groupBy(l, (x) => x.data)).map(([data, ll]) => [data, sum(ll, (x) => x.qtd)]).sort((a, b) => (a[0] > b[0] ? 1 : -1));
+      const porDia = Object.entries(groupBy(l, (x) => x.data))
+        .map(([data, ll]) => [data, sum(ll, (x) => x.qtd)])
+        .sort((a, b) => (a[0] > b[0] ? 1 : -1));
       let acc = 0;
-      return { servico, unidade, total: sum(l, (x) => x.qtd), evolucao: porDia.map(([data, q]) => ({ data, acumulado: (acc += q) })) };
+      return {
+        servico,
+        unidade,
+        total: sum(l, (x) => x.qtd),
+        evolucao: porDia.map(([data, q]) => ({ data, acumulado: (acc += q) })),
+      };
     })
     .sort((a, b) => b.total - a.total);
 
@@ -99,21 +134,31 @@ export function calcularIndicadores(state, { obraIds, de, ate }) {
 
   // --- ocorrências, NC, incidentes e pendências ---
   const ocorrencias = rdos.flatMap((r) => r.ocorrencias);
-  const ultimoPorObra = obras.map((o) => rdos.filter((r) => r.obraId === o.id && ENVIADOS(r)).sort((a, b) => (a.data < b.data ? 1 : -1))[0]).filter(Boolean);
+  const ultimoPorObra = obras
+    .map((o) => rdos.filter((r) => r.obraId === o.id && ENVIADOS(r)).sort((a, b) => (a.data < b.data ? 1 : -1))[0])
+    .filter(Boolean);
   const pendenciasAbertas = ultimoPorObra.flatMap((r) => r.pendencias.filter((p) => p.status !== 'resolvida'));
   const ocorrenciasInd = {
     total: ocorrencias.length,
     impactoPrazo: ocorrencias.filter((o) => o.impactoPrazo).length,
     impactoCusto: ocorrencias.filter((o) => o.impactoCusto).length,
     impactoQualidade: ocorrencias.filter((o) => o.impactoQualidade).length,
-    naoConformidades: sum(rdos, (r) => r.qualidade.filter((q) => q.tipo === 'nao_conformidade' || q.resultado === 'nao_conforme').length),
+    naoConformidades: sum(
+      rdos,
+      (r) => r.qualidade.filter((q) => q.tipo === 'nao_conformidade' || q.resultado === 'nao_conforme').length,
+    ),
     incidentes: sum(rdos, (r) => r.seguranca.incidentes.length),
-    pendenciasPorCriticidade: ['baixa', 'media', 'alta', 'critica'].map((k) => ({ nivel: k, n: pendenciasAbertas.filter((p) => p.criticidade === k).length })),
+    pendenciasPorCriticidade: ['baixa', 'media', 'alta', 'critica'].map((k) => ({
+      nivel: k,
+      n: pendenciasAbertas.filter((p) => p.criticidade === k).length,
+    })),
     pendenciasAbertas: pendenciasAbertas.length,
   };
 
   // --- cobertura fotográfica e registros incompletos ---
-  const comFotos = rdos.filter((r) => ENVIADOS(r) && r.fotos.length >= 3 && r.fotos.every((f) => (f.legenda || '').trim()));
+  const comFotos = rdos.filter(
+    (r) => ENVIADOS(r) && r.fotos.length >= 3 && r.fotos.every((f) => (f.legenda || '').trim()),
+  );
   const incompletos = rdos
     .filter((r) => r.status !== STATUS.FINALIZADO || r.fotos.length < 3)
     .map((r) => {
@@ -127,11 +172,30 @@ export function calcularIndicadores(state, { obraIds, de, ate }) {
     })
     .filter((x) => x.faltas.length);
   const baseCobertura = rdos.filter(ENVIADOS).length;
-  const cobertura = { comFotos: comFotos.length, total: baseCobertura, pct: baseCobertura ? Math.round((comFotos.length / baseCobertura) * 100) : 0, incompletos };
+  const cobertura = {
+    comFotos: comFotos.length,
+    total: baseCobertura,
+    pct: baseCobertura ? Math.round((comFotos.length / baseCobertura) * 100) : 0,
+    incompletos,
+  };
 
   return {
-    obras, de, ate, contagem, distribuicao, tempos, hhPorDia, hhPorFuncao, hhPorEmpresa, equipamentos, servicos, clima,
-    ocorrencias: ocorrenciasInd, cobertura, equipUnidades: sum(rdos, (r) => resumoEquipamentos(r).unidades), totalRdos: rdos.length,
+    obras,
+    de,
+    ate,
+    contagem,
+    distribuicao,
+    tempos,
+    hhPorDia,
+    hhPorFuncao,
+    hhPorEmpresa,
+    equipamentos,
+    servicos,
+    clima,
+    ocorrencias: ocorrenciasInd,
+    cobertura,
+    equipUnidades: sum(rdos, (r) => resumoEquipamentos(r).unidades),
+    totalRdos: rdos.length,
   };
 }
 

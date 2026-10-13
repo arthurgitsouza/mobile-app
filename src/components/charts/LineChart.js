@@ -16,7 +16,13 @@ const bonito = (max) => {
  * anel de 2 px na cor da superfície. Rótulo só no ponto final; eixo com valores redondos.
  * pontos: [{ rotulo, valor }]
  */
-export default function LineChart({ pontos, altura = 160, formatar = (v) => String(Math.round(v)), unidade = '', cor = chart.series[0] }) {
+export default function LineChart({
+  pontos,
+  altura = 160,
+  formatar = (v) => String(Math.round(v)),
+  unidade = '',
+  cor = chart.series[0],
+}) {
   const [largura, setLargura] = useState(0);
   if (!pontos.length) return null;
   const padE = 44;
@@ -33,11 +39,23 @@ export default function LineChart({ pontos, altura = 160, formatar = (v) => Stri
   const ultimo = pontos[pontos.length - 1];
 
   return (
-    <View onLayout={(e) => setLargura(e.nativeEvent.layout.width)} accessible accessibilityLabel={`Evolução: ${pontos.length} pontos, último valor ${formatar(ultimo.valor)} ${unidade}`}>
+    <View
+      onLayout={(e) => setLargura(e.nativeEvent.layout.width)}
+      accessible
+      accessibilityLabel={`Evolução: ${pontos.length} pontos, último valor ${formatar(ultimo.valor)} ${unidade}`}
+    >
       {largura > 0 ? (
         <Svg width={largura} height={altura}>
           {[0, 0.5, 1].map((p) => (
-            <Line key={p} x1={padE} x2={padE + w} y1={padT + h - p * h} y2={padT + h - p * h} stroke={p === 0 ? chart.axis : chart.grid} strokeWidth={1} />
+            <Line
+              key={p}
+              x1={padE}
+              x2={padE + w}
+              y1={padT + h - p * h}
+              y2={padT + h - p * h}
+              stroke={p === 0 ? chart.axis : chart.grid}
+              strokeWidth={1}
+            />
           ))}
           <Path d={area} fill={cor} opacity={0.1} />
           <Path d={linha} stroke={cor} strokeWidth={2} fill="none" strokeLinejoin="round" strokeLinecap="round" />
@@ -48,7 +66,19 @@ export default function LineChart({ pontos, altura = 160, formatar = (v) => Stri
       {largura > 0 ? (
         <>
           {[max, max / 2, 0].map((t, i) => (
-            <Txt key={i} v="caption" muted style={{ position: 'absolute', left: 0, width: padE - 6, textAlign: 'right', top: padT + h - (t / max) * h - 7, fontSize: 10 }}>
+            <Txt
+              key={i}
+              v="caption"
+              muted
+              style={{
+                position: 'absolute',
+                left: 0,
+                width: padE - 6,
+                textAlign: 'right',
+                top: padT + h - (t / max) * h - 7,
+                fontSize: 10,
+              }}
+            >
               {formatar(t)}
             </Txt>
           ))}

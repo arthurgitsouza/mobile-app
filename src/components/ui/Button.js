@@ -21,7 +21,18 @@ const SIZES = {
 };
 
 export default function Button({
-  title, onPress, variant = 'primary', size = 'md', icon, iconRight, loading, disabled, full = true, style, accessibilityLabel, hint,
+  title,
+  onPress,
+  variant = 'primary',
+  size = 'md',
+  icon,
+  iconRight,
+  loading,
+  disabled,
+  full = true,
+  style,
+  accessibilityLabel,
+  hint,
 }) {
   const v = VARIANTS[variant];
   const s = SIZES[size];

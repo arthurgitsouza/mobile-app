@@ -8,7 +8,15 @@ import useCriarRdo from '../../hooks/useCriarRdo';
 import { ehDiaUtil, obrasVisiveis, rdoDaData } from '../../domain/selectors';
 import { validarRdo } from '../../domain/validation';
 import { numeroFormatado } from '../../domain/rdo';
-import { formatDateLong, formatDateTime, formatTime, hojeObra, horaAgoraObra, nomeDiaSemana, timeToMinutes } from '../../utils/date';
+import {
+  formatDateLong,
+  formatDateTime,
+  formatTime,
+  hojeObra,
+  horaAgoraObra,
+  nomeDiaSemana,
+  timeToMinutes,
+} from '../../utils/date';
 import { capitalizar } from '../../utils/format';
 import { Banner, Button, Card, Icon, ProgressRing, Screen, SyncBanner, StatusBadge, Txt } from '../../components/ui';
 import { RdoCard } from '../../components/rdo';
@@ -24,7 +32,9 @@ export default function OperacionalHome() {
   const cfg = state.settings.lembretes;
   const passouDoLimite = timeToMinutes(horaAgoraObra(now)) >= timeToMinutes(cfg.operacionalFimDia);
 
-  const meus = state.rdos.filter((r) => r.autorId === currentUser.id && !['retificado', 'cancelado'].includes(r.status)).sort((a, b) => (a.data < b.data ? 1 : -1));
+  const meus = state.rdos
+    .filter((r) => r.autorId === currentUser.id && !['retificado', 'cancelado'].includes(r.status))
+    .sort((a, b) => (a.data < b.data ? 1 : -1));
   const atencao = meus.filter((r) => r.status === 'devolvido' || (r.status === 'rascunho' && r.data < hoje));
   const recentes = meus.filter((r) => !atencao.includes(r)).slice(0, 4);
   const obraDe = (r) => state.obras.find((o) => o.id === r.obraId);
@@ -62,9 +72,16 @@ export default function OperacionalHome() {
                   Você ainda não iniciou o RDO de hoje. Registre clima, equipe, equipamentos, atividades e fotos.
                 </Txt>
                 {!util ? (
-                  <Banner tone="info" message="Hoje não é dia útil desta obra, mas você pode registrar um RDO se houve atividade." />
+                  <Banner
+                    tone="info"
+                    message="Hoje não é dia útil desta obra, mas você pode registrar um RDO se houve atividade."
+                  />
                 ) : passouDoLimite ? (
-                  <Banner tone="warning" icon="clock-alert-outline" message={`O prazo sugerido para enviar o RDO era ${cfg.operacionalFimDia}.`} />
+                  <Banner
+                    tone="warning"
+                    icon="clock-alert-outline"
+                    message={`O prazo sugerido para enviar o RDO era ${cfg.operacionalFimDia}.`}
+                  />
                 ) : (
                   <View style={styles.dica}>
                     <Icon name="clock-outline" size={16} color={colors.gold200} />
@@ -73,12 +90,25 @@ export default function OperacionalHome() {
                     </Txt>
                   </View>
                 )}
-                <Button title="Iniciar RDO de hoje" icon="plus-circle-outline" variant="accent" size="lg" onPress={() => criar(obra)} />
+                <Button
+                  title="Iniciar RDO de hoje"
+                  icon="plus-circle-outline"
+                  variant="accent"
+                  size="lg"
+                  onPress={() => criar(obra)}
+                />
               </>
             ) : rdo.status === 'rascunho' || rdo.status === 'devolvido' ? (
               <>
                 <View style={styles.progress}>
-                  <ProgressRing value={pct} size={72} stroke={8} color={colors.gold500} track="rgba(255,255,255,0.2)" label="Progresso do preenchimento">
+                  <ProgressRing
+                    value={pct}
+                    size={72}
+                    stroke={8}
+                    color={colors.gold500}
+                    track="rgba(255,255,255,0.2)"
+                    label="Progresso do preenchimento"
+                  >
                     <Txt v="bodyStrong" color={colors.white}>
                       {pct}%
                     </Txt>
@@ -88,16 +118,37 @@ export default function OperacionalHome() {
                       RDO {numeroFormatado(rdo)} · {v.progresso.completos} de {v.progresso.total} etapas
                     </Txt>
                     <Txt v="small" color={colors.textOnDarkMuted}>
-                      {v.valido ? 'Pronto para revisão e envio.' : `${v.erros.length} ${v.erros.length === 1 ? 'pendência obrigatória' : 'pendências obrigatórias'} para enviar.`}
+                      {v.valido
+                        ? 'Pronto para revisão e envio.'
+                        : `${v.erros.length} ${v.erros.length === 1 ? 'pendência obrigatória' : 'pendências obrigatórias'} para enviar.`}
                     </Txt>
                     <Txt v="caption" color={colors.textOnDarkMuted}>
                       Salvo automaticamente às {formatTime(rdo.atualizadoEm)}
                     </Txt>
                   </View>
                 </View>
-                {rdo.status === 'devolvido' && rdo.devolucao ? <Banner tone="warning" title={`Devolvido — corrigir até ${formatDateTime(rdo.devolucao.prazo)}`} message={rdo.devolucao.motivo} /> : null}
-                <Button title={rdo.status === 'devolvido' ? 'Corrigir RDO' : 'Continuar preenchimento'} icon="pencil-outline" variant="accent" size="lg" onPress={() => nav.navigate('RdoForm', { rdoId: rdo.id })} />
-                {v.valido ? <Button title="Revisar e enviar" icon="send-check-outline" variant="onDark" onPress={() => nav.navigate('RdoForm', { rdoId: rdo.id, passo: 'revisao' })} /> : null}
+                {rdo.status === 'devolvido' && rdo.devolucao ? (
+                  <Banner
+                    tone="warning"
+                    title={`Devolvido — corrigir até ${formatDateTime(rdo.devolucao.prazo)}`}
+                    message={rdo.devolucao.motivo}
+                  />
+                ) : null}
+                <Button
+                  title={rdo.status === 'devolvido' ? 'Corrigir RDO' : 'Continuar preenchimento'}
+                  icon="pencil-outline"
+                  variant="accent"
+                  size="lg"
+                  onPress={() => nav.navigate('RdoForm', { rdoId: rdo.id })}
+                />
+                {v.valido ? (
+                  <Button
+                    title="Revisar e enviar"
+                    icon="send-check-outline"
+                    variant="onDark"
+                    onPress={() => nav.navigate('RdoForm', { rdoId: rdo.id, passo: 'revisao' })}
+                  />
+                ) : null}
               </>
             ) : (
               <>
@@ -110,7 +161,12 @@ export default function OperacionalHome() {
                         ? 'RDO finalizado com PDF verificável.'
                         : 'Acompanhe a situação do RDO.'}
                 </Txt>
-                <Button title="Ver RDO de hoje" icon="file-document-outline" variant="onDark" onPress={() => nav.navigate('RdoDetail', { rdoId: rdo.id })} />
+                <Button
+                  title="Ver RDO de hoje"
+                  icon="file-document-outline"
+                  variant="onDark"
+                  onPress={() => nav.navigate('RdoDetail', { rdoId: rdo.id })}
+                />
               </>
             )}
           </View>
@@ -131,7 +187,11 @@ export default function OperacionalHome() {
             />
           ))}
           {atencao.some((r) => r.status === 'rascunho') ? (
-            <Banner tone="warning" icon="calendar-alert" message="RDO de dia anterior ainda em rascunho: complete e envie para manter o registro em dia." />
+            <Banner
+              tone="warning"
+              icon="calendar-alert"
+              message="RDO de dia anterior ainda em rascunho: complete e envie para manter o registro em dia."
+            />
           ) : null}
         </>
       ) : null}
@@ -140,7 +200,16 @@ export default function OperacionalHome() {
         Meus RDOs recentes
       </TituloSecao>
       {recentes.length ? (
-        recentes.map((r) => <RdoCard key={r.id} rdo={r} obra={obraDe(r)} agora={now} config={cfg} onPress={() => nav.navigate('RdoDetail', { rdoId: r.id })} />)
+        recentes.map((r) => (
+          <RdoCard
+            key={r.id}
+            rdo={r}
+            obra={obraDe(r)}
+            agora={now}
+            config={cfg}
+            onPress={() => nav.navigate('RdoDetail', { rdoId: r.id })}
+          />
+        ))
       ) : (
         <Txt v="small" muted>
           Você ainda não tem RDOs recentes.
@@ -150,7 +219,8 @@ export default function OperacionalHome() {
       <Card tone="soft" style={{ flexDirection: 'row', gap: 10 }}>
         <Icon name="cloud-off-outline" size={22} color={colors.navy600} />
         <Txt v="small" muted style={{ flex: 1 }}>
-          Sem sinal no canteiro? Continue preenchendo e fotografando: tudo fica salvo no aparelho e sincroniza quando a conexão voltar.
+          Sem sinal no canteiro? Continue preenchendo e fotografando: tudo fica salvo no aparelho e sincroniza quando a
+          conexão voltar.
         </Txt>
       </Card>
     </Screen>
@@ -158,7 +228,14 @@ export default function OperacionalHome() {
 }
 
 const styles = StyleSheet.create({
-  hero: { backgroundColor: colors.navy700, borderRadius: radius.xl, padding: 18, gap: 12, borderWidth: 1, borderColor: colors.navy600 },
+  hero: {
+    backgroundColor: colors.navy700,
+    borderRadius: radius.xl,
+    padding: 18,
+    gap: 12,
+    borderWidth: 1,
+    borderColor: colors.navy600,
+  },
   heroTop: { flexDirection: 'row', alignItems: 'flex-start', gap: 8 },
   dica: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   progress: { flexDirection: 'row', alignItems: 'center', gap: 14 },

@@ -18,7 +18,11 @@ export default function AppWatchers() {
     if (!online || pendentes === 0) return undefined;
     const t = setTimeout(() => {
       actions.sincronizarPendentes();
-      toast.show({ type: 'success', title: 'Conexão restabelecida', message: `${contar(pendentes, 'RDO')} sincronizado${pendentes > 1 ? 's' : ''} com o servidor.` });
+      toast.show({
+        type: 'success',
+        title: 'Conexão restabelecida',
+        message: `${contar(pendentes, 'RDO')} sincronizado${pendentes > 1 ? 's' : ''} com o servidor.`,
+      });
     }, 1800);
     return () => clearTimeout(t);
   }, [online, pendentes, actions, toast]);
@@ -50,8 +54,11 @@ export default function AppWatchers() {
       const naoLidas = minhas.filter((n) => !n.lida).length;
       if (naoLidas > 0) {
         toast.show({
-          type: 'push', icon: 'bell-ring-outline', title: `Você tem ${contar(naoLidas, 'notificação', 'notificações')} não lida${naoLidas > 1 ? 's' : ''}`,
-          message: minhas.find((n) => !n.lida)?.titulo, onPress: () => navegar('Notifications'),
+          type: 'push',
+          icon: 'bell-ring-outline',
+          title: `Você tem ${contar(naoLidas, 'notificação', 'notificações')} não lida${naoLidas > 1 ? 's' : ''}`,
+          message: minhas.find((n) => !n.lida)?.titulo,
+          onPress: () => navegar('Notifications'),
         });
       }
       return;
@@ -61,7 +68,10 @@ export default function AppWatchers() {
     if (novas.length) {
       const n = novas[0];
       toast.show({
-        type: 'push', icon: TIPOS_NOTIFICACAO[n.tipo]?.icone, title: n.titulo, message: n.mensagem,
+        type: 'push',
+        icon: TIPOS_NOTIFICACAO[n.tipo]?.icone,
+        title: n.titulo,
+        message: n.mensagem,
         onPress: () => (n.rdoId ? navegar('RdoDetail', { rdoId: n.rdoId }) : navegar('Notifications')),
       });
     }

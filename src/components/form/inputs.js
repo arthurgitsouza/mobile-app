@@ -7,8 +7,15 @@ import Field from './Field';
 
 export const inputStyles = StyleSheet.create({
   wrap: {
-    flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 50, paddingHorizontal: 14, borderRadius: radius.md,
-    borderWidth: 1.5, borderColor: colors.borderStrong, backgroundColor: colors.white,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    minHeight: 50,
+    paddingHorizontal: 14,
+    borderRadius: radius.md,
+    borderWidth: 1.5,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.white,
   },
   focused: { borderColor: colors.navy600, backgroundColor: colors.white },
   error: { borderColor: colors.danger },
@@ -18,15 +25,54 @@ export const inputStyles = StyleSheet.create({
 });
 
 export function TextField({
-  label, required, help, error, value, onChangeText, placeholder, multiline, keyboardType, maxLength, suffix, prefixIcon,
-  editable = true, autoCapitalize = 'sentences', secureTextEntry, onBlur, onFocus, returnKeyType, onSubmitEditing, inputRef, mask,
-  autoComplete, textContentType, right, style, autoCorrect, numberOfLines,
+  label,
+  required,
+  help,
+  error,
+  value,
+  onChangeText,
+  placeholder,
+  multiline,
+  keyboardType,
+  maxLength,
+  suffix,
+  prefixIcon,
+  editable = true,
+  autoCapitalize = 'sentences',
+  secureTextEntry,
+  onBlur,
+  onFocus,
+  returnKeyType,
+  onSubmitEditing,
+  inputRef,
+  mask,
+  autoComplete,
+  textContentType,
+  right,
+  style,
+  autoCorrect,
+  numberOfLines,
 }) {
   const [focused, setFocused] = useState(false);
   return (
     <Field label={label} required={required} help={help} error={error} right={right} style={style}>
-      <View style={[inputStyles.wrap, focused && inputStyles.focused, !!error && inputStyles.error, !editable && inputStyles.readonly, multiline && { alignItems: 'flex-start' }]}>
-        {prefixIcon ? <Icon name={prefixIcon} size={20} color={colors.textMuted} style={multiline ? { marginTop: 14 } : undefined} /> : null}
+      <View
+        style={[
+          inputStyles.wrap,
+          focused && inputStyles.focused,
+          !!error && inputStyles.error,
+          !editable && inputStyles.readonly,
+          multiline && { alignItems: 'flex-start' },
+        ]}
+      >
+        {prefixIcon ? (
+          <Icon
+            name={prefixIcon}
+            size={20}
+            color={colors.textMuted}
+            style={multiline ? { marginTop: 14 } : undefined}
+          />
+        ) : null}
         <TextInput
           ref={inputRef}
           value={value ?? ''}
@@ -76,7 +122,17 @@ export function IntegerField(props) {
 }
 
 export function TimeField(props) {
-  return <TextField keyboardType="number-pad" mask={maskTime} maxLength={5} placeholder="HH:MM" prefixIcon="clock-outline" autoCapitalize="none" {...props} />;
+  return (
+    <TextField
+      keyboardType="number-pad"
+      mask={maskTime}
+      maxLength={5}
+      placeholder="HH:MM"
+      prefixIcon="clock-outline"
+      autoCapitalize="none"
+      {...props}
+    />
+  );
 }
 
 export function PasswordField({ label = 'Senha', ...props }) {
@@ -89,7 +145,13 @@ export function PasswordField({ label = 'Senha', ...props }) {
       autoCorrect={false}
       prefixIcon="lock-outline"
       right={
-        <Pressable onPress={() => setVisible((v) => !v)} accessibilityRole="button" accessibilityLabel={visible ? 'Ocultar senha' : 'Mostrar senha'} hitSlop={8} style={{ flexDirection: 'row', alignItems: 'center', gap: 4, minHeight: 32 }}>
+        <Pressable
+          onPress={() => setVisible((v) => !v)}
+          accessibilityRole="button"
+          accessibilityLabel={visible ? 'Ocultar senha' : 'Mostrar senha'}
+          hitSlop={8}
+          style={{ flexDirection: 'row', alignItems: 'center', gap: 4, minHeight: 32 }}
+        >
           <Icon name={visible ? 'eye-off-outline' : 'eye-outline'} size={18} color={colors.blue500} />
           <Txt v="smallStrong" color={colors.blue500}>
             {visible ? 'Ocultar' : 'Mostrar'}
@@ -118,7 +180,12 @@ export function SearchBar({ value, onChangeText, placeholder = 'Buscar', onDark,
         style={[styles.searchInput, { color: onDark ? colors.white : colors.text }]}
       />
       {value ? (
-        <Pressable onPress={() => onChangeText('')} accessibilityRole="button" accessibilityLabel="Limpar busca" hitSlop={10}>
+        <Pressable
+          onPress={() => onChangeText('')}
+          accessibilityRole="button"
+          accessibilityLabel="Limpar busca"
+          hitSlop={10}
+        >
           <Icon name="close-circle" size={18} color={onDark ? colors.textOnDarkMuted : colors.textSubtle} />
         </Pressable>
       ) : null}
@@ -127,7 +194,14 @@ export function SearchBar({ value, onChangeText, placeholder = 'Buscar', onDark,
 }
 
 const styles = StyleSheet.create({
-  search: { flexDirection: 'row', alignItems: 'center', gap: 8, height: 46, paddingHorizontal: 12, borderRadius: radius.md },
+  search: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    height: 46,
+    paddingHorizontal: 12,
+    borderRadius: radius.md,
+  },
   searchLight: { backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.borderStrong },
   searchDark: { backgroundColor: 'rgba(255,255,255,0.14)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.28)' },
   searchInput: { flex: 1, fontSize: 15, paddingVertical: 0 },
