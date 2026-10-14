@@ -1,0 +1,146 @@
+{
+  "funcoes": [
+    "Engenheiro",
+    "Mestre de obras",
+    "Encarregado",
+    "Técnico em edificações",
+    "Técnico de segurança",
+    "Almoxarife",
+    "Pedreiro",
+    "Servente",
+    "Carpinteiro",
+    "Armador",
+    "Eletricista",
+    "Encanador",
+    "Pintor",
+    "Azulejista",
+    "Operador de máquinas",
+    "Motorista",
+    "Soldador",
+    "Ajudante"
+  ],
+  "equipamentos": [
+    "Betoneira",
+    "Compactador (sapo)",
+    "Placa vibratória",
+    "Caminhão basculante",
+    "Caminhão betoneira",
+    "Retroescavadeira",
+    "Escavadeira hidráulica",
+    "Mini carregadeira",
+    "Rolo compactador",
+    "Guincho",
+    "Vibrador de imersão",
+    "Bomba de concreto",
+    "Serra circular",
+    "Gerador",
+    "Martelete"
+  ],
+  "servicos": [
+    {
+      "nome": "Locação e marcação",
+      "unidade": "m²"
+    },
+    {
+      "nome": "Escavação",
+      "unidade": "m³"
+    },
+    {
+      "nome": "Aterro compactado",
+      "unidade": "m³"
+    },
+    {
+      "nome": "Armação de aço",
+      "unidade": "kg"
+    },
+    {
+      "nome": "Formas",
+      "unidade": "m²"
+    },
+    {
+      "nome": "Concretagem",
+      "unidade": "m³"
+    },
+    {
+      "nome": "Alvenaria de vedação",
+      "unidade": "m²"
+    },
+    {
+      "nome": "Chapisco e reboco",
+      "unidade": "m²"
+    },
+    {
+      "nome": "Contrapiso",
+      "unidade": "m²"
+    },
+    {
+      "nome": "Revestimento cerâmico",
+      "unidade": "m²"
+    },
+    {
+      "nome": "Instalações hidráulicas",
+      "unidade": "m"
+    },
+    {
+      "nome": "Instalações elétricas",
+      "unidade": "m"
+    },
+    {
+      "nome": "Impermeabilização",
+      "unidade": "m²"
+    },
+    {
+      "nome": "Pintura",
+      "unidade": "m²"
+    },
+    {
+      "nome": "Cobertura",
+      "unidade": "m²"
+    },
+    {
+      "nome": "Limpeza da obra",
+      "unidade": "vb"
+    }
+  ],
+  "materiais": [
+    "Cimento CP-II (saco 50 kg)",
+    "Areia média",
+    "Brita 1",
+    "Aço CA-50",
+    "Bloco cerâmico 9×19×19",
+    "Concreto usinado fck 30",
+    "Tubo PVC 100 mm",
+    "Argamassa colante",
+    "Cal hidratada",
+    "Madeira para formas"
+  ],
+  "unidades": [
+    "m",
+    "m²",
+    "m³",
+    "kg",
+    "t",
+    "un",
+    "cj",
+    "vb",
+    "h",
+    "dia",
+    "l",
+    "saco",
+    "viagem"
+  ],
+  "frentes": [
+    "Pavimento térreo",
+    "1º pavimento",
+    "2º pavimento",
+    "Fundações",
+    "Área externa",
+    "Cobertura",
+    "Canteiro / almoxarifado"
+  ],
+  "origensEmpresa": [
+    "Equipe própria",
+    "Empreiteira terceirizada",
+    "Subcontratada"
+  ]
+}

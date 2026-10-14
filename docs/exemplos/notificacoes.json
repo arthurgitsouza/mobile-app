@@ -1,0 +1,386 @@
+[
+  {
+    "id": "nt_mv7hr6kjmf1",
+    "usuarioId": "u_master",
+    "tipo": "rdo_submetido",
+    "titulo": "RDO pronto para análise",
+    "mensagem": "RDO nº 0007 da obra Obra Alfa está pronto para análise.",
+    "obraId": "obra_alfa",
+    "rdoId": "rdo_alfa_0007",
+    "rdoStatus": "submetido",
+    "prazo": "2026-10-13T12:00:00.000Z",
+    "dataHora": "2026-10-12T12:00:00.000Z",
+    "lida": false,
+    "chave": null,
+    "alvoId": null,
+    "entregas": [
+      {
+        "canal": "push",
+        "status": "entregue",
+        "em": "2026-10-12T12:00:00.000Z"
+      },
+      {
+        "canal": "email",
+        "status": "entregue",
+        "em": "2026-10-12T12:00:00.000Z"
+      },
+      {
+        "canal": "whatsapp",
+        "status": "entregue",
+        "em": "2026-10-12T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": "nt_mv7hr6kjnvk",
+    "usuarioId": "u_master",
+    "tipo": "lembrete",
+    "titulo": "Lembrete: análise pendente há mais de 24 h",
+    "mensagem": "RDO nº 0007 (Obra Alfa) aguarda análise há 27 h. O prazo sugerido era 24 h.",
+    "obraId": "obra_alfa",
+    "rdoId": "rdo_alfa_0007",
+    "rdoStatus": "submetido",
+    "prazo": "2026-10-13T12:00:00.000Z",
+    "dataHora": "2026-10-13T12:00:00.000Z",
+    "lida": false,
+    "chave": "lem:master:rdo_alfa_0007:24",
+    "alvoId": null,
+    "entregas": [
+      {
+        "canal": "push",
+        "status": "entregue",
+        "em": "2026-10-13T12:00:00.000Z"
+      },
+      {
+        "canal": "email",
+        "status": "entregue",
+        "em": "2026-10-13T12:00:00.000Z"
+      },
+      {
+        "canal": "whatsapp",
+        "status": "entregue",
+        "em": "2026-10-13T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": "nt_mv7hr6kjo5i",
+    "usuarioId": "u_master",
+    "tipo": "esclarecimento",
+    "titulo": "Cliente solicitou esclarecimento",
+    "mensagem": "Roberto Campos pediu esclarecimento no RDO nº 0008 (Obra Beta): \"Qual foi o traço do concreto…\"",
+    "obraId": "obra_beta",
+    "rdoId": "rdo_beta_0008",
+    "rdoStatus": "enviado_cliente",
+    "prazo": null,
+    "dataHora": "2026-10-13T10:00:00.000Z",
+    "lida": false,
+    "chave": null,
+    "alvoId": null,
+    "entregas": [
+      {
+        "canal": "push",
+        "status": "entregue",
+        "em": "2026-10-13T10:00:00.000Z"
+      },
+      {
+        "canal": "email",
+        "status": "entregue",
+        "em": "2026-10-13T10:00:00.000Z"
+      },
+      {
+        "canal": "whatsapp",
+        "status": "entregue",
+        "em": "2026-10-13T10:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": "nt_mv7hr6kjpw4",
+    "usuarioId": "u_master",
+    "tipo": "falha_entrega",
+    "titulo": "Falha de entrega de e-mail",
+    "mensagem": "Não foi possível entregar o e-mail do RDO nº 0008 (Obra Beta) a Roberto Campos. Push entregue. Você pode reenviar.",
+    "obraId": "obra_beta",
+    "rdoId": "rdo_beta_0008",
+    "rdoStatus": "enviado_cliente",
+    "prazo": null,
+    "dataHora": "2026-10-13T06:30:00.000Z",
+    "lida": false,
+    "chave": null,
+    "alvoId": "u_roberto",
+    "entregas": [
+      {
+        "canal": "push",
+        "status": "entregue",
+        "em": "2026-10-13T06:30:00.000Z"
+      },
+      {
+        "canal": "email",
+        "status": "falha",
+        "em": "2026-10-13T06:30:00.000Z"
+      },
+      {
+        "canal": "whatsapp",
+        "status": "entregue",
+        "em": "2026-10-13T06:30:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": "nt_mv7hr6kjqna",
+    "usuarioId": "u_master",
+    "tipo": "cliente_manifestou",
+    "titulo": "Cliente registrou ressalva",
+    "mensagem": "Fernanda Albuquerque registrou ciência com ressalva no RDO nº 0005 (Obra Alfa). PDF final disponível.",
+    "obraId": "obra_alfa",
+    "rdoId": "rdo_alfa_0005",
+    "rdoStatus": "finalizado",
+    "prazo": null,
+    "dataHora": "2026-10-09T15:00:00.000Z",
+    "lida": true,
+    "chave": null,
+    "alvoId": null,
+    "entregas": [
+      {
+        "canal": "push",
+        "status": "entregue",
+        "em": "2026-10-09T15:00:00.000Z"
+      },
+      {
+        "canal": "email",
+        "status": "entregue",
+        "em": "2026-10-09T15:00:00.000Z"
+      },
+      {
+        "canal": "whatsapp",
+        "status": "entregue",
+        "em": "2026-10-09T15:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": "nt_mv7hr6kjrs2",
+    "usuarioId": "u_joao",
+    "tipo": "rdo_devolvido",
+    "titulo": "RDO devolvido para correção",
+    "mensagem": "RDO nº 0008 (Obra Alfa) foi devolvido. Motivo: Foto 03 sem local preciso: informe o eixo/pavimento onde a foto foi tirada e reenvie.",
+    "obraId": "obra_alfa",
+    "rdoId": "rdo_alfa_0008",
+    "rdoStatus": "devolvido",
+    "prazo": "2026-10-13T21:00:00.000Z",
+    "dataHora": "2026-10-13T12:00:00.000Z",
+    "lida": false,
+    "chave": null,
+    "alvoId": null,
+    "entregas": [
+      {
+        "canal": "push",
+        "status": "entregue",
+        "em": "2026-10-13T12:00:00.000Z"
+      },
+      {
+        "canal": "email",
+        "status": "entregue",
+        "em": "2026-10-13T12:00:00.000Z"
+      },
+      {
+        "canal": "whatsapp",
+        "status": "nao_configurado",
+        "em": "2026-10-13T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": "nt_mv7hr6kjsvg",
+    "usuarioId": "u_joao",
+    "tipo": "cliente_manifestou",
+    "titulo": "Cliente registrou ressalva",
+    "mensagem": "Fernanda Albuquerque registrou ciência com ressalva no RDO nº 0005. PDF final disponível.",
+    "obraId": "obra_alfa",
+    "rdoId": "rdo_alfa_0005",
+    "rdoStatus": "finalizado",
+    "prazo": null,
+    "dataHora": "2026-10-09T15:00:00.000Z",
+    "lida": true,
+    "chave": null,
+    "alvoId": null,
+    "entregas": [
+      {
+        "canal": "push",
+        "status": "entregue",
+        "em": "2026-10-09T15:00:00.000Z"
+      },
+      {
+        "canal": "email",
+        "status": "entregue",
+        "em": "2026-10-09T15:00:00.000Z"
+      },
+      {
+        "canal": "whatsapp",
+        "status": "nao_configurado",
+        "em": "2026-10-09T15:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": "nt_mv7hr6kjthn",
+    "usuarioId": "u_fernanda",
+    "tipo": "rdo_validado",
+    "titulo": "RDO aguarda sua ciência/aceite",
+    "mensagem": "RDO nº 0006 da obra Obra Alfa foi validado e aguarda sua ciência/aceite.",
+    "obraId": "obra_alfa",
+    "rdoId": "rdo_alfa_0006",
+    "rdoStatus": "enviado_cliente",
+    "prazo": "2026-10-13T08:00:00.000Z",
+    "dataHora": "2026-10-12T08:00:00.000Z",
+    "lida": false,
+    "chave": null,
+    "alvoId": null,
+    "entregas": [
+      {
+        "canal": "push",
+        "status": "entregue",
+        "em": "2026-10-12T08:00:00.000Z"
+      },
+      {
+        "canal": "email",
+        "status": "entregue",
+        "em": "2026-10-12T08:00:00.000Z"
+      },
+      {
+        "canal": "whatsapp",
+        "status": "nao_configurado",
+        "em": "2026-10-12T08:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": "nt_mv7hr6kjufo",
+    "usuarioId": "u_fernanda",
+    "tipo": "lembrete",
+    "titulo": "Lembrete: RDO aguardando ciência",
+    "mensagem": "RDO nº 0006 (Obra Alfa) aguarda sua ciência/aceite há 31 h.",
+    "obraId": "obra_alfa",
+    "rdoId": "rdo_alfa_0006",
+    "rdoStatus": "enviado_cliente",
+    "prazo": "2026-10-13T08:00:00.000Z",
+    "dataHora": "2026-10-13T08:00:00.000Z",
+    "lida": false,
+    "chave": "lem:cliente:rdo_alfa_0006:24",
+    "alvoId": null,
+    "entregas": [
+      {
+        "canal": "push",
+        "status": "entregue",
+        "em": "2026-10-13T08:00:00.000Z"
+      },
+      {
+        "canal": "email",
+        "status": "entregue",
+        "em": "2026-10-13T08:00:00.000Z"
+      },
+      {
+        "canal": "whatsapp",
+        "status": "nao_configurado",
+        "em": "2026-10-13T08:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": "nt_mv7hr6kjvrs",
+    "usuarioId": "u_fernanda",
+    "tipo": "cliente_manifestou",
+    "titulo": "RDO finalizado",
+    "mensagem": "RDO nº 0005 (Obra Alfa) foi finalizado com a sua ressalva. PDF final disponível.",
+    "obraId": "obra_alfa",
+    "rdoId": "rdo_alfa_0005",
+    "rdoStatus": "finalizado",
+    "prazo": null,
+    "dataHora": "2026-10-09T15:00:00.000Z",
+    "lida": true,
+    "chave": null,
+    "alvoId": null,
+    "entregas": [
+      {
+        "canal": "push",
+        "status": "entregue",
+        "em": "2026-10-09T15:00:00.000Z"
+      },
+      {
+        "canal": "email",
+        "status": "entregue",
+        "em": "2026-10-09T15:00:00.000Z"
+      },
+      {
+        "canal": "whatsapp",
+        "status": "nao_configurado",
+        "em": "2026-10-09T15:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": "nt_mv7hr6kjwka",
+    "usuarioId": "u_roberto",
+    "tipo": "rdo_validado",
+    "titulo": "RDO aguarda sua ciência/aceite",
+    "mensagem": "RDO nº 0008 da obra Obra Beta foi validado e aguarda sua ciência/aceite.",
+    "obraId": "obra_beta",
+    "rdoId": "rdo_beta_0008",
+    "rdoStatus": "enviado_cliente",
+    "prazo": null,
+    "dataHora": "2026-10-13T06:00:00.000Z",
+    "lida": true,
+    "chave": null,
+    "alvoId": null,
+    "entregas": [
+      {
+        "canal": "push",
+        "status": "entregue",
+        "em": "2026-10-13T06:00:00.000Z"
+      },
+      {
+        "canal": "email",
+        "status": "entregue",
+        "em": "2026-10-13T06:00:00.000Z"
+      },
+      {
+        "canal": "whatsapp",
+        "status": "nao_configurado",
+        "em": "2026-10-13T06:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": "nt_mv7hr6kkxdb",
+    "usuarioId": "u_roberto",
+    "tipo": "esclarecimento",
+    "titulo": "Esclarecimento em análise",
+    "mensagem": "Sua solicitação sobre o RDO nº 0008 foi enviada ao responsável técnico.",
+    "obraId": "obra_beta",
+    "rdoId": "rdo_beta_0008",
+    "rdoStatus": "enviado_cliente",
+    "prazo": null,
+    "dataHora": "2026-10-13T10:00:00.000Z",
+    "lida": true,
+    "chave": null,
+    "alvoId": null,
+    "entregas": [
+      {
+        "canal": "push",
+        "status": "entregue",
+        "em": "2026-10-13T10:00:00.000Z"
+      },
+      {
+        "canal": "email",
+        "status": "entregue",
+        "em": "2026-10-13T10:00:00.000Z"
+      },
+      {
+        "canal": "whatsapp",
+        "status": "nao_configurado",
+        "em": "2026-10-13T10:00:00.000Z"
+      }
+    ]
+  }
+]

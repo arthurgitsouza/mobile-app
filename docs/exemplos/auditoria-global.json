@@ -1,0 +1,37 @@
+[
+  {
+    "id": "ag1",
+    "dataHora": "2026-09-03T15:00:00.000Z",
+    "evento": "obra",
+    "usuarioId": "u_master",
+    "detalhe": "Obra Alfa cadastrada (CT-014)."
+  },
+  {
+    "id": "ag2",
+    "dataHora": "2026-09-03T15:00:00.000Z",
+    "evento": "usuario",
+    "usuarioId": "u_master",
+    "detalhe": "Usuário João Ribeiro vinculado à Obra Alfa."
+  },
+  {
+    "id": "ag3",
+    "dataHora": "2026-09-03T15:00:00.000Z",
+    "evento": "usuario",
+    "usuarioId": "u_master",
+    "detalhe": "Cliente Fernanda Albuquerque vinculada à Obra Alfa."
+  },
+  {
+    "id": "ag4",
+    "dataHora": "2026-09-17T15:00:00.000Z",
+    "evento": "obra",
+    "usuarioId": "u_master",
+    "detalhe": "Obra Beta cadastrada (CT-019)."
+  },
+  {
+    "id": "ag5",
+    "dataHora": "2026-09-30T15:00:00.000Z",
+    "evento": "obra",
+    "usuarioId": "u_master",
+    "detalhe": "Obra Gama cadastrada (CT-023)."
+  }
+]
