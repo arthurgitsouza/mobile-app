@@ -6,39 +6,56 @@ import { notificacoesDe } from '../domain/selectors';
 import { TIPOS_NOTIFICACAO } from '../domain/notificacoes';
 import { contar } from '../utils/format';
 import { navegar } from '../navigation/navigationRef';
+import { env } from '../config/env.js';
 
 // Observadores globais (sem UI): sincronização ao reconectar, lembretes e "push simulado".
 export default function AppWatchers() {
   const { state, actions, online, currentUser } = useApp();
   const { toast } = useUI();
-  
-  useEffect(() => {
-  if (state.apiError) {
-    toast.show({
-      type: 'error',
-      title: 'Não foi possível concluir',
-      message: state.apiError.mensagem,
-    });
-  }
-}, [state.apiError, toast]);
 
-  // 1. Sincronização: ao ficar online com RDOs pendentes, envia (progresso simulado de ~1,8 s).
-  const pendentes = state ? state.rdos.filter((r) => r.sync?.pendente).length : 0;
   useEffect(() => {
-    if (!online || pendentes === 0) return undefined;
-    const t = setTimeout(() => {
-      actions.sincronizarPendentes();
+    if (state?.apiError) {
       toast.show({
-        type: 'success',
-        title: 'Conexão restabelecida',
-        message: `${contar(pendentes, 'RDO')} sincronizado${pendentes > 1 ? 's' : ''} com o servidor.`,
+        type: 'error',
+        title: 'Não foi possível concluir',
+        message: state.apiError.mensagem,
       });
-    }, 1800);
-    return () => clearTimeout(t);
-  }, [online, pendentes, actions, toast]);
+    }
+  }, [state?.apiError, toast]);
+
+  const pendentes = env.USE_MOCK
+    ? (state?.rdos || []).filter((r) => r.sync?.pendente).length
+    : (state?.filaOffline || []).filter((item) => item.userId === currentUser?.id).length;
+  useEffect(() => {
+    if (!online || !currentUser || pendentes === 0) return undefined;
+    let vivo = true;
+    const timer = setTimeout(
+      async () => {
+        try {
+          await actions.sincronizarPendentes();
+          if (vivo)
+            toast.show({
+              type: 'success',
+              title: env.USE_MOCK ? 'Sincronização de demonstração concluída' : 'Sincronização concluída',
+              message: env.USE_MOCK
+                ? 'Os RDOs pendentes foram atualizados no modo mock.'
+                : 'Os itens pendentes foram confirmados pelo servidor.',
+            });
+        } catch {
+          // O erro já aparece no aviso global e a fila permanece salva.
+        }
+      },
+      env.USE_MOCK ? 1800 : 300,
+    );
+    return () => {
+      vivo = false;
+      clearTimeout(timer);
+    };
+  }, [online, currentUser, pendentes, actions, toast]);
 
   // 2. Lembretes e escalonamento (seção 5): ao abrir, a cada minuto e ao voltar ao primeiro plano.
   useEffect(() => {
+    if (!env.USE_MOCK) return undefined;
     actions.processarLembretes();
     const i = setInterval(() => actions.processarLembretes(), 60000);
     const sub = AppState.addEventListener('change', (s) => s === 'active' && actions.processarLembretes());

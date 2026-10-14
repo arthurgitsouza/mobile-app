@@ -1,10 +1,9 @@
 import { env } from '../../config/env.js';
-import { ApiError } from './client.js';
-import { executarMock } from './mock.js';
-
+import { criarActions } from '../../store/apiActions.js';
 import * as auth from './auth.js';
 import * as obras from './obras.js';
 import * as rdos from './rdos.js';
+import * as fotos from './fotos.js';
 import * as comentarios from './comentarios.js';
 import * as usuarios from './usuarios.js';
 import * as notificacoes from './notificacoes.js';
@@ -17,6 +16,7 @@ const recursos = {
   ...auth,
   ...obras,
   ...rdos,
+  ...fotos,
   ...comentarios,
   ...usuarios,
   ...notificacoes,
@@ -26,40 +26,6 @@ const recursos = {
   ...academico,
 };
 
-export function criarApi({
-  getState,
-  commit,
-  useMock = env.USE_MOCK,
-  onError = () => {},
-}) {
-  async function executar(nome, args) {
-    if (!useMock) {
-      throw new ApiError({
-        codigo: 'ETAPA_INICIAL',
-        mensagem: 'Por enquanto, mantenha o modo mock ativado.',
-      });
-    }
-
-    const atual = getState();
-    const novo = executarMock(nome, atual, args);
-
-    if (novo !== atual) {
-      commit(novo);
-    }
-
-    return novo;
-  }
-
-  const servico = { executar };
-  const api = {};
-
-  Object.entries(recursos).forEach(([nome, funcao]) => {
-    api[nome] = (args = {}) => {
-      const resultado = funcao(servico, args);
-      resultado.catch(onError);
-      return resultado;
-    };
-  });
-
-  return api;
+export function criarApi({ useMock = env.USE_MOCK, demo = env.DEMO, ...opcoes }) {
+  return criarActions({ recursos, useMock, demo, ...opcoes });
 }
