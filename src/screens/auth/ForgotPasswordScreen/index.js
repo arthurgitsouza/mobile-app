@@ -1,11 +1,12 @@
+import { styles } from './styles';
 import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
-import { colors, radius } from '../../theme';
-import { useApp } from '../../store/AppContext';
-import { haptic } from '../../utils/feedback';
-import { isEmail, mascararEmail } from '../../utils/format';
-import { Banner, Button, Card, Icon, Screen, Txt } from '../../components/ui';
-import { PasswordField, TextField } from '../../components/form';
+import { colors, radius } from '../../../theme';
+import { useApp } from '../../../store/AppContext';
+import { haptic } from '../../../utils/feedback';
+import { isEmail, mascararEmail } from '../../../utils/format';
+import { Banner, Button, Card, Icon, Screen, Txt } from '../../../components/ui';
+import { PasswordField, TextField } from '../../../components/form';
 
 // Recuperação de acesso (RF-01): e-mail → código de uso único → nova senha.
 // O código é exibido na tela apenas porque o envio de e-mail é simulado no protótipo.
@@ -287,29 +288,3 @@ function CodeInput({ value, onChange, error }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  simHeader: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  rule: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  okIcon: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: colors.successBg,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  codeRow: { flexDirection: 'row', gap: 8, justifyContent: 'center' },
-  codeBox: {
-    width: 48,
-    height: 58,
-    borderRadius: radius.md,
-    borderWidth: 1.5,
-    borderColor: colors.borderStrong,
-    backgroundColor: colors.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  codeActive: { borderColor: colors.navy600, borderWidth: 2.5 },
-  hiddenInput: { position: 'absolute', opacity: 0.01, height: 1, width: 1 },
-});

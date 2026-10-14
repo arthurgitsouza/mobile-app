@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { colors } from '../../theme';
-import { PERFIL } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { notaFinal } from '../../data/seedAcademico';
-import { formatDateTime } from '../../utils/date';
-import { formatNumber, toNumber } from '../../utils/format';
-import { haptic } from '../../utils/feedback';
+import { View } from 'react-native';
+import styles from './styles';
+
+import { colors } from '../../../theme';
+import { PERFIL } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { notaFinal } from '../../../data/seedAcademico';
+import { formatDateTime } from '../../../utils/date';
+import { formatNumber, toNumber } from '../../../utils/format';
+import { haptic } from '../../../utils/feedback';
 import {
   Badge,
   Banner,
@@ -19,9 +21,9 @@ import {
   SectionTitle,
   Txt,
   useUI,
-} from '../../components/ui';
-import { NumberField, TextField } from '../../components/form';
-import { mediaDoGrupo } from './AcademicScreen';
+} from '../../../components/ui';
+import { NumberField, TextField } from '../../../components/form';
+import { mediaDoGrupo } from '../AcademicScreen';
 
 const STATUS = {
   pendente: { label: 'Pendente', color: colors.gray, bg: colors.grayBg, icon: 'clock-outline' },
@@ -231,23 +233,3 @@ export default function AcademicGroupScreen({ route, navigation }) {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  num: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: colors.navy700,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  versao: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: colors.blue50,
-  },
-});
