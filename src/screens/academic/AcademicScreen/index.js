@@ -1,11 +1,13 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { colors } from '../../theme';
-import { PERFIL } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { notaFinal } from '../../data/seedAcademico';
-import { formatNumber } from '../../utils/format';
-import { Badge, Banner, Card, EmptyState, Icon, ProgressBar, Screen, SectionTitle, Txt } from '../../components/ui';
+import { View } from 'react-native';
+import styles from './styles';
+
+import { colors } from '../../../theme';
+import { PERFIL } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { notaFinal } from '../../../data/seedAcademico';
+import { formatNumber } from '../../../utils/format';
+import { Badge, Banner, Card, EmptyState, Icon, ProgressBar, Screen, SectionTitle, Txt } from '../../../components/ui';
 
 export function mediaDoGrupo(grupo, criterios) {
   const notas = grupo.entregas
@@ -22,7 +24,7 @@ export default function AcademicScreen({ navigation }) {
 
   if (currentUser.perfil !== PERFIL.MASTER) {
     return (
-      <Screen title="Acadêmico" back>
+      <Screen title="Acadêmica" back>
         <EmptyState icon="lock-outline" title="Acesso restrito" />
       </Screen>
     );
@@ -110,15 +112,3 @@ export default function AcademicScreen({ navigation }) {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  pos: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: colors.navy700,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
