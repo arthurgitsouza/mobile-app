@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import { colors } from '../../theme';
-import { POLITICA_PRIVACIDADE, TERMOS_USO } from '../../constants/texts';
-import { useApp } from '../../store/AppContext';
-import { haptic } from '../../utils/feedback';
-import { primeiroNome } from '../../utils/format';
-import { Banner, Button, Card, Icon, Screen, SegmentedTabs, SectionTitle, Txt } from '../../components/ui';
-import CheckboxField from '../../components/form/CheckboxField';
+import { colors } from '../../../theme';
+import { POLITICA_PRIVACIDADE, TERMOS_USO } from '../../../constants/texts';
+import { useApp } from '../../../store/AppContext';
+import { haptic } from '../../../utils/feedback';
+import { primeiroNome } from '../../../utils/format';
+import { Banner, Button, Card, Icon, Screen, SegmentedTabs, SectionTitle, Txt } from '../../../components/ui';
+import CheckboxField from '../../../components/form/CheckboxField';
 
 // Aceite de termos e LGPD (seção 13 — "Login, recuperação de acesso e aceite de termos").
 // Também serve como consulta (readOnly) a partir de Configurações.

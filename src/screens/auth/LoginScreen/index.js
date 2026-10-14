@@ -1,16 +1,17 @@
+import { styles } from './styles';
 import React, { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors, radius } from '../../theme';
-import { PERFIS } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { autenticarBiometria, biometriaDisponivel } from '../../services/biometrics';
-import { haptic } from '../../utils/feedback';
-import { isEmail, primeiroNome } from '../../utils/format';
-import { Avatar, Banner, BrandMark, Button, Card, Icon, LinkButton, Txt, useUI } from '../../components/ui';
-import { PasswordField, TextField } from '../../components/form';
-import CheckboxField from '../../components/form/CheckboxField';
+import { colors, radius } from '../../../theme'; 
+import { PERFIS } from '../../../constants'; 
+import { useApp } from '../../../store/AppContext'; 
+import { autenticarBiometria, biometriaDisponivel } from '../../../services/biometrics'; 
+import { haptic } from '../../../utils/feedback'; 
+import { isEmail, primeiroNome } from '../../../utils/format';
+import { Avatar, Banner, BrandMark, Button, Card, Icon, LinkButton, Txt, useUI } from '../../../components/ui'; 
+import { PasswordField, TextField } from '../../../components/form';
+import CheckboxField from '../../../components/form/CheckboxField'; 
 
 const MAX_TENTATIVAS = 5;
 const BLOQUEIO_MS = 30000;
@@ -255,34 +256,3 @@ export default function LoginScreen({ navigation }) {
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.bg },
-  hero: {
-    backgroundColor: colors.navy700,
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 24,
-    paddingBottom: 64,
-    borderBottomWidth: 4,
-    borderBottomColor: colors.gold500,
-  },
-  proto: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginTop: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: radius.pill,
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    borderWidth: 1,
-    borderColor: 'rgba(243,221,166,0.4)',
-  },
-  body: { paddingHorizontal: 16, marginTop: -40, gap: 20 },
-  formCard: { gap: 14, padding: 18 },
-  rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  demoHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 },
-  quick: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12 },
-  footer: { alignItems: 'center', gap: 6, paddingTop: 4 },
-});

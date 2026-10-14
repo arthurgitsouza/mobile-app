@@ -1,9 +1,10 @@
+import { styles } from './styles';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { colors } from '../../theme';
-import { PERFIS } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { Badge, Banner, Button, Card, Icon, Screen, Txt } from '../../components/ui';
+import { colors } from '../../../theme';
+import { PERFIS } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { Badge, Banner, Button, Card, Icon, Screen, Txt } from '../../../components/ui';
 
 // Cenário principal de demonstração (seção 21) com atalhos para entrar em cada perfil.
 const PASSOS = [
@@ -128,15 +129,3 @@ export default function DemoGuideScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  head: { flexDirection: 'row', gap: 12, alignItems: 'flex-start' },
-  num: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.navy700,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  now: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-});
