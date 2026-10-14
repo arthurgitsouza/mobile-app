@@ -11,6 +11,16 @@ import { navegar } from '../navigation/navigationRef';
 export default function AppWatchers() {
   const { state, actions, online, currentUser } = useApp();
   const { toast } = useUI();
+  
+  useEffect(() => {
+  if (state.apiError) {
+    toast.show({
+      type: 'error',
+      title: 'Não foi possível concluir',
+      message: state.apiError.mensagem,
+    });
+  }
+}, [state.apiError, toast]);
 
   // 1. Sincronização: ao ficar online com RDOs pendentes, envia (progresso simulado de ~1,8 s).
   const pendentes = state ? state.rdos.filter((r) => r.sync?.pendente).length : 0;

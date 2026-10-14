@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import { useNetInfo } from '@react-native-community/netinfo';
-import { ACTIONS } from './actions.js';
+import { criarApi } from '../services/api/index.js';
 import { loadState, persistState, flushPersist } from './persistence.js';
 import { gerarSeed } from '../data/seed.js';
 import { uid } from '../utils/format.js';
@@ -49,17 +49,23 @@ export function AppProvider({ children }) {
   }, []);
 
   // actions.<nome>(args) aplica a transformação pura sobre o estado mais recente e devolve o novo estado.
-  const actions = useMemo(() => {
-    const out = {};
-    Object.entries(ACTIONS).forEach(([name, fn]) => {
-      out[name] = (args = {}) => {
-        const next = fn(ref.current, args);
-        if (next !== ref.current) commit(next);
-        return ref.current;
-      };
-    });
-    return out;
-  }, [commit]);
+  const actions = useMemo(
+  () =>
+    criarApi({
+      getState: () => ref.current,
+      commit,
+      onError: (erro) => {
+        commit({
+          ...ref.current,
+          apiError: {
+            mensagem: erro.mensagem || erro.message,
+            id: uid('erro'),
+          },
+        });
+      },
+    }),
+  [commit],
+);
 
   const currentUser = state ? state.users.find((u) => u.id === state.session.userId && u.ativo) || null : null;
   const realOnline = net.isConnected !== false && net.isInternetReachable !== false;

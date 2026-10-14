@@ -165,7 +165,11 @@ export default function RdoDetailScreen({ route, navigation }) {
           confirmLabel: 'Abrir retificação',
         });
         if (motivo) {
-          const s = actions.retificarRdo({ rdoId, userId: currentUser.id, motivo });
+          const s = await actions
+  .retificarRdo({ rdoId, userId: currentUser.id, motivo })
+  .catch(() => null);
+
+if (!s) return undefined;
           const nova = s.rdos.find((r) => r.retificaDe === rdoId);
           toast.show({
             type: 'success',
