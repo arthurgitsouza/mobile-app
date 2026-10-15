@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
-import { colors } from '../../theme';
-import { TIPOS_CIENCIA } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { hashCurto, payloadVerificacao, verificarIntegridade } from '../../domain/integridade';
-import { numeroFormatado } from '../../domain/rdo';
-import { formatDateTime, FUSO_OBRA_LABEL } from '../../utils/date';
+import { styles } from './styles';
+import { colors } from '../../../theme';
+import { TIPOS_CIENCIA } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { hashCurto, payloadVerificacao, verificarIntegridade } from '../../../domain/integridade';
+import { numeroFormatado } from '../../../domain/rdo';
+import { formatDateTime, FUSO_OBRA_LABEL } from '../../../utils/date';
 import {
   Badge,
   Banner,
@@ -19,8 +20,8 @@ import {
   SectionTitle,
   Txt,
   useUI,
-} from '../../components/ui';
-import { QRCodeView, SignatureView } from '../../components/rdo';
+} from '../../../components/ui';
+import { QRCodeView, SignatureView } from '../../../components/rdo';
 
 // Comprovante de assinatura: identidade, data/hora, versão, IP, dispositivo, 2º fator, hash e QR de verificação.
 export default function ReceiptScreen({ route, navigation }) {
@@ -65,45 +66,36 @@ export default function ReceiptScreen({ route, navigation }) {
       subtitle={`RDO nº ${numeroFormatado(rdo)} · ${obra?.nome}`}
       back
       footer={
-        <View style={{ flexDirection: 'row', gap: 10 }}>
+        <View style={styles.footer}>
           <Button
             title="Ver PDF"
             icon="file-pdf-box"
             variant="secondary"
             onPress={() => navigation.navigate('PdfViewer', { rdoId })}
-            style={{ flex: 1 }}
+            style={styles.btnFlex}
           />
           <Button
             title={novo ? 'Concluir' : 'Voltar'}
             icon="check"
             onPress={() => (novo ? navigation.replace('RdoDetail', { rdoId }) : navigation.goBack())}
-            style={{ flex: 1 }}
+            style={styles.btnFlex}
           />
         </View>
       }
     >
       {novo ? (
-        <View style={{ alignItems: 'center', gap: 6, paddingVertical: 6 }}>
-          <View
-            style={{
-              width: 72,
-              height: 72,
-              borderRadius: 36,
-              backgroundColor: colors.successBg,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
+        <View style={styles.successHeader}>
+          <View style={styles.successIconBadge}>
             <Icon name="check-decagram" size={40} color={colors.success} />
           </View>
-          <Txt v="h2" style={{ textAlign: 'center' }}>
+          <Txt v="h2" style={styles.centerText}>
             {cliente
               ? assin.tipo === 'ressalva'
                 ? 'Ciência registrada com ressalva'
                 : 'Ciência/aceite registrado'
               : 'RDO validado e assinado'}
           </Txt>
-          <Txt v="small" muted style={{ textAlign: 'center' }}>
+          <Txt v="small" muted style={styles.centerText}>
             {cliente
               ? 'O RDO foi finalizado e o PDF final com a sua manifestação está disponível.'
               : rdo.status === 'enviado_cliente'
@@ -113,9 +105,9 @@ export default function ReceiptScreen({ route, navigation }) {
         </View>
       ) : null}
 
-      <Card style={{ gap: 10 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <Txt v="label" color={colors.navy600} style={{ flex: 1 }}>
+      <Card style={styles.cardGap}>
+        <View style={styles.cardHeaderRow}>
+          <Txt v="label" color={colors.navy600} style={styles.btnFlex}>
             {cliente ? 'CIÊNCIA/ACEITE DO CLIENTE' : 'VALIDAÇÃO E CHANCELA DO MASTER'}
           </Txt>
           {tipo ? (
@@ -154,24 +146,24 @@ export default function ReceiptScreen({ route, navigation }) {
       </Card>
 
       <SectionTitle>Verificação de integridade</SectionTitle>
-      <Card style={{ gap: 12, alignItems: 'center' }}>
+      <Card style={styles.verificationCard}>
         <QRCodeView value={payloadVerificacao(rdo)} size={148} />
-        <Txt v="caption" muted style={{ textAlign: 'center' }}>
+        <Txt v="caption" muted style={styles.centerText}>
           {cliente && rdo.hashFinal
             ? 'Hash final do documento (conteúdo + assinaturas)'
             : 'Hash do conteúdo técnico fechado na assinatura'}
         </Txt>
-        <Txt v="small" mono selectable style={{ textAlign: 'center' }}>
+        <Txt v="small" mono selectable style={styles.centerText}>
           {hashMostrado}
         </Txt>
-        <View style={{ flexDirection: 'row', gap: 10, width: '100%' }}>
+        <View style={styles.actionsRow}>
           <Button
             title="Copiar hash"
             icon="content-copy"
             variant="secondary"
             size="sm"
             onPress={copiar}
-            style={{ flex: 1 }}
+            style={styles.btnFlex}
           />
           <Button
             title="Verificar agora"
@@ -179,7 +171,7 @@ export default function ReceiptScreen({ route, navigation }) {
             variant="tonal"
             size="sm"
             onPress={() => setCheck(verificarIntegridade(rdo))}
-            style={{ flex: 1 }}
+            style={styles.btnFlex}
           />
         </View>
         {check ? (
@@ -189,7 +181,7 @@ export default function ReceiptScreen({ route, navigation }) {
               icon="shield-check"
               title="Documento íntegro"
               message={`O hash recalculado (${hashCurto(check.calculado, 12)}) confere com o registrado na assinatura.`}
-              style={{ alignSelf: 'stretch' }}
+              style={styles.bannerFullWidth}
             />
           ) : (
             <Banner
@@ -197,7 +189,7 @@ export default function ReceiptScreen({ route, navigation }) {
               icon="shield-alert"
               title="Divergência detectada"
               message="O conteúdo não corresponde ao hash assinado."
-              style={{ alignSelf: 'stretch' }}
+              style={styles.bannerFullWidth}
             />
           )
         ) : null}

@@ -1,25 +1,26 @@
 import React, { useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { colors } from '../../theme';
-import { PERFIL, STATUS } from '../../constants';
-import { AVISO_ASSINATURA_DESENHADA, AVISO_TEXTO_DECLARACAO, declaracaoMaster } from '../../constants/texts';
-import { useApp } from '../../store/AppContext';
+import { styles } from './styles';
+import { colors } from '../../../theme';
+import { PERFIL, STATUS } from '../../../constants';
+import { AVISO_ASSINATURA_DESENHADA, AVISO_TEXTO_DECLARACAO, declaracaoMaster } from '../../../constants/texts';
+import { useApp } from '../../../store/AppContext';
 import {
   conteudoTecnico,
   numeroFormatado,
   resumoEquipamentos,
   totalHomemHora,
   totalTrabalhadores,
-} from '../../domain/rdo';
-import { hashOf } from '../../utils/object';
-import { formatDate, nomeDiaSemana } from '../../utils/date';
-import { formatNumber } from '../../utils/format';
-import { evidenciasDoAparelho } from '../../utils/device';
-import { haptic } from '../../utils/feedback';
-import { Banner, Button, Card, EmptyState, KeyValue, Screen, SectionTitle, Txt, useUI } from '../../components/ui';
-import { SwitchField } from '../../components/form';
-import CheckboxField from '../../components/form/CheckboxField';
-import { RdoSections, SecondFactor, SignaturePad } from '../../components/rdo';
+} from '../../../domain/rdo';
+import { hashOf } from '../../../utils/object';
+import { formatDate, nomeDiaSemana } from '../../../utils/date';
+import { formatNumber } from '../../../utils/format';
+import { evidenciasDoAparelho } from '../../../utils/device';
+import { haptic } from '../../../utils/feedback';
+import { Banner, Button, Card, EmptyState, KeyValue, Screen, SectionTitle, Txt, useUI } from '../../../components/ui';
+import { SwitchField } from '../../../components/form';
+import CheckboxField from '../../../components/form/CheckboxField';
+import { RdoSections, SecondFactor, SignaturePad } from '../../../components/rdo';
 
 // Validação, chancela e assinatura do master (seção 5, etapa 4; seção 11).
 export default function SignMasterScreen({ route, navigation }) {
@@ -99,8 +100,8 @@ export default function SignMasterScreen({ route, navigation }) {
       keyboard
       scrollEnabled={rolagem}
       footer={
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          <Button title="Cancelar" variant="secondary" onPress={() => navigation.goBack()} style={{ flex: 1 }} />
+        <View style={styles.footer}>
+          <Button title="Cancelar" variant="secondary" onPress={() => navigation.goBack()} style={styles.btnCancel} />
           <Button
             title="Assinar e validar"
             icon="check-decagram-outline"
@@ -108,7 +109,7 @@ export default function SignMasterScreen({ route, navigation }) {
             disabled={!pronto}
             loading={salvando}
             onPress={assinar}
-            style={{ flex: 1.7 }}
+            style={styles.btnSubmit}
           />
         </View>
       }
@@ -121,7 +122,7 @@ export default function SignMasterScreen({ route, navigation }) {
       />
 
       <SectionTitle>1 · O que você está assinando</SectionTitle>
-      <Card style={{ gap: 8 }}>
+      <Card style={styles.cardGapMedium}>
         <KeyValue inline label="RDO / versão" value={`${num} · v${rdo.versao}`} />
         <KeyValue inline label="Obra" value={obra.nome} />
         <KeyValue inline label="Data" value={`${formatDate(rdo.data)} · ${nomeDiaSemana(rdo.data)}`} />
@@ -150,11 +151,11 @@ export default function SignMasterScreen({ route, navigation }) {
         />
       ) : null}
 
-      <Card tone="soft" style={{ gap: 4 }}>
+      <Card tone="soft" style={styles.cardGapSmall}>
         <Txt v="label" color={colors.navy600}>
           IMPRESSÃO DIGITAL (SHA-256) DO CONTEÚDO
         </Txt>
-        <Txt v="small" mono selectable style={{ lineHeight: 18 }}>
+        <Txt v="small" mono selectable style={styles.hashText}>
           {hashPrevio}
         </Txt>
         <Txt v="caption" muted>
@@ -164,7 +165,7 @@ export default function SignMasterScreen({ route, navigation }) {
       </Card>
 
       <SectionTitle>2 · Declaração</SectionTitle>
-      <Card tone="gold" style={{ gap: 10 }}>
+      <Card tone="gold" style={styles.cardGapLarge}>
         <Txt v="body" color={colors.goldText}>
           {declaracaoMaster(num, rdo.versao)}
         </Txt>
@@ -194,7 +195,7 @@ export default function SignMasterScreen({ route, navigation }) {
         onValueChange={setEnviarAgora}
       />
       {enviarAgora ? (
-        <Card style={{ gap: 10 }}>
+        <Card style={styles.cardGapLarge}>
           <Txt v="smallStrong">Destinatários</Txt>
           {clientes.length ? (
             clientes.map((c) => (
@@ -224,7 +225,7 @@ export default function SignMasterScreen({ route, navigation }) {
         </Card>
       ) : null}
       {!pronto ? (
-        <Txt v="caption" muted style={{ textAlign: 'center' }}>
+        <Txt v="caption" muted style={styles.centerText}>
           Para assinar: aceite a declaração, confirme o segundo fator e desenhe a assinatura.
         </Txt>
       ) : null}

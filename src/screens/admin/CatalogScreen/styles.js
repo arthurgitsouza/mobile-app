@@ -1,14 +1,14 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  linha: { 
-    paddingHorizontal: 12 
+  linha: {
+    paddingHorizontal: 12,
   },
-  conteudo: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    gap: 10, 
-    minHeight: 52 
+  conteudo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    minHeight: 52,
   },
   searchMargin: {
     marginTop: 8,

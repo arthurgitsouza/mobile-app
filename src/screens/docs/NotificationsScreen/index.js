@@ -1,15 +1,16 @@
 import React, { useMemo, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
-import { colors, radius } from '../../theme';
-import { useApp } from '../../store/AppContext';
-import { useNow } from '../../hooks/useNow';
-import { notificacoesDe } from '../../domain/selectors';
-import { CANAIS, STATUS_ENTREGA, TIPOS_NOTIFICACAO, temFalhaDeEntrega } from '../../domain/notificacoes';
-import { numeroFormatado } from '../../domain/rdo';
-import { emailCliente } from '../../constants/texts';
-import { PERFIL } from '../../constants';
-import { dateFromISO, formatDate, formatDateTime, hojeObra, addDays, tempoRelativo } from '../../utils/date';
+import { styles } from './styles';
+import { colors } from '../../../theme';
+import { useApp } from '../../../store/AppContext';
+import { useNow } from '../../../hooks/useNow';
+import { notificacoesDe } from '../../../domain/selectors';
+import { CANAIS, STATUS_ENTREGA, TIPOS_NOTIFICACAO, temFalhaDeEntrega } from '../../../domain/notificacoes';
+import { numeroFormatado } from '../../../domain/rdo';
+import { emailCliente } from '../../../constants/texts';
+import { PERFIL } from '../../../constants';
+import { dateFromISO, formatDate, formatDateTime, hojeObra, addDays, tempoRelativo } from '../../../utils/date';
 import {
   Badge,
   Banner,
@@ -25,7 +26,7 @@ import {
   StatusBadge,
   Txt,
   useUI,
-} from '../../components/ui';
+} from '../../../components/ui';
 
 const COR = {
   info: [colors.info, colors.infoBg],
@@ -100,7 +101,7 @@ export default function NotificationsScreen() {
       headerExtra={
         <SegmentedTabs
           compact
-          style={{ marginTop: 8 }}
+          style={styles.tabsMargin}
           items={[
             { key: 'todas', label: 'Todas', count: todas.length },
             { key: 'nao_lidas', label: 'Não lidas', count: naoLidas },
@@ -119,7 +120,7 @@ export default function NotificationsScreen() {
       ) : null}
 
       {grupos.map((g) => (
-        <View key={g.rotulo} style={{ gap: 8 }}>
+        <View key={g.rotulo} style={styles.groupContainer}>
           <Txt v="label" color={colors.navy600}>
             {g.rotulo.toUpperCase()}
           </Txt>
@@ -134,16 +135,16 @@ export default function NotificationsScreen() {
                 onPress={() => abrir(n)}
                 accessibilityRole="button"
                 accessibilityLabel={`${n.lida ? '' : 'Não lida. '}${n.titulo}. ${n.mensagem}`}
-                style={({ pressed }) => [styles.item, !n.lida && styles.naoLida, pressed && { opacity: 0.9 }]}
+                style={({ pressed }) => [styles.item, !n.lida && styles.naoLida, pressed && styles.pressed]}
               >
                 <View style={[styles.icone, { backgroundColor: bg }]}>
                   <Icon name={t.icone} size={22} color={fg} />
                 </View>
-                <View style={{ flex: 1, gap: 4 }}>
+                <View style={styles.content}>
                   <View style={styles.top}>
                     <Txt
-                      v={n.lida ? 'bodyStrong' : 'bodyStrong'}
-                      style={{ flex: 1, fontWeight: n.lida ? '600' : '800' }}
+                      v="bodyStrong"
+                      style={[styles.titleText, { fontWeight: n.lida ? '600' : '800' }]}
                       numberOfLines={2}
                     >
                       {n.titulo}
@@ -212,7 +213,7 @@ export default function NotificationsScreen() {
         {aberta ? (
           <>
             <Txt v="body">{aberta.mensagem}</Txt>
-            <Card tone="soft" style={{ gap: 8 }}>
+            <Card tone="soft" style={styles.modalCardGap}>
               <KeyValue inline label="Obra" value={obraNome(aberta.obraId)} />
               <KeyValue
                 inline
@@ -236,7 +237,7 @@ export default function NotificationsScreen() {
                 title="Falha na entrega do e-mail"
                 message="O push foi entregue, mas o e-mail não. Você pode reenviar agora."
               >
-                <View style={{ marginTop: 8 }}>
+                <View style={styles.bannerButtonContainer}>
                   <Button
                     title="Reenviar e-mail"
                     icon="email-fast-outline"
@@ -256,7 +257,7 @@ export default function NotificationsScreen() {
               </Banner>
             ) : null}
 
-            <View style={{ gap: 8 }}>
+            <View style={styles.groupContainer}>
               <Txt v="label" color={colors.navy600}>
                 CANAIS DE ENTREGA
               </Txt>
@@ -267,7 +268,7 @@ export default function NotificationsScreen() {
                 return (
                   <View key={e.canal} style={styles.canal}>
                     <Icon name={c.icone} size={20} color={colors.navy600} />
-                    <Txt v="small" style={{ flex: 1 }}>
+                    <Txt v="small" style={styles.flexOne}>
                       {c.label}
                     </Txt>
                     <Badge label={s.label} color={fg} bg={bg} size="sm" />
@@ -277,7 +278,7 @@ export default function NotificationsScreen() {
             </View>
 
             {aberta.tipo === 'rdo_validado' && currentUser.perfil !== PERFIL.OPERACIONAL && rdoDe(aberta) ? (
-              <View style={{ gap: 8 }}>
+              <View style={styles.groupContainer}>
                 <Button
                   title={email ? 'Ocultar e-mail simulado' : 'Ver e-mail enviado (simulado)'}
                   icon="email-outline"
@@ -323,34 +324,8 @@ function EmailPreview({ n, rdo, obra, destino }) {
         Para: {destino?.email}
       </Txt>
       <Txt v="smallStrong">Assunto: {e.assunto}</Txt>
-      <View style={{ height: 1, backgroundColor: colors.divider, marginVertical: 6 }} />
+      <View style={styles.emailDivider} />
       <Txt v="small">{e.corpo}</Txt>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  item: {
-    flexDirection: 'row',
-    gap: 12,
-    padding: 12,
-    borderRadius: radius.lg,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  naoLida: { borderColor: colors.navy600, backgroundColor: colors.blue50 },
-  icone: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
-  top: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  dot: { width: 10, height: 10, borderRadius: 5, backgroundColor: colors.gold500 },
-  meta: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  canal: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 4 },
-  email: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radius.md,
-    padding: 12,
-    gap: 4,
-    backgroundColor: colors.white,
-  },
-});

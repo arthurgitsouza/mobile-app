@@ -257,7 +257,12 @@ export default function SettingsScreen({ navigation }) {
         title="Alterar senha"
         footer={
           <View style={styles.modalFooter}>
-            <Button title="Cancelar" variant="secondary" onPress={() => setSenhaSheet(false)} style={styles.btnCancel} />
+            <Button
+              title="Cancelar"
+              variant="secondary"
+              onPress={() => setSenhaSheet(false)}
+              style={styles.btnCancel}
+            />
             <Button title="Salvar" icon="check" onPress={trocarSenha} style={styles.btnSave} />
           </View>
         }

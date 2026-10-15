@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
-import { colors, radius } from '../../theme';
-import { EVENTOS_PUBLICOS } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { hashCurto, payloadVerificacao, verificarIntegridade } from '../../domain/integridade';
-import { numeroFormatado } from '../../domain/rdo';
-import { nowISO } from '../../utils/date';
-import { montarHtmlRdo, nomeArquivoPdf } from '../../utils/pdf';
-import { compartilharPdf, fotosParaBase64, imprimir } from '../../services/arquivos';
+import { styles } from './styles';
+import { colors } from '../../../theme';
+import { EVENTOS_PUBLICOS } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { hashCurto, payloadVerificacao, verificarIntegridade } from '../../../domain/integridade';
+import { numeroFormatado } from '../../../domain/rdo';
+import { nowISO } from '../../../utils/date';
+import { montarHtmlRdo, nomeArquivoPdf } from '../../../utils/pdf';
+import { compartilharPdf, fotosParaBase64, imprimir } from '../../../services/arquivos';
 import {
   Banner,
   Button,
@@ -20,10 +21,10 @@ import {
   StatusBadge,
   Txt,
   useUI,
-} from '../../components/ui';
-import { AuditItem, QRCodeView, RdoSections } from '../../components/rdo';
-import { nomeUsuario, perfilUsuario } from '../../domain/selectors';
-import { podeVerRdo } from '../../domain/workflow';
+} from '../../../components/ui';
+import { AuditItem, QRCodeView, RdoSections } from '../../../components/rdo';
+import { nomeUsuario, perfilUsuario } from '../../../domain/selectors';
+import { podeVerRdo } from '../../../domain/workflow';
 
 // PDF e central de arquivos (seção 13): pré-visualização do documento + geração real do PDF (expo-print) e compartilhamento.
 export default function PdfViewerScreen({ route, navigation }) {
@@ -117,7 +118,7 @@ export default function PdfViewerScreen({ route, navigation }) {
         <View style={styles.pdfIcon}>
           <Icon name="file-pdf-box" size={38} color={colors.danger} />
         </View>
-        <View style={{ flex: 1, gap: 4 }}>
+        <View style={styles.fileInfo}>
           <Txt v="bodyStrong" numberOfLines={2}>
             {nomeArquivo}
           </Txt>
@@ -128,7 +129,7 @@ export default function PdfViewerScreen({ route, navigation }) {
         </View>
       </Card>
 
-      <View style={{ gap: 10 }}>
+      <View style={styles.buttonGroup}>
         <Button
           title={finalizado ? 'Compartilhar / salvar PDF' : 'Gerar minuta em PDF'}
           icon="share-variant-outline"
@@ -149,22 +150,22 @@ export default function PdfViewerScreen({ route, navigation }) {
       {hash ? (
         <>
           <SectionTitle>Verificação de autenticidade</SectionTitle>
-          <Card style={{ alignItems: 'center', gap: 10 }}>
+          <Card style={styles.verificationCard}>
             <QRCodeView value={payloadVerificacao(rdo)} size={140} />
-            <Txt v="caption" muted style={{ textAlign: 'center' }}>
+            <Txt v="caption" muted style={styles.centerText}>
               Hash SHA-256 {rdo.hashFinal ? 'final (conteúdo + assinaturas)' : 'do conteúdo técnico'}
             </Txt>
-            <Txt v="small" mono selectable style={{ textAlign: 'center' }}>
+            <Txt v="small" mono selectable style={styles.centerText}>
               {hash}
             </Txt>
-            <View style={{ flexDirection: 'row', gap: 10, width: '100%' }}>
+            <View style={styles.actionsRow}>
               <Button
                 title="Copiar hash"
                 icon="content-copy"
                 variant="secondary"
                 size="sm"
                 onPress={copiar}
-                style={{ flex: 1 }}
+                style={styles.btnFlex}
               />
               <Button
                 title="Verificar integridade"
@@ -172,7 +173,7 @@ export default function PdfViewerScreen({ route, navigation }) {
                 variant="tonal"
                 size="sm"
                 onPress={() => setCheck(verificarIntegridade(rdo))}
-                style={{ flex: 1 }}
+                style={styles.btnFlex}
               />
             </View>
             {check ? (
@@ -182,7 +183,7 @@ export default function PdfViewerScreen({ route, navigation }) {
                   icon="shield-check"
                   title="Documento íntegro"
                   message={`Hash recalculado ${hashCurto(check.calculado, 12)} confere com a assinatura.`}
-                  style={{ alignSelf: 'stretch' }}
+                  style={styles.bannerFullWidth}
                 />
               ) : (
                 <Banner
@@ -190,7 +191,7 @@ export default function PdfViewerScreen({ route, navigation }) {
                   icon="shield-alert"
                   title="Divergência detectada"
                   message="O conteúdo não corresponde ao hash assinado."
-                  style={{ alignSelf: 'stretch' }}
+                  style={styles.bannerFullWidth}
                 />
               )
             ) : null}
@@ -227,15 +228,3 @@ export default function PdfViewerScreen({ route, navigation }) {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  arquivo: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  pdfIcon: {
-    width: 60,
-    height: 60,
-    borderRadius: radius.md,
-    backgroundColor: colors.dangerBg,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

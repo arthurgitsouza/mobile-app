@@ -1,21 +1,21 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  chips: { 
-    flexDirection: 'row', 
-    flexWrap: 'wrap', 
-    gap: 8 
+  chips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
   },
-  row: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    gap: 12, 
-    padding: 12 
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 12,
   },
-  tags: { 
-    flexDirection: 'row', 
-    flexWrap: 'wrap', 
-    gap: 6 
+  tags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
   },
   searchMargin: {
     marginTop: 8,

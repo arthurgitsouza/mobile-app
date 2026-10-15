@@ -160,11 +160,7 @@ export default function AuditScreen({ navigation }) {
         );
       })}
       {eventos.length > limite ? (
-        <Button
-          title={`Carregar mais (${restantes})`}
-          variant="secondary"
-          onPress={() => setLimite((l) => l + 40)}
-        />
+        <Button title={`Carregar mais (${restantes})`} variant="secondary" onPress={() => setLimite((l) => l + 40)} />
       ) : null}
     </Screen>
   );

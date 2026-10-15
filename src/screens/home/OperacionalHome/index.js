@@ -1,13 +1,14 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { colors, radius } from '../../theme';
-import { useApp } from '../../store/AppContext';
-import { useNow } from '../../hooks/useNow';
-import useCriarRdo from '../../hooks/useCriarRdo';
-import { ehDiaUtil, obrasVisiveis, rdoDaData } from '../../domain/selectors';
-import { validarRdo } from '../../domain/validation';
-import { numeroFormatado } from '../../domain/rdo';
+import { styles } from './styles';
+import { colors } from '../../../theme';
+import { useApp } from '../../../store/AppContext';
+import { useNow } from '../../../hooks/useNow';
+import useCriarRdo from '../../../hooks/useCriarRdo';
+import { ehDiaUtil, obrasVisiveis, rdoDaData } from '../../../domain/selectors';
+import { validarRdo } from '../../../domain/validation';
+import { numeroFormatado } from '../../../domain/rdo';
 import {
   formatDateLong,
   formatDateTime,
@@ -16,11 +17,11 @@ import {
   horaAgoraObra,
   nomeDiaSemana,
   timeToMinutes,
-} from '../../utils/date';
-import { capitalizar } from '../../utils/format';
-import { Banner, Button, Card, Icon, ProgressRing, Screen, SyncBanner, StatusBadge, Txt } from '../../components/ui';
-import { RdoCard } from '../../components/rdo';
-import { DataDeHoje, TituloSecao, tituloBoasVindas } from './shared';
+} from '../../../utils/date';
+import { capitalizar } from '../../../utils/format';
+import { Banner, Button, Card, Icon, ProgressRing, Screen, SyncBanner, StatusBadge, Txt } from '../../../components/ui';
+import { RdoCard } from '../../../components/rdo';
+import { DataDeHoje, TituloSecao, tituloBoasVindas } from '../Shared';
 
 export default function OperacionalHome() {
   const nav = useNavigation();
@@ -52,7 +53,7 @@ export default function OperacionalHome() {
         return (
           <View key={obra.id} style={styles.hero}>
             <View style={styles.heroTop}>
-              <View style={{ flex: 1 }}>
+              <View style={styles.flexOne}>
                 <Txt v="label" color={colors.gold200}>
                   RDO DE HOJE
                 </Txt>
@@ -113,7 +114,7 @@ export default function OperacionalHome() {
                       {pct}%
                     </Txt>
                   </ProgressRing>
-                  <View style={{ flex: 1, gap: 2 }}>
+                  <View style={styles.progressInfo}>
                     <Txt v="bodyStrong" color={colors.white}>
                       RDO {numeroFormatado(rdo)} · {v.progresso.completos} de {v.progresso.total} etapas
                     </Txt>
@@ -216,9 +217,9 @@ export default function OperacionalHome() {
         </Txt>
       )}
 
-      <Card tone="soft" style={{ flexDirection: 'row', gap: 10 }}>
+      <Card tone="soft" style={styles.offlineCard}>
         <Icon name="cloud-off-outline" size={22} color={colors.navy600} />
-        <Txt v="small" muted style={{ flex: 1 }}>
+        <Txt v="small" muted style={styles.flexOne}>
           Sem sinal no canteiro? Continue preenchendo e fotografando: tudo fica salvo no aparelho e sincroniza quando a
           conexão voltar.
         </Txt>
@@ -226,17 +227,3 @@ export default function OperacionalHome() {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  hero: {
-    backgroundColor: colors.navy700,
-    borderRadius: radius.xl,
-    padding: 18,
-    gap: 12,
-    borderWidth: 1,
-    borderColor: colors.navy600,
-  },
-  heroTop: { flexDirection: 'row', alignItems: 'flex-start', gap: 8 },
-  dica: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  progress: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-});

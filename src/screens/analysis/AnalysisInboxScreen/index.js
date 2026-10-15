@@ -1,12 +1,13 @@
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { colors } from '../../theme';
-import { useApp } from '../../store/AppContext';
-import { useNow } from '../../hooks/useNow';
-import { rdosAguardandoAnalise } from '../../domain/selectors';
-import { Banner, EmptyState, Screen, SyncBanner, Txt } from '../../components/ui';
-import { RdoCard } from '../../components/rdo';
+import { styles } from './styles';
+import { colors } from '../../../theme';
+import { useApp } from '../../../store/AppContext';
+import { useNow } from '../../../hooks/useNow';
+import { rdosAguardandoAnalise } from '../../../domain/selectors';
+import { Banner, EmptyState, Screen, SyncBanner, Txt } from '../../../components/ui';
+import { RdoCard } from '../../../components/rdo';
 
 // Caixa de análise do master (seção 13): o que exige ação agora, do mais antigo ao mais recente.
 export default function AnalysisInboxScreen() {
@@ -72,8 +73,8 @@ export default function AnalysisInboxScreen() {
         />
       ) : null}
       {grupos.map((g) => (
-        <View key={g.key} style={{ gap: 10 }}>
-          <View style={{ gap: 2 }}>
+        <View key={g.key} style={styles.groupGap}>
+          <View style={styles.headerGap}>
             <Txt v="h3">
               {g.titulo}{' '}
               <Txt v="h3" color={colors.textSubtle}>

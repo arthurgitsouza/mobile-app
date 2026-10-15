@@ -1,14 +1,15 @@
 import React, { useMemo } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { chart, colors, radius } from '../../theme';
-import { EVENTOS_AUDITORIA } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { useNow } from '../../hooks/useNow';
-import { diasSemRdo, nomeUsuario, rdoDaData, rdosAguardandoAnalise } from '../../domain/selectors';
-import { numeroFormatado } from '../../domain/rdo';
-import { combineDateTime, formatDate, hojeObra, tempoRelativo, addHours } from '../../utils/date';
-import { contar } from '../../utils/format';
+import { styles } from './styles';
+import { chart, colors } from '../../../theme';
+import { EVENTOS_AUDITORIA } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { useNow } from '../../../hooks/useNow';
+import { diasSemRdo, nomeUsuario, rdoDaData, rdosAguardandoAnalise } from '../../../domain/selectors';
+import { numeroFormatado } from '../../../domain/rdo';
+import { combineDateTime, formatDate, hojeObra, tempoRelativo, addHours } from '../../../utils/date';
+import { contar } from '../../../utils/format';
 import {
   Avatar,
   Banner,
@@ -21,9 +22,9 @@ import {
   StatusBadge,
   SyncBanner,
   Txt,
-} from '../../components/ui';
-import { StatTile } from '../../components/charts/StatTile';
-import { Grade, TituloSecao, DataDeHoje, tituloBoasVindas } from './shared';
+} from '../../../components/ui';
+import { StatTile } from '../../../components/charts/StatTile';
+import { Grade, TituloSecao, DataDeHoje, tituloBoasVindas } from '../Shared';
 
 export default function MasterHome() {
   const nav = useNavigation();
@@ -86,7 +87,7 @@ export default function MasterHome() {
           >
             {d.aguardando.length}
           </Txt>
-          <View style={{ flex: 1, gap: 4 }}>
+          <View style={styles.heroInfo}>
             <Txt v="bodyStrong" color={colors.white}>
               {d.aguardando.length === 1 ? 'RDO pronto para análise' : 'RDOs prontos para análise'}
             </Txt>
@@ -159,11 +160,11 @@ export default function MasterHome() {
           <Card
             key={obra.id}
             onPress={() => nav.navigate('ObraDetail', { obraId: obra.id })}
-            style={{ gap: 10 }}
+            style={styles.cardGapMedium}
             accessibilityLabel={`${obra.nome}, avanço ${obra.avancoFisico}%`}
           >
             <View style={styles.row}>
-              <View style={{ flex: 1 }}>
+              <View style={styles.flexOne}>
                 <Txt v="bodyStrong">{obra.nome}</Txt>
                 <Txt v="caption" muted>
                   {obra.descricao} · {obra.contrato}
@@ -172,14 +173,14 @@ export default function MasterHome() {
               {rdoHoje ? (
                 <StatusBadge status={rdoHoje.status} size="sm" />
               ) : (
-                <Txt v="caption" color={colors.warning} style={{ fontWeight: '800' }}>
+                <Txt v="caption" color={colors.warning} style={styles.noRdoText}>
                   Sem RDO hoje
                 </Txt>
               )}
             </View>
-            <View style={{ gap: 4 }}>
+            <View style={styles.progressContainer}>
               <View style={styles.row}>
-                <Txt v="small" muted style={{ flex: 1 }}>
+                <Txt v="small" muted style={styles.flexOne}>
                   Avanço físico {obra.avancoFisico}% · previsto {obra.avancoPrevisto}%
                 </Txt>
                 <Txt v="smallStrong" color={defasagem >= 0 ? chart.deltaGood : chart.deltaBad}>
@@ -202,18 +203,18 @@ export default function MasterHome() {
             <Card
               key={p.id}
               onPress={() => nav.navigate('RdoDetail', { rdoId: rdo.id })}
-              style={{ gap: 6 }}
+              style={styles.cardGapSmall}
               accessibilityLabel={`Pendência ${p.criticidade}: ${p.descricao}`}
             >
               <View style={styles.row}>
                 <CriticidadeBadge nivel={p.criticidade} size="sm" />
-                <Txt v="caption" muted style={{ flex: 1 }} numberOfLines={1}>
+                <Txt v="caption" muted style={styles.flexOne} numberOfLines={1}>
                   {obra.nome} · RDO nº {numeroFormatado(rdo)}
                 </Txt>
                 {vencida ? (
                   <View style={styles.vencida}>
                     <Icon name="clock-alert-outline" size={13} color={colors.danger} />
-                    <Txt v="caption" color={colors.danger} style={{ fontWeight: '800' }}>
+                    <Txt v="caption" color={colors.danger} style={styles.vencidaText}>
                       Vencida
                     </Txt>
                   </View>
@@ -243,7 +244,7 @@ export default function MasterHome() {
       <TituloSecao acao="Auditoria" onAcao={() => nav.navigate('Audit')}>
         Atividade recente
       </TituloSecao>
-      <Card style={{ gap: 12 }}>
+      <Card style={styles.cardGapLarge}>
         {d.eventos.map((e) => (
           <Pressable
             key={e.id}
@@ -252,7 +253,7 @@ export default function MasterHome() {
             style={styles.evento}
           >
             <Avatar nome={nomeUsuario(state, e.usuarioId)} size={32} />
-            <View style={{ flex: 1 }}>
+            <View style={styles.flexOne}>
               <Txt v="smallStrong" numberOfLines={1}>
                 {EVENTOS_AUDITORIA[e.evento]?.label || e.evento}
               </Txt>
@@ -273,58 +274,14 @@ function Atalho({ icon, label, onPress }) {
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={label}
-      style={({ pressed }) => [styles.atalho, pressed && { opacity: 0.85 }]}
+      style={({ pressed }) => [styles.atalho, pressed && styles.pressed]}
     >
       <View style={styles.atalhoIcon}>
         <Icon name={icon} size={24} color={colors.navy700} />
       </View>
-      <Txt v="smallStrong" style={{ flex: 1 }} numberOfLines={2}>
+      <Txt v="smallStrong" style={styles.flexOne} numberOfLines={2}>
         {label}
       </Txt>
     </Pressable>
   );
 }
-
-const styles = StyleSheet.create({
-  hero: {
-    backgroundColor: colors.navy700,
-    borderRadius: radius.xl,
-    padding: 18,
-    gap: 12,
-    borderWidth: 1,
-    borderColor: colors.navy600,
-  },
-  heroRow: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  heroNum: { fontSize: 64, lineHeight: 70, letterSpacing: -2 },
-  heroAlert: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  vencida: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 3,
-    backgroundColor: colors.dangerBg,
-    borderRadius: 999,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-  },
-  evento: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 44 },
-  atalho: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: 12,
-    minHeight: 64,
-  },
-  atalhoIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: colors.blue100,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

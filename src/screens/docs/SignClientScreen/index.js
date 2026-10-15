@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { colors, radius } from '../../theme';
-import { PERFIL, STATUS } from '../../constants';
+import { Pressable, View } from 'react-native';
+import { styles } from './styles';
+import { colors } from '../../../theme';
+import { PERFIL, STATUS } from '../../../constants';
 import {
   AVISO_ASSINATURA_DESENHADA,
   AVISO_TEXTO_DECLARACAO,
   RESSALVA_EXEMPLOS,
   declaracaoCliente,
-} from '../../constants/texts';
-import { useApp } from '../../store/AppContext';
-import { numeroFormatado } from '../../domain/rdo';
-import { formatDate, nomeDiaSemana, formatDateTime } from '../../utils/date';
-import { evidenciasDoAparelho } from '../../utils/device';
-import { haptic } from '../../utils/feedback';
-import { Banner, Button, Card, EmptyState, Icon, Screen, SectionTitle, Txt, useUI } from '../../components/ui';
-import { TextField } from '../../components/form';
-import CheckboxField from '../../components/form/CheckboxField';
-import { RdoSections, SecondFactor, SignaturePad } from '../../components/rdo';
+} from '../../../constants/texts';
+import { useApp } from '../../../store/AppContext';
+import { numeroFormatado } from '../../../domain/rdo';
+import { formatDate, nomeDiaSemana, formatDateTime } from '../../../utils/date';
+import { evidenciasDoAparelho } from '../../../utils/device';
+import { haptic } from '../../../utils/feedback';
+import { Banner, Button, Card, EmptyState, Icon, Screen, SectionTitle, Txt, useUI } from '../../../components/ui';
+import { TextField } from '../../../components/form';
+import CheckboxField from '../../../components/form/CheckboxField';
+import { RdoSections, SecondFactor, SignaturePad } from '../../../components/rdo';
 
 const OPCOES = [
   {
@@ -129,8 +130,8 @@ export default function SignClientScreen({ route, navigation }) {
       keyboard
       scrollEnabled={rolagem}
       footer={
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          <Button title="Cancelar" variant="secondary" onPress={() => navigation.goBack()} style={{ flex: 1 }} />
+        <View style={styles.footer}>
+          <Button title="Cancelar" variant="secondary" onPress={() => navigation.goBack()} style={styles.btnCancel} />
           <Button
             title={rotulo}
             icon={tipo === 'esclarecimento' ? 'send-outline' : 'draw-pen'}
@@ -138,7 +139,7 @@ export default function SignClientScreen({ route, navigation }) {
             disabled={!pronto}
             loading={salvando}
             onPress={enviar}
-            style={{ flex: 2 }}
+            style={styles.btnSubmit}
           />
         </View>
       }
@@ -198,7 +199,7 @@ export default function SignClientScreen({ route, navigation }) {
             <View style={[styles.opIcon, { backgroundColor: ativo ? o.cor : colors.grayBg }]}>
               <Icon name={o.icone} size={24} color={ativo ? colors.white : colors.textMuted} />
             </View>
-            <View style={{ flex: 1, gap: 2 }}>
+            <View style={styles.opTextContainer}>
               <Txt v="bodyStrong">{o.titulo}</Txt>
               <Txt v="small" muted>
                 {o.desc}
@@ -214,7 +215,7 @@ export default function SignClientScreen({ route, navigation }) {
       })}
 
       {exigeTexto ? (
-        <View style={{ gap: 8 }}>
+        <View style={styles.fieldContainer}>
           <TextField
             label={tipo === 'ressalva' ? 'Sua ressalva' : 'Sua dúvida'}
             required
@@ -233,7 +234,7 @@ export default function SignClientScreen({ route, navigation }) {
             error={texto && texto.trim().length < 10 ? 'Descreva com ao menos 10 caracteres.' : undefined}
           />
           {tipo === 'ressalva' ? (
-            <View style={{ gap: 6 }}>
+            <View style={styles.exemplosContainer}>
               <Txt v="caption" muted>
                 Exemplos (toque para usar):
               </Txt>
@@ -258,7 +259,7 @@ export default function SignClientScreen({ route, navigation }) {
       {assina ? (
         <>
           <SectionTitle>2 · Declaração</SectionTitle>
-          <Card tone="gold" style={{ gap: 10 }}>
+          <Card tone="gold" style={styles.cardGap}>
             <Txt v="body" color={colors.goldText}>
               {declaracaoCliente(tipo, num, rdo.versao)}
             </Txt>
@@ -289,25 +290,3 @@ export default function SignClientScreen({ route, navigation }) {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  opcao: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    padding: 14,
-    borderRadius: radius.lg,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    backgroundColor: colors.white,
-    minHeight: 72,
-  },
-  opIcon: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
-  exemplo: {
-    padding: 10,
-    borderRadius: radius.md,
-    backgroundColor: colors.blue50,
-    borderWidth: 1,
-    borderColor: colors.blue100,
-  },
-});

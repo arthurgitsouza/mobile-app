@@ -2,15 +2,15 @@ import { StyleSheet } from 'react-native';
 import { colors } from '../../../theme';
 
 export const styles = StyleSheet.create({
-  chips: { 
-    flexDirection: 'row', 
-    flexWrap: 'wrap', 
-    gap: 8 
+  chips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
   },
-  row: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    gap: 10 
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   },
   icone: {
     width: 34,

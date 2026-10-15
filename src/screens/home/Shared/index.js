@@ -1,9 +1,10 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { colors } from '../../theme';
-import { formatDateLong, horaAgoraObra, hojeObra, nomeDiaSemana } from '../../utils/date';
-import { capitalizar, primeiroNome } from '../../utils/format';
-import { Txt } from '../../components/ui';
+import { View } from 'react-native';
+import { styles } from './styles';
+import { colors } from '../../../theme';
+import { formatDateLong, horaAgoraObra, hojeObra, nomeDiaSemana } from '../../../utils/date';
+import { capitalizar, primeiroNome } from '../../../utils/format';
+import { Txt } from '../../../components/ui';
 
 export function saudacao() {
   const h = Number(horaAgoraObra().slice(0, 2));
@@ -29,15 +30,15 @@ export function Grade({ children }) {
   const linhas = [];
   for (let i = 0; i < itens.length; i += 2) linhas.push(itens.slice(i, i + 2));
   return (
-    <View style={{ gap: 12 }}>
+    <View style={styles.gradeGap}>
       {linhas.map((l, i) => (
         <View key={i} style={styles.linha}>
           {l.map((c, j) => (
-            <View key={j} style={{ flex: 1 }}>
+            <View key={j} style={styles.colunaFlex}>
               {c}
             </View>
           ))}
-          {l.length === 1 ? <View style={{ flex: 1 }} /> : null}
+          {l.length === 1 ? <View style={styles.colunaFlex} /> : null}
         </View>
       ))}
     </View>
@@ -47,25 +48,14 @@ export function Grade({ children }) {
 export function TituloSecao({ children, acao, onAcao }) {
   return (
     <View style={styles.titulo}>
-      <Txt v="h3" style={{ flex: 1 }} accessibilityRole="header">
+      <Txt v="h3" style={styles.colunaFlex} accessibilityRole="header">
         {children}
       </Txt>
       {acao ? (
-        <Txt
-          v="smallStrong"
-          color={colors.blue500}
-          onPress={onAcao}
-          accessibilityRole="link"
-          style={{ paddingVertical: 8 }}
-        >
+        <Txt v="smallStrong" color={colors.blue500} onPress={onAcao} accessibilityRole="link" style={styles.acaoLink}>
           {acao}
         </Txt>
       ) : null}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  linha: { flexDirection: 'row', gap: 12 },
-  titulo: { flexDirection: 'row', alignItems: 'center', marginTop: 6 },
-});

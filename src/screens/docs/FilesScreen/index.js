@@ -1,16 +1,17 @@
 import React, { useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
-import { colors, radius } from '../../theme';
-import { PERFIL } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { hashCurto } from '../../domain/integridade';
-import { obrasVisiveis, rdosVisiveis } from '../../domain/selectors';
-import { formatDate, formatDateTime } from '../../utils/date';
-import { normalizar } from '../../utils/format';
-import { nomeArquivoPdf } from '../../utils/pdf';
-import { Badge, Card, Chip, EmptyState, Icon, Screen, SegmentedTabs, Txt } from '../../components/ui';
-import { SearchBar } from '../../components/form';
+import { styles } from './styles';
+import { colors } from '../../../theme';
+import { PERFIL } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { hashCurto } from '../../../domain/integridade';
+import { obrasVisiveis, rdosVisiveis } from '../../../domain/selectors';
+import { formatDate, formatDateTime } from '../../../utils/date';
+import { normalizar } from '../../../utils/format';
+import { nomeArquivoPdf } from '../../../utils/pdf';
+import { Badge, Card, Chip, EmptyState, Icon, Screen, SegmentedTabs, Txt } from '../../../components/ui';
+import { SearchBar } from '../../../components/form';
 
 // PDF e central de arquivos (seção 13): PDFs finais dos RDOs e exportações geradas.
 export default function FilesScreen() {
@@ -42,7 +43,7 @@ export default function FilesScreen() {
       back={!isTab}
       bell={isTab}
       headerExtra={
-        <View style={{ gap: 8, marginTop: 8 }}>
+        <View style={styles.headerExtraContainer}>
           <SearchBar onDark value={busca} onChangeText={setBusca} placeholder="Buscar arquivo ou obra" />
           {master ? (
             <SegmentedTabs
@@ -90,7 +91,7 @@ export default function FilesScreen() {
               <View style={styles.pdf}>
                 <Icon name="file-pdf-box" size={32} color={colors.danger} />
               </View>
-              <View style={{ flex: 1, gap: 3 }}>
+              <View style={styles.fileInfo}>
                 <Txt v="bodyStrong" numberOfLines={2}>
                   {nome}
                 </Txt>
@@ -141,10 +142,10 @@ export default function FilesScreen() {
           ) : null}
           {state.files.map((f) => (
             <Card key={f.id} style={styles.arquivo}>
-              <View style={[styles.pdf, { backgroundColor: colors.successBg }]}>
+              <View style={[styles.pdf, styles.exportIconBg]}>
                 <Icon name="file-delimited-outline" size={30} color={colors.success} />
               </View>
-              <View style={{ flex: 1, gap: 3 }}>
+              <View style={styles.fileInfo}>
                 <Txt v="bodyStrong" numberOfLines={2}>
                   {f.nome}
                 </Txt>
@@ -159,17 +160,3 @@ export default function FilesScreen() {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  arquivo: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12 },
-  pdf: {
-    width: 54,
-    height: 54,
-    borderRadius: radius.md,
-    backgroundColor: colors.dangerBg,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 2 },
-});

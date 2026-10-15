@@ -1,19 +1,20 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { chart, colors, radius } from '../../theme';
-import { EVENTOS_PUBLICOS } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { useNow } from '../../hooks/useNow';
-import { nomeUsuario, obrasVisiveis, rdosVisiveis } from '../../domain/selectors';
-import { numeroFormatado } from '../../domain/rdo';
-import { formatDate, tempoRelativo } from '../../utils/date';
-import { Banner, Button, Card, Icon, ProgressBar, Screen, Txt } from '../../components/ui';
-import { RdoCard } from '../../components/rdo';
-import { StatTile } from '../../components/charts/StatTile';
-import { DataDeHoje, Grade, TituloSecao, tituloBoasVindas } from './shared';
+import { styles } from './styles';
+import { chart, colors } from '../../../theme';
+import { EVENTOS_PUBLICOS } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { useNow } from '../../../hooks/useNow';
+import { nomeUsuario, obrasVisiveis, rdosVisiveis } from '../../../domain/selectors';
+import { numeroFormatado } from '../../../domain/rdo';
+import { formatDate, tempoRelativo } from '../../../utils/date';
+import { Banner, Button, Card, Icon, ProgressBar, Screen, Txt } from '../../../components/ui';
+import { RdoCard } from '../../../components/rdo';
+import { StatTile } from '../../../components/charts/StatTile';
+import { DataDeHoje, Grade, TituloSecao, tituloBoasVindas } from '../Shared';
 
-export default function ClienteHome() {
+export default function ClientHome() {
   const nav = useNavigation();
   const { state, currentUser } = useApp();
   const now = useNow();
@@ -49,7 +50,7 @@ export default function ClienteHome() {
           >
             {aguardando.length}
           </Txt>
-          <Txt v="body" color={colors.white} style={{ flex: 1 }}>
+          <Txt v="body" color={colors.white} style={styles.heroTextFlex}>
             {aguardando.length === 0
               ? 'Você está em dia. Novos RDOs validados aparecerão aqui.'
               : aguardando.length === 1
@@ -60,7 +61,7 @@ export default function ClienteHome() {
       </View>
 
       {aguardando.map((r) => (
-        <View key={r.id} style={{ gap: 8 }}>
+        <View key={r.id} style={styles.cardGapSmall}>
           <RdoCard
             rdo={r}
             obra={obraDe(r)}
@@ -98,11 +99,11 @@ export default function ClienteHome() {
         <Card
           key={o.id}
           onPress={() => nav.navigate('ObraDetail', { obraId: o.id })}
-          style={{ gap: 10 }}
+          style={styles.cardGapMedium}
           accessibilityLabel={`${o.nome}, avanço ${o.avancoFisico}%`}
         >
           <View style={styles.row}>
-            <View style={{ flex: 1 }}>
+            <View style={styles.flexOne}>
               <Txt v="bodyStrong">{o.nome}</Txt>
               <Txt v="caption" muted>
                 {o.descricao} · {o.contrato}
@@ -110,9 +111,9 @@ export default function ClienteHome() {
             </View>
             <Icon name="chevron-right" size={22} color={colors.textSubtle} />
           </View>
-          <View style={{ gap: 4 }}>
+          <View style={styles.progressContainer}>
             <View style={styles.row}>
-              <Txt v="small" muted style={{ flex: 1 }}>
+              <Txt v="small" muted style={styles.flexOne}>
                 Avanço físico {o.avancoFisico}% · previsto {o.avancoPrevisto}%
               </Txt>
               <Txt v="smallStrong" color={o.avancoFisico >= o.avancoPrevisto ? chart.deltaGood : chart.deltaBad}>
@@ -146,13 +147,13 @@ export default function ClienteHome() {
       {publicos.length ? (
         <>
           <TituloSecao>Histórico recente</TituloSecao>
-          <Card style={{ gap: 12 }}>
+          <Card style={styles.cardGapLarge}>
             {publicos.map((e) => (
               <View key={e.id} style={styles.row}>
                 <View style={styles.evento}>
                   <Icon name="check-decagram-outline" size={18} color={colors.navy700} />
                 </View>
-                <View style={{ flex: 1 }}>
+                <View style={styles.flexOne}>
                   <Txt v="smallStrong" numberOfLines={1}>
                     RDO nº {numeroFormatado(e.rdo)} · {formatDate(e.rdo.data)}
                   </Txt>
@@ -173,25 +174,3 @@ export default function ClienteHome() {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  hero: {
-    backgroundColor: colors.navy700,
-    borderRadius: radius.xl,
-    padding: 18,
-    gap: 8,
-    borderWidth: 1,
-    borderColor: colors.navy600,
-  },
-  heroRow: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  heroNum: { fontSize: 64, lineHeight: 70, letterSpacing: -2 },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  evento: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: colors.blue100,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
