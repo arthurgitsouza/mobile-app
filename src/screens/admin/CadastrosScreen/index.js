@@ -1,7 +1,8 @@
 import React from 'react';
-import { Card, Divider, EmptyState, ListRow, Screen, SectionTitle } from '../../components/ui';
-import { PERFIL } from '../../constants';
-import { useApp } from '../../store/AppContext';
+import { styles } from './styles';
+import { Card, Divider, EmptyState, ListRow, Screen, SectionTitle } from '../../../components/ui';
+import { PERFIL } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
 
 export const CATALOGOS = {
   funcoes: { titulo: 'Funções', icone: 'account-hard-hat', desc: 'Funções da mão de obra (Pedreiro, Servente…)' },
@@ -20,6 +21,7 @@ export const CATALOGOS = {
 // Cadastros (RF-02): empresa, clientes, obras, usuários e biblioteca reutilizada nos formulários do RDO.
 export default function CadastrosScreen({ navigation }) {
   const { state, currentUser } = useApp();
+
   if (currentUser.perfil !== PERFIL.MASTER) {
     return (
       <Screen title="Cadastros" back>
@@ -31,10 +33,11 @@ export default function CadastrosScreen({ navigation }) {
       </Screen>
     );
   }
+
   return (
     <Screen title="Cadastros" subtitle="Empresa, clientes, obras e biblioteca" back>
       <SectionTitle>Estrutura</SectionTitle>
-      <Card padded={false} style={{ paddingHorizontal: 12 }}>
+      <Card padded={false} style={styles.cardList}>
         <ListRow
           icon="domain"
           title="Empresa"
@@ -65,7 +68,7 @@ export default function CadastrosScreen({ navigation }) {
       </Card>
 
       <SectionTitle>Biblioteca de cadastros</SectionTitle>
-      <Card padded={false} style={{ paddingHorizontal: 12 }}>
+      <Card padded={false} style={styles.cardList}>
         {Object.entries(CATALOGOS).map(([chave, c], i) => (
           <React.Fragment key={chave}>
             {i ? <Divider /> : null}

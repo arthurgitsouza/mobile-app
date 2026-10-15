@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import { PERFIL } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { autenticarBiometria, biometriaDisponivel } from '../../services/biometrics';
-import { formatDateTime } from '../../utils/date';
-import { haptic } from '../../utils/feedback';
+import { styles } from './styles';
+import { PERFIL } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { autenticarBiometria, biometriaDisponivel } from '../../../services/biometrics';
+import { formatDateTime } from '../../../utils/date';
+import { haptic } from '../../../utils/feedback';
 import {
   Banner,
   BottomSheet,
@@ -17,8 +18,8 @@ import {
   SectionTitle,
   Txt,
   useUI,
-} from '../../components/ui';
-import { ChipGroup, PasswordField, SwitchField, TimeField } from '../../components/form';
+} from '../../../components/ui';
+import { ChipGroup, PasswordField, SwitchField, TimeField } from '../../../components/form';
 
 const INATIVIDADE = [
   { value: '0', label: 'Nunca' },
@@ -91,7 +92,7 @@ export default function SettingsScreen({ navigation }) {
   return (
     <Screen title="Configurações" subtitle={currentUser.nome} back keyboard>
       <SectionTitle>Conta e segurança</SectionTitle>
-      <Card padded={false} style={{ paddingHorizontal: 12 }}>
+      <Card padded={false} style={styles.cardList}>
         <ListRow
           icon="lock-reset"
           title="Alterar senha"
@@ -105,7 +106,7 @@ export default function SettingsScreen({ navigation }) {
         value={bio}
         onValueChange={alternarBiometria}
       />
-      <View style={{ gap: 6 }}>
+      <View style={styles.gapSmall}>
         <ChipGroup
           label="Bloquear por inatividade"
           options={INATIVIDADE}
@@ -187,7 +188,7 @@ export default function SettingsScreen({ navigation }) {
         onValueChange={(v) => actions.atualizarConfiguracoes({ patch: { forceOffline: v } })}
         tone="gold"
       />
-      <Card style={{ gap: 8 }}>
+      <Card style={styles.cardGap}>
         <KeyValue inline label="Conexão" value={online ? 'Online' : 'Offline'} />
         <KeyValue inline label="Pendentes de envio" value={String(pendentes)} />
         <Button
@@ -200,7 +201,7 @@ export default function SettingsScreen({ navigation }) {
       </Card>
 
       <SectionTitle>Privacidade (LGPD)</SectionTitle>
-      <Card padded={false} style={{ paddingHorizontal: 12 }}>
+      <Card padded={false} style={styles.cardList}>
         <ListRow
           icon="shield-lock-outline"
           title="Termos de uso e política de privacidade"
@@ -246,7 +247,7 @@ export default function SettingsScreen({ navigation }) {
         variant="danger"
         onPress={resetar}
       />
-      <Txt v="caption" subtle style={{ textAlign: 'center' }}>
+      <Txt v="caption" subtle style={styles.footerText}>
         Protótipo de interface · dados fictícios armazenados apenas neste aparelho.
       </Txt>
 
@@ -255,9 +256,9 @@ export default function SettingsScreen({ navigation }) {
         onClose={() => setSenhaSheet(false)}
         title="Alterar senha"
         footer={
-          <View style={{ flexDirection: 'row', gap: 10 }}>
-            <Button title="Cancelar" variant="secondary" onPress={() => setSenhaSheet(false)} style={{ flex: 1 }} />
-            <Button title="Salvar" icon="check" onPress={trocarSenha} style={{ flex: 1.3 }} />
+          <View style={styles.modalFooter}>
+            <Button title="Cancelar" variant="secondary" onPress={() => setSenhaSheet(false)} style={styles.btnCancel} />
+            <Button title="Salvar" icon="check" onPress={trocarSenha} style={styles.btnSave} />
           </View>
         }
       >

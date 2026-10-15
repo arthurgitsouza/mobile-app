@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import { PERFIL } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { isEmail, maskPhone } from '../../utils/format';
-import { haptic } from '../../utils/feedback';
-import { Banner, Button, EmptyState, Screen, useUI } from '../../components/ui';
-import { TextField } from '../../components/form';
+import { styles } from './styles';
+import { PERFIL } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { isEmail, maskPhone } from '../../../utils/format';
+import { haptic } from '../../../utils/feedback';
+import { Banner, Button, EmptyState, Screen, useUI } from '../../../components/ui';
+import { TextField } from '../../../components/form';
 
 // Cadastro da empresa executora (RF-02). O protótipo tem uma empresa; o modelo já prevê várias (RNF-07).
 export default function EmpresaScreen({ navigation }) {
@@ -45,9 +46,9 @@ export default function EmpresaScreen({ navigation }) {
       back
       keyboard
       footer={
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          <Button title="Cancelar" variant="secondary" onPress={() => navigation.goBack()} style={{ flex: 1 }} />
-          <Button title="Salvar" icon="check" onPress={salvar} style={{ flex: 1.4 }} />
+        <View style={styles.footer}>
+          <Button title="Cancelar" variant="secondary" onPress={() => navigation.goBack()} style={styles.btnCancel} />
+          <Button title="Salvar" icon="check" onPress={salvar} style={styles.btnSave} />
         </View>
       }
       hideFooterOnKeyboard

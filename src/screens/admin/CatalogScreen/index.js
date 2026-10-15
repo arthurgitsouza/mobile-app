@@ -1,12 +1,13 @@
 import React, { useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { colors } from '../../theme';
-import { PERFIL } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { normalizar } from '../../utils/format';
-import { BottomSheet, Button, Card, EmptyState, Icon, IconButton, Screen, Txt, useUI } from '../../components/ui';
-import { SearchBar, SelectField, TextField } from '../../components/form';
-import { CATALOGOS } from './CadastrosScreen';
+import { View } from 'react-native';
+import { styles } from './styles';
+import { colors } from '../../../theme';
+import { PERFIL } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { normalizar } from '../../../utils/format';
+import { BottomSheet, Button, Card, EmptyState, Icon, IconButton, Screen, Txt, useUI } from '../../../components/ui';
+import { SearchBar, SelectField, TextField } from '../../../components/form';
+import { CATALOGOS } from '../CadastrosScreen';
 
 // Editor de uma lista da biblioteca (funções, equipamentos, serviços…). Serviços têm unidade padrão.
 export default function CatalogScreen({ route, navigation }) {
@@ -72,7 +73,7 @@ export default function CatalogScreen({ route, navigation }) {
         />
       }
       headerExtra={
-        <SearchBar onDark value={busca} onChangeText={setBusca} placeholder="Buscar" style={{ marginTop: 8 }} />
+        <SearchBar onDark value={busca} onChangeText={setBusca} placeholder="Buscar" style={styles.searchMargin} />
       }
     >
       <Txt v="small" muted>
@@ -91,7 +92,7 @@ export default function CatalogScreen({ route, navigation }) {
         >
           <View style={styles.conteudo}>
             <Icon name={meta.icone} size={20} color={colors.navy600} />
-            <Txt v="body" style={{ flex: 1 }} numberOfLines={2}>
+            <Txt v="body" style={styles.flexOne} numberOfLines={2}>
               {servicos ? item.nome : item}
             </Txt>
             {servicos ? (
@@ -121,9 +122,9 @@ export default function CatalogScreen({ route, navigation }) {
         onClose={() => setEdit(null)}
         title={edit?.indice == null ? 'Novo item' : 'Editar item'}
         footer={
-          <View style={{ flexDirection: 'row', gap: 10 }}>
-            <Button title="Cancelar" variant="secondary" onPress={() => setEdit(null)} style={{ flex: 1 }} />
-            <Button title="Salvar" icon="check" onPress={salvar} style={{ flex: 1.3 }} />
+          <View style={styles.modalButtons}>
+            <Button title="Cancelar" variant="secondary" onPress={() => setEdit(null)} style={styles.btnCancel} />
+            <Button title="Salvar" icon="check" onPress={salvar} style={styles.btnSave} />
           </View>
         }
       >
@@ -153,8 +154,3 @@ export default function CatalogScreen({ route, navigation }) {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  linha: { paddingHorizontal: 12 },
-  conteudo: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 52 },
-});

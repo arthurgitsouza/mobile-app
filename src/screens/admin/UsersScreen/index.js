@@ -1,12 +1,13 @@
 import React, { useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { colors } from '../../theme';
-import { PERFIL, PERFIS } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { normalizar } from '../../utils/format';
-import { Avatar, Badge, Button, Card, Chip, EmptyState, Icon, IconButton, Screen, Txt } from '../../components/ui';
-import { SearchBar } from '../../components/form';
+import { styles } from './styles';
+import { colors } from '../../../theme';
+import { PERFIL, PERFIS } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { normalizar } from '../../../utils/format';
+import { Avatar, Badge, Button, Card, Chip, EmptyState, Icon, IconButton, Screen, Txt } from '../../../components/ui';
+import { SearchBar } from '../../../components/form';
 
 // Usuários e permissões (seção 13): cadastro por perfil e vínculo por obra (RF-02, RF-03).
 export default function UsersScreen() {
@@ -58,7 +59,7 @@ export default function UsersScreen() {
           value={busca}
           onChangeText={setBusca}
           placeholder="Buscar nome, e-mail ou cargo"
-          style={{ marginTop: 8 }}
+          style={styles.searchMargin}
         />
       }
     >
@@ -87,7 +88,7 @@ export default function UsersScreen() {
             accessibilityLabel={`${u.nome}, ${PERFIS[u.perfil].label}${u.ativo ? '' : ', bloqueado'}`}
           >
             <Avatar nome={u.nome} size={46} />
-            <View style={{ flex: 1, gap: 3 }}>
+            <View style={styles.userInfo}>
               <Txt v="bodyStrong" numberOfLines={1}>
                 {u.nome}
               </Txt>
@@ -130,9 +131,3 @@ export default function UsersScreen() {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12 },
-  tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-});

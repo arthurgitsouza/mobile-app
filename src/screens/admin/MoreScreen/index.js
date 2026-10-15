@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { colors } from '../../theme';
-import { PERFIL, PERFIS } from '../../constants';
-import { useApp } from '../../store/AppContext';
+import { styles } from './styles';
+import { colors } from '../../../theme';
+import { PERFIL, PERFIS } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
 import {
   Avatar,
   Badge,
@@ -16,7 +17,7 @@ import {
   SectionTitle,
   Txt,
   useUI,
-} from '../../components/ui';
+} from '../../../components/ui';
 
 // Menu "Mais": cadastros, relatórios, configurações e (em modo demonstração) troca rápida de perfil.
 export default function MoreScreen() {
@@ -45,7 +46,7 @@ export default function MoreScreen() {
     <Screen title="Mais" subtitle={PERFIS[perfil].longo} tab bell>
       <Card style={styles.perfil}>
         <Avatar nome={currentUser.nome} size={56} />
-        <View style={{ flex: 1, gap: 2 }}>
+        <View style={styles.perfilInfo}>
           <Txt v="h3">{currentUser.nome}</Txt>
           <Txt v="small" muted>
             {currentUser.cargo}
@@ -150,7 +151,7 @@ export default function MoreScreen() {
       <Card padded={false} style={styles.lista}>
         {item('logout', 'Encerrar sessão', undefined, sair, { danger: true, chevron: false })}
       </Card>
-      <Txt v="caption" subtle style={{ textAlign: 'center' }}>
+      <Txt v="caption" subtle style={styles.footerText}>
         RDO Mobile v1.0.0 · protótipo de interface (sem back-end)
       </Txt>
 
@@ -182,8 +183,3 @@ export default function MoreScreen() {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  perfil: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  lista: { paddingHorizontal: 12 },
-});

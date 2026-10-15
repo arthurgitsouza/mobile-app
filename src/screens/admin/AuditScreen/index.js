@@ -1,14 +1,15 @@
 import React, { useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { colors } from '../../theme';
-import { EVENTOS_AUDITORIA, PERFIL } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { numeroFormatado } from '../../domain/rdo';
-import { nomeUsuario } from '../../domain/selectors';
-import { formatDateTime } from '../../utils/date';
-import { normalizar } from '../../utils/format';
-import { Badge, Banner, Button, Card, Chip, EmptyState, Icon, Screen, Txt } from '../../components/ui';
-import { SearchBar } from '../../components/form';
+import { View } from 'react-native';
+import { styles } from './styles';
+import { colors } from '../../../theme';
+import { EVENTOS_AUDITORIA, PERFIL } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { numeroFormatado } from '../../../domain/rdo';
+import { nomeUsuario } from '../../../domain/selectors';
+import { formatDateTime } from '../../../utils/date';
+import { normalizar } from '../../../utils/format';
+import { Badge, Banner, Button, Card, Chip, EmptyState, Icon, Screen, Txt } from '../../../components/ui';
+import { SearchBar } from '../../../components/form';
 
 const GRUPOS = [
   { key: '', label: 'Todos' },
@@ -77,6 +78,8 @@ export default function AuditScreen({ navigation }) {
     );
   }
 
+  const restantes = eventos.length - limite;
+
   return (
     <Screen
       title="Auditoria geral"
@@ -88,7 +91,7 @@ export default function AuditScreen({ navigation }) {
           value={busca}
           onChangeText={setBusca}
           placeholder="Buscar usuário, obra, RDO ou evento"
-          style={{ marginTop: 8 }}
+          style={styles.searchMargin}
         />
       }
     >
@@ -120,13 +123,13 @@ export default function AuditScreen({ navigation }) {
           <Card
             key={`${a.id}-${a.rdo?.id || 'g'}`}
             onPress={a.rdo ? () => navigation.navigate('RdoDetail', { rdoId: a.rdo.id, tab: 'historico' }) : undefined}
-            style={{ gap: 6 }}
+            style={styles.cardGap}
           >
             <View style={styles.row}>
               <View style={styles.icone}>
                 <Icon name={m.icone} size={18} color={colors.navy700} />
               </View>
-              <View style={{ flex: 1 }}>
+              <View style={styles.flexOne}>
                 <Txt v="smallStrong">{m.label}</Txt>
                 <Txt v="caption" muted>
                   {nomeUsuario(state, a.usuarioId)} · {formatDateTime(a.dataHora)}
@@ -158,7 +161,7 @@ export default function AuditScreen({ navigation }) {
       })}
       {eventos.length > limite ? (
         <Button
-          title={`Carregar mais (${eventos.length - limite})`}
+          title={`Carregar mais (${restantes})`}
           variant="secondary"
           onPress={() => setLimite((l) => l + 40)}
         />
@@ -166,16 +169,3 @@ export default function AuditScreen({ navigation }) {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  icone: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: colors.blue100,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

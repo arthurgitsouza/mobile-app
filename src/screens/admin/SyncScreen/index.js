@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { colors } from '../../theme';
-import { useApp } from '../../store/AppContext';
-import { numeroFormatado } from '../../domain/rdo';
-import { formatDateTime, tempoRelativo } from '../../utils/date';
+import { View } from 'react-native';
+import { styles } from './styles';
+import { colors } from '../../../theme';
+import { useApp } from '../../../store/AppContext';
+import { numeroFormatado } from '../../../domain/rdo';
+import { formatDateTime, tempoRelativo } from '../../../utils/date';
 import {
   Banner,
   Button,
@@ -15,8 +16,8 @@ import {
   SectionTitle,
   Txt,
   useUI,
-} from '../../components/ui';
-import { SwitchField } from '../../components/form';
+} from '../../../components/ui';
+import { SwitchField } from '../../../components/form';
 
 // Central de sincronização (RNF-03): mostra claramente o que ainda não foi enviado e permite sincronizar.
 export default function SyncScreen({ navigation }) {
@@ -54,7 +55,7 @@ export default function SyncScreen({ navigation }) {
         <View style={[styles.iconeStatus, { backgroundColor: online ? colors.success : colors.warning }]}>
           <Icon name={online ? 'cloud-check-outline' : 'cloud-off-outline'} size={28} color={colors.white} />
         </View>
-        <View style={{ flex: 1, gap: 2 }}>
+        <View style={styles.statusInfo}>
           <Txt v="h3" color={online ? colors.success : colors.warning}>
             {online ? 'Conectado' : 'Sem conexão'}
           </Txt>
@@ -79,10 +80,10 @@ export default function SyncScreen({ navigation }) {
       <SectionTitle>Aguardando envio ({pendentes.length})</SectionTitle>
       {pendentes.length ? (
         pendentes.map((r) => (
-          <Card key={r.id} onPress={() => navigation.navigate('RdoDetail', { rdoId: r.id })} style={{ gap: 6 }}>
+          <Card key={r.id} onPress={() => navigation.navigate('RdoDetail', { rdoId: r.id })} style={styles.cardGap}>
             <View style={styles.row}>
               <Icon name="cloud-upload-outline" size={22} color={colors.warning} />
-              <Txt v="bodyStrong" style={{ flex: 1 }}>
+              <Txt v="bodyStrong" style={styles.flexOne}>
                 RDO nº {numeroFormatado(r)} · {state.obras.find((o) => o.id === r.obraId)?.nome}
               </Txt>
               <StatusBadge status={r.status} size="sm" />
@@ -107,7 +108,7 @@ export default function SyncScreen({ navigation }) {
           {rascunhos.map((r) => (
             <Card key={r.id} onPress={() => navigation.navigate('RdoForm', { rdoId: r.id })} style={styles.row}>
               <Icon name="content-save-outline" size={22} color={colors.navy600} />
-              <Txt v="small" style={{ flex: 1 }}>
+              <Txt v="small" style={styles.flexOne}>
                 RDO nº {numeroFormatado(r)} — salvo às {formatDateTime(r.atualizadoEm)}
               </Txt>
             </Card>
@@ -122,7 +123,7 @@ export default function SyncScreen({ navigation }) {
           message={`${fotosLocais.length} foto(s) só estão no aparelho e serão enviadas com o RDO.`}
         />
       ) : null}
-      <Txt v="caption" muted style={{ textAlign: 'center' }}>
+      <Txt v="caption" muted style={styles.centerText}>
         Última sincronização: {ultimo ? formatDateTime(ultimo) : '—'}
       </Txt>
       <Button
@@ -133,16 +134,10 @@ export default function SyncScreen({ navigation }) {
         disabled={!online || pendentes.length === 0}
       />
       {!online ? (
-        <Txt v="caption" muted style={{ textAlign: 'center' }}>
+        <Txt v="caption" muted style={styles.centerText}>
           Reconecte-se para sincronizar. O app envia automaticamente quando a rede voltar.
         </Txt>
       ) : null}
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  status: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  iconeStatus: { width: 52, height: 52, borderRadius: 26, alignItems: 'center', justifyContent: 'center' },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-});

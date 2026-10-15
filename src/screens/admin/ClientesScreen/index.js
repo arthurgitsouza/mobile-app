@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { colors } from '../../theme';
-import { PERFIL } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { isEmail, maskPhone, uid } from '../../utils/format';
-import { haptic } from '../../utils/feedback';
+import { View } from 'react-native';
+import { styles } from './styles';
+import { colors } from '../../../theme';
+import { PERFIL } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { isEmail, maskPhone, uid } from '../../../utils/format';
+import { haptic } from '../../../utils/feedback';
 import {
   Badge,
   BottomSheet,
@@ -16,8 +17,8 @@ import {
   Screen,
   Txt,
   useUI,
-} from '../../components/ui';
-import { TextField } from '../../components/form';
+} from '../../../components/ui';
+import { TextField } from '../../../components/form';
 
 // Cadastro de clientes (RF-02). O vínculo do cliente com a obra é feito na obra; usuários "Cliente" pertencem a um cliente.
 export default function ClientesScreen() {
@@ -74,12 +75,12 @@ export default function ClientesScreen() {
         const obras = state.obras.filter((o) => o.clienteId === c.id);
         const usuarios = state.users.filter((u) => u.clienteId === c.id);
         return (
-          <Card key={c.id} onPress={() => abrir(c)} style={{ gap: 6 }}>
+          <Card key={c.id} onPress={() => abrir(c)} style={styles.cardGap}>
             <View style={styles.row}>
               <View style={styles.icone}>
                 <Icon name="account-tie-outline" size={24} color={colors.navy600} />
               </View>
-              <View style={{ flex: 1 }}>
+              <View style={styles.flexOne}>
                 <Txt v="bodyStrong">{c.nome}</Txt>
                 <Txt v="caption" muted>
                   {c.contato} · {c.email}
@@ -110,9 +111,9 @@ export default function ClientesScreen() {
         onClose={() => setEdit(null)}
         title={edit && state.clientes.some((c) => c.id === edit.id) ? 'Editar cliente' : 'Novo cliente'}
         footer={
-          <View style={{ flexDirection: 'row', gap: 10 }}>
-            <Button title="Cancelar" variant="secondary" onPress={() => setEdit(null)} style={{ flex: 1 }} />
-            <Button title="Salvar" icon="check" onPress={salvar} style={{ flex: 1.3 }} />
+          <View style={styles.modalFooter}>
+            <Button title="Cancelar" variant="secondary" onPress={() => setEdit(null)} style={styles.btnCancel} />
+            <Button title="Salvar" icon="check" onPress={salvar} style={styles.btnSave} />
           </View>
         }
       >
@@ -154,15 +155,3 @@ export default function ClientesScreen() {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  icone: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    backgroundColor: colors.blue100,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

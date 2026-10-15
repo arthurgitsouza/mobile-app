@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { colors } from '../../theme';
-import { MATRIZ_PERMISSOES, PERFIL, PERFIS } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { Avatar, Badge, Button, Card, EmptyState, Icon, Screen, SegmentedTabs, Txt } from '../../components/ui';
+import { View } from 'react-native';
+import { styles } from './styles';
+import { colors } from '../../../theme';
+import { MATRIZ_PERMISSOES, PERFIL, PERFIS } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { Avatar, Badge, Button, Card, EmptyState, Icon, Screen, SegmentedTabs, Txt } from '../../../components/ui';
 
 const CELULA = {
   sim: { icon: 'check-circle', color: colors.success, label: 'Permitido' },
@@ -38,24 +39,24 @@ export default function PermissionsScreen({ navigation }) {
       {aba === 'perfil' ? (
         <>
           <View style={styles.cabecalho}>
-            <View style={{ flex: 1 }} />
+            <View style={styles.flexOne} />
             {Object.values(PERFIS).map((p) => (
               <View key={p.key} style={styles.col} accessible accessibilityLabel={p.longo}>
                 <Icon name={p.icone} size={20} color={colors.navy700} />
-                <Txt v="caption" muted style={{ fontSize: 10.5 }}>
+                <Txt v="caption" muted style={styles.colLabel}>
                   {p.label}
                 </Txt>
               </View>
             ))}
           </View>
           {MATRIZ_PERMISSOES.map((g) => (
-            <Card key={g.grupo} padded={false} style={{ paddingHorizontal: 12, paddingVertical: 6 }}>
-              <Txt v="label" color={colors.navy600} style={{ paddingTop: 8, paddingBottom: 4 }}>
+            <Card key={g.grupo} padded={false} style={styles.cardGrupo}>
+              <Txt v="label" color={colors.navy600} style={styles.grupoTitulo}>
                 {g.grupo.toUpperCase()}
               </Txt>
               {g.itens.map((it, i) => (
                 <View key={it.label} style={[styles.linha, i > 0 && styles.sep]}>
-                  <View style={{ flex: 1, gap: 2 }}>
+                  <View style={styles.infoCol}>
                     <Txt v="small">{it.label}</Txt>
                     {it.nota ? (
                       <Txt v="caption" muted>
@@ -96,9 +97,9 @@ export default function PermissionsScreen({ navigation }) {
         state.obras.map((o) => {
           const equipe = state.users.filter((u) => (o.usuarioIds || []).includes(u.id));
           return (
-            <Card key={o.id} style={{ gap: 10 }}>
+            <Card key={o.id} style={styles.cardObraGap}>
               <View style={styles.topo}>
-                <View style={{ flex: 1 }}>
+                <View style={styles.flexOne}>
                   <Txt v="bodyStrong">{o.nome}</Txt>
                   <Txt v="caption" muted>
                     {o.descricao} · {o.contrato}
@@ -109,7 +110,7 @@ export default function PermissionsScreen({ navigation }) {
               {equipe.map((u) => (
                 <View key={u.id} style={styles.topo}>
                   <Avatar nome={u.nome} size={32} />
-                  <Txt v="small" style={{ flex: 1 }}>
+                  <Txt v="small" style={styles.flexOne}>
                     {u.nome}
                   </Txt>
                   <Badge label={PERFIS[u.perfil].label} color={colors.gray} bg={colors.grayBg} size="sm" />
@@ -137,13 +138,3 @@ export default function PermissionsScreen({ navigation }) {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  cabecalho: { flexDirection: 'row', alignItems: 'flex-end', paddingHorizontal: 12 },
-  col: { width: 64, alignItems: 'center', gap: 2 },
-  linha: { flexDirection: 'row', alignItems: 'center', paddingVertical: 10 },
-  sep: { borderTopWidth: 1, borderTopColor: colors.divider },
-  legenda: { flexDirection: 'row', gap: 16, justifyContent: 'center' },
-  leg: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  topo: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-});

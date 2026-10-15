@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import { PERFIL, PERFIS } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { isEmail, maskPhone, uid } from '../../utils/format';
-import { haptic } from '../../utils/feedback';
-import { Banner, Button, Card, EmptyState, Screen, SectionTitle, Txt, useUI } from '../../components/ui';
-import { ChipGroup, SelectField, SwitchField, TextField } from '../../components/form';
+import { styles } from './styles';
+import { PERFIL, PERFIS } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { isEmail, maskPhone, uid } from '../../../utils/format';
+import { haptic } from '../../../utils/feedback';
+import { Banner, Button, Card, EmptyState, Screen, SectionTitle, Txt, useUI } from '../../../components/ui';
+import { ChipGroup, SelectField, SwitchField, TextField } from '../../../components/form';
 
 // Cadastro de usuário: perfil, contato, cliente (quando perfil Cliente) e vínculo por obra.
 export default function UserFormScreen({ route, navigation }) {
@@ -112,13 +113,13 @@ export default function UserFormScreen({ route, navigation }) {
       back
       keyboard
       footer={
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          <Button title="Cancelar" variant="secondary" onPress={() => navigation.goBack()} style={{ flex: 1 }} />
+        <View style={styles.footer}>
+          <Button title="Cancelar" variant="secondary" onPress={() => navigation.goBack()} style={styles.btnCancel} />
           <Button
             title={existente ? 'Salvar' : 'Cadastrar e convidar'}
             icon="check"
             onPress={salvar}
-            style={{ flex: 1.6 }}
+            style={styles.btnSave}
           />
         </View>
       }
@@ -183,7 +184,7 @@ export default function UserFormScreen({ route, navigation }) {
       ) : (
         <>
           <SectionTitle>Obras vinculadas</SectionTitle>
-          <Card style={{ gap: 8 }}>
+          <Card style={styles.obrasCard}>
             {state.obras.map((o) => (
               <SwitchField
                 key={o.id}
@@ -191,7 +192,7 @@ export default function UserFormScreen({ route, navigation }) {
                 description={`${o.descricao} · ${o.contrato}`}
                 value={obraIds.includes(o.id)}
                 onValueChange={(v) => setObraIds((cur) => (v ? [...cur, o.id] : cur.filter((x) => x !== o.id)))}
-                style={{ borderWidth: 0 }}
+                style={styles.switchNoBorder}
               />
             ))}
             <Txt v="caption" muted>
