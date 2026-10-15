@@ -1,0 +1,14 @@
+{
+  "forceOffline": false,
+  "simularFalhaEmail": false,
+  "inatividadeMin": 0,
+  "lembretes": {
+    "operacionalFimDia": "18:00",
+    "masterHoras": 24,
+    "clienteHoras": [
+      24,
+      48
+    ],
+    "escalonamentoHoras": 72
+  }
+}

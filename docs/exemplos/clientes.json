@@ -1,0 +1,23 @@
+[
+  {
+    "id": "cli_horizonte",
+    "nome": "Grupo Horizonte Empreendimentos",
+    "contato": "Fernanda Albuquerque",
+    "email": "cliente@horizonte.com.br",
+    "telefone": "(98) 98800-1001"
+  },
+  {
+    "id": "cli_pontadaareia",
+    "nome": "Logística Ponta da Areia S.A.",
+    "contato": "Roberto Campos",
+    "email": "roberto@pontadaareia.com.br",
+    "telefone": "(98) 98800-1002"
+  },
+  {
+    "id": "cli_saudeviva",
+    "nome": "Consórcio Saúde Viva",
+    "contato": "Paula Nogueira",
+    "email": "paula@saudeviva.org.br",
+    "telefone": "(98) 98800-1003"
+  }
+]

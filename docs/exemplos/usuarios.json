@@ -1,0 +1,110 @@
+[
+  {
+    "id": "u_master",
+    "nome": "Eng. Carlos Lima",
+    "email": "master@planengen.com.br",
+    "perfil": "master",
+    "cargo": "Engenheiro Civil — RT",
+    "telefone": "(98) 98800-0001",
+    "ativo": true,
+    "canais": {
+      "push": true,
+      "email": true,
+      "whatsapp": true
+    },
+    "criadoEm": "2026-09-03T15:00:00.000Z"
+  },
+  {
+    "id": "u_joao",
+    "nome": "João Ribeiro",
+    "email": "operacional@planengen.com.br",
+    "perfil": "operacional",
+    "cargo": "Mestre de obras",
+    "telefone": "(98) 98800-0002",
+    "ativo": true,
+    "canais": {
+      "push": true,
+      "email": true,
+      "whatsapp": false
+    },
+    "criadoEm": "2026-09-03T15:00:00.000Z"
+  },
+  {
+    "id": "u_marcos",
+    "nome": "Marcos Vinícius",
+    "email": "marcos@planengen.com.br",
+    "perfil": "operacional",
+    "cargo": "Técnico em edificações",
+    "telefone": "(98) 98800-0003",
+    "ativo": true,
+    "canais": {
+      "push": true,
+      "email": true,
+      "whatsapp": false
+    },
+    "criadoEm": "2026-09-03T15:00:00.000Z"
+  },
+  {
+    "id": "u_ana",
+    "nome": "Ana Beatriz Costa",
+    "email": "ana@planengen.com.br",
+    "perfil": "operacional",
+    "cargo": "Estagiária de Engenharia",
+    "telefone": "(98) 98800-0004",
+    "ativo": true,
+    "canais": {
+      "push": true,
+      "email": true,
+      "whatsapp": false
+    },
+    "criadoEm": "2026-09-03T15:00:00.000Z"
+  },
+  {
+    "id": "u_fernanda",
+    "nome": "Fernanda Albuquerque",
+    "email": "cliente@horizonte.com.br",
+    "perfil": "cliente",
+    "cargo": "Gerente de Projetos",
+    "telefone": "(98) 98800-1001",
+    "clienteId": "cli_horizonte",
+    "ativo": true,
+    "canais": {
+      "push": true,
+      "email": true,
+      "whatsapp": false
+    },
+    "criadoEm": "2026-09-03T15:00:00.000Z"
+  },
+  {
+    "id": "u_roberto",
+    "nome": "Roberto Campos",
+    "email": "roberto@pontadaareia.com.br",
+    "perfil": "cliente",
+    "cargo": "Diretor de Operações",
+    "telefone": "(98) 98800-1002",
+    "clienteId": "cli_pontadaareia",
+    "ativo": true,
+    "canais": {
+      "push": true,
+      "email": true,
+      "whatsapp": false
+    },
+    "criadoEm": "2026-09-03T15:00:00.000Z"
+  },
+  {
+    "id": "u_paula",
+    "nome": "Paula Nogueira",
+    "email": "paula@saudeviva.org.br",
+    "perfil": "cliente",
+    "cargo": "Coordenadora de Obras",
+    "telefone": "(98) 98800-1003",
+    "clienteId": "cli_saudeviva",
+    "ativo": true,
+    "canais": {
+      "push": true,
+      "email": true,
+      "whatsapp": false
+    },
+    "criadoEm": "2026-09-03T15:00:00.000Z"
+  }
+]

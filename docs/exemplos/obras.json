@@ -1,0 +1,99 @@
+[
+  {
+    "id": "obra_alfa",
+    "nome": "Obra Alfa",
+    "descricao": "Residencial Alfa — Bloco A",
+    "contrato": "CT-014",
+    "os": "OS 021/2026",
+    "clienteId": "cli_horizonte",
+    "clienteNome": "Grupo Horizonte Empreendimentos",
+    "empresaExecutora": "PLANENGEN Consultoria e Construção LTDA",
+    "endereco": "Av. dos Holandeses, s/n — Calhau, São Luís/MA",
+    "inicio": "2026-07-30",
+    "inicioRegistro": "2026-10-02",
+    "fim": "2027-07-30",
+    "engenheiroRTId": "u_master",
+    "engenheiroRT": "Eng. Carlos Lima — CREA 123456789-0 MA",
+    "diasUteis": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "exigeAssinaturaOperacional": true,
+    "status": "ativa",
+    "avancoFisico": 38,
+    "avancoPrevisto": 41,
+    "usuarioIds": [
+      "u_joao",
+      "u_fernanda"
+    ]
+  },
+  {
+    "id": "obra_beta",
+    "nome": "Obra Beta",
+    "descricao": "Galpão Logístico Beta",
+    "contrato": "CT-019",
+    "os": "OS 034/2026",
+    "clienteId": "cli_pontadaareia",
+    "clienteNome": "Logística Ponta da Areia S.A.",
+    "empresaExecutora": "PLANENGEN Consultoria e Construção LTDA",
+    "endereco": "Rod. BR-135, km 12 — Distrito Industrial, São Luís/MA",
+    "inicio": "2026-08-24",
+    "inicioRegistro": "2026-10-05",
+    "fim": "2027-03-22",
+    "engenheiroRTId": "u_master",
+    "engenheiroRT": "Eng. Carlos Lima — CREA 123456789-0 MA",
+    "diasUteis": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "exigeAssinaturaOperacional": false,
+    "status": "ativa",
+    "avancoFisico": 61,
+    "avancoPrevisto": 55,
+    "usuarioIds": [
+      "u_marcos",
+      "u_ana",
+      "u_roberto"
+    ]
+  },
+  {
+    "id": "obra_gama",
+    "nome": "Obra Gama",
+    "descricao": "Reforma da UBS Gama",
+    "contrato": "CT-023",
+    "os": "OS 047/2026",
+    "clienteId": "cli_saudeviva",
+    "clienteNome": "Consórcio Saúde Viva",
+    "empresaExecutora": "PLANENGEN Consultoria e Construção LTDA",
+    "endereco": "Rua Grande, 350 — Centro, São Luís/MA",
+    "inicio": "2026-10-09",
+    "inicioRegistro": "2026-10-09",
+    "fim": "2027-01-26",
+    "engenheiroRTId": "u_master",
+    "engenheiroRT": "Eng. Carlos Lima — CREA 123456789-0 MA",
+    "diasUteis": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "exigeAssinaturaOperacional": false,
+    "status": "ativa",
+    "avancoFisico": 12,
+    "avancoPrevisto": 15,
+    "usuarioIds": [
+      "u_marcos",
+      "u_paula"
+    ]
+  }
+]
