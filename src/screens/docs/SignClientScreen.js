@@ -9,6 +9,7 @@ import {
   declaracaoCliente,
 } from '../../constants/texts';
 import { useApp } from '../../store/AppContext';
+import useAcao from '../../hooks/useAcao';
 import { numeroFormatado } from '../../domain/rdo';
 import { formatDate, nomeDiaSemana, formatDateTime } from '../../utils/date';
 import { evidenciasDoAparelho } from '../../utils/device';
@@ -58,6 +59,7 @@ export default function SignClientScreen({ route, navigation }) {
   const [mostrar, setMostrar] = useState(false);
   const [rolagem, setRolagem] = useState(true);
   const [salvando, setSalvando] = useState(false);
+  const assinarCliente = useAcao(actions.assinarComoCliente);
 
   if (!rdo || !obra || currentUser.perfil !== PERFIL.CLIENTE || rdo.status !== STATUS.ENVIADO_CLIENTE) {
     return (
@@ -93,7 +95,11 @@ export default function SignClientScreen({ route, navigation }) {
     setSalvando(true);
     await new Promise((r) => setTimeout(r, 700));
     if (tipo === 'esclarecimento') {
-      actions.assinarComoCliente({ rdoId, userId: currentUser.id, tipo, texto });
+      const s = await assinarCliente.executar({ rdoId, userId: currentUser.id, tipo, texto });
+      if (!s) {
+        setSalvando(false);
+        return;
+      }
       haptic.success();
       toast.show({
         type: 'success',
@@ -103,13 +109,17 @@ export default function SignClientScreen({ route, navigation }) {
       navigation.goBack();
       return;
     }
-    actions.assinarComoCliente({
+    const s = await assinarCliente.executar({
       rdoId,
       userId: currentUser.id,
       tipo,
       texto,
       assinatura: { ...assin, ...evidenciasDoAparelho(state.session.deviceId, fator.metodo) },
     });
+    if (!s) {
+      setSalvando(false);
+      return;
+    }
     haptic.success();
     navigation.replace('Receipt', { rdoId, quem: 'cliente', novo: true });
   };

@@ -4,6 +4,7 @@ import { colors } from '../../theme';
 import { PERFIL, STATUS } from '../../constants';
 import { AVISO_ASSINATURA_DESENHADA, AVISO_TEXTO_DECLARACAO, declaracaoMaster } from '../../constants/texts';
 import { useApp } from '../../store/AppContext';
+import useAcao from '../../hooks/useAcao';
 import {
   conteudoTecnico,
   numeroFormatado,
@@ -38,6 +39,7 @@ export default function SignMasterScreen({ route, navigation }) {
   const [mostrar, setMostrar] = useState(false);
   const [rolagem, setRolagem] = useState(true);
   const [salvando, setSalvando] = useState(false);
+  const validarAssinar = useAcao(actions.validarEAssinar);
 
   const hashPrevio = useMemo(() => (rdo ? hashOf(conteudoTecnico(rdo)) : ''), [rdo]);
 
@@ -80,13 +82,17 @@ export default function SignMasterScreen({ route, navigation }) {
     setSalvando(true);
     await new Promise((r) => setTimeout(r, 700));
     const canais = ['app', ...(email ? ['email'] : []), ...(whats && temWhats ? ['whatsapp'] : [])];
-    actions.validarEAssinar({
+    const s = await validarAssinar.executar({
       rdoId,
       userId: currentUser.id,
       enviarAgora,
       canais,
       assinatura: { ...assin, ...evidenciasDoAparelho(state.session.deviceId, fator.metodo) },
     });
+    if (!s) {
+      setSalvando(false);
+      return;
+    }
     haptic.success();
     navigation.replace('Receipt', { rdoId, quem: 'master', novo: true });
   };
