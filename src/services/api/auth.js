@@ -17,3 +17,19 @@ export async function definirBiometria(servico, args = {}) {
 export async function alterarSenha(servico, args = {}) {
   return servico.executar('alterarSenha', args);
 }
+
+export async function solicitarRecuperacao(servico, args = {}) {
+  return servico.executar('solicitarRecuperacao', args);
+}
+
+export async function verificarCodigo(servico, args = {}) {
+  return servico.executar('verificarCodigo', args);
+}
+
+export async function redefinirSenha(servico, args = {}) {
+  return servico.executar('redefinirSenha', args);
+}
+
+export async function restaurarSessao(servico, args = {}) {
+  return servico.executar('restaurarSessao', args);
+}

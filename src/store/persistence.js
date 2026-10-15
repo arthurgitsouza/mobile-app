@@ -1,9 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SCHEMA_VERSION } from '../data/seed.js';
+import { env } from '../config/env.js';
+import { criarGravador } from './persistenceCore.js';
 
 // Persistência local do protótipo (offline-first). Uma chave por fatia para evitar linhas grandes
 // no AsyncStorage (limite de ~2 MB por valor no Android).
-const PREFIX = 'rdo:v1:';
+const PREFIX = env.USE_MOCK ? 'rdo:v1:' : 'rdo:api:v1:';
 const SLICES = [
   'meta',
   'empresa',
@@ -18,9 +20,11 @@ const SLICES = [
   'settings',
   'academico',
   'session',
+  'filaOffline',
 ];
 
 function sliceValue(state, key) {
+  if (key === 'filaOffline') return state.filaOffline || [];
   if (key === 'meta') return { schemaVersion: state.schemaVersion, geradoEm: state.geradoEm };
   if (key === 'session') {
     const s = state.session;
@@ -35,6 +39,10 @@ export async function loadState() {
     const pairs = await AsyncStorage.multiGet(SLICES.map((k) => PREFIX + k));
     const data = {};
     for (const [k, v] of pairs) {
+      if (v == null && k === PREFIX + 'filaOffline') {
+        data.filaOffline = [];
+        continue;
+      }
       if (v == null) return null;
       data[k.slice(PREFIX.length)] = JSON.parse(v);
     }
@@ -46,8 +54,9 @@ export async function loadState() {
   }
 }
 
-let timer = null;
-let pending = null;
+const gravador = criarGravador({
+  gravar: (batch) => AsyncStorage.multiSet(Object.entries(batch).map(([k, v]) => [PREFIX + k, JSON.stringify(v)])),
+});
 
 // Grava apenas as fatias cujas referências mudaram, com debounce (o formulário salva a cada digitação).
 export function persistState(prev, next) {
@@ -59,29 +68,15 @@ export function persistState(prev, next) {
     return prev[k] !== next[k];
   });
   if (!changed.length) return;
-  pending = { ...(pending || {}) };
-  changed.forEach((k) => {
-    pending[k] = sliceValue(next, k);
-  });
-  clearTimeout(timer);
-  timer = setTimeout(flushPersist, 450);
+  gravador.agendar(Object.fromEntries(changed.map((k) => [k, sliceValue(next, k)])));
 }
 
-export async function flushPersist() {
-  clearTimeout(timer);
-  const batch = pending;
-  pending = null;
-  if (!batch) return;
-  try {
-    await AsyncStorage.multiSet(Object.entries(batch).map(([k, v]) => [PREFIX + k, JSON.stringify(v)]));
-  } catch {
-    // Falha de gravação não deve derrubar o app; o estado em memória segue válido.
-  }
+export async function flushPersist({ strict = false } = {}) {
+  return gravador.flush({ strict });
 }
 
 export async function clearPersisted() {
-  clearTimeout(timer);
-  pending = null;
+  await gravador.limpar();
   try {
     await AsyncStorage.multiRemove(SLICES.map((k) => PREFIX + k));
   } catch {
