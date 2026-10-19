@@ -48,33 +48,33 @@ Observações:
 
 Legenda de efeitos: **Aud.** = evento gravado na auditoria do RDO; **Notif.** = notificação criada (para quem e de que tipo).
 
-| Ação (função no app) | De | Para | Quem pode | Condições e dados | Efeitos |
-| --- | --- | --- | --- | --- | --- |
-| Criar (`criarRdo`) | — | `rascunho` | Operacional vinculado à obra | `obraId`, `data`, `turno`. `numero` e `id` vêm do servidor. | Aud. `criacao`. |
-| Salvar rascunho (`salvarRdo`) | `rascunho`, `devolvido` | igual | O autor (operacional) | Conteúdo do RDO. Qualquer outro status: ignora. O servidor deve responder erro `409`. | Aud. `rascunho_salvo` só se for salvamento manual. Campos de controle (`status`, `assinaturas`, hashes, `auditoria`…) nunca vêm do cliente. |
-| Submeter (`submeterRdo`) | `rascunho` | `submetido` | O autor | Passa em **todas** as validações de erro (seção 3). | Grava `submetidoEm`, `declaracao.dataHora`; `devolucao = null`. Aud. `submissao`. Notif. **masters** ativos: `rdo_submetido` (prazo = agora + `masterHoras`). |
-| Corrigir e reenviar (`submeterRdo`) | `devolvido` | `submetido` | O autor | Idem. | Aud. `correcao_reenvio`. Notif. masters: `rdo_submetido` ("corrigido e reenviado"). |
-| Iniciar análise (`iniciarAnalise`) | `submetido` | `em_analise` | Master | O app chama sozinho quando o master **abre** o RDO. | Aud. `analise_iniciada`. |
-| Registrar visualização (`registrarVisualizacao`) | qualquer | igual | Qualquer usuário que pode ver | Não repete se o mesmo usuário já visualizou nos últimos **10 minutos**. | Aud. `visualizacao`. |
-| Comentar (`comentarRdo`) | ver 2 | igual | Ver 2 | `texto` obrigatório. `visibilidade`: o cliente sempre `cliente`; o master escolhe `interno` ou `cliente` (só se o RDO já foi liberado). | Aud. `comentario`. Notif. o outro lado: master → autor (interno) ou clientes da obra (visibilidade cliente); operacional/cliente → masters. |
-| Responder esclarecimento (`comentarRdo`) | `enviado_cliente` com `esclarecimentoPendente` | igual (pendência cai) | Master | Quando há esclarecimento pendente, o comentário do master vira `tipo: resposta` e fica visível ao cliente. | `esclarecimentoPendente = false`. Aud. `comentario` + `esclarecimento_respondido`. Notif. clientes. |
-| Devolver (`devolverRdo`) | `submetido`, `em_analise` | `devolvido` | Master | `motivo` obrigatório, `prazo` (data e hora limite). | Grava `devolucao { motivo, prazo, por, em }` e um comentário `tipo: devolucao` (interno). Aud. `devolucao`. Notif. autor: `rdo_devolvido` (com prazo). |
-| Editar como master (`editarComoMaster`) | `submetido`, `em_analise` | igual | Master | `justificativa` e lista `alteracoes` (antes/depois) obrigatórias e não vazias. | Substitui o conteúdo preservando os campos de controle. Comentário `tipo: sistema`. Aud. `edicao_master` com `meta { justificativa, alteracoes }`. Notif. autor: `sistema`. |
-| Validar e assinar (`validarEAssinar`) | `submetido`, `em_analise` | `validado` (e `enviado_cliente` se `enviarAgora`) | Master | `assinatura` (desenho + 2º fator). | Calcula `hashTecnico` (seção 4). Grava `assinaturas.master`. Aud. `validacao`. Notif. autor: `sistema`. Depois, ver "Enviar ao cliente". |
-| Enviar ao cliente (`enviarAoCliente`) | `validado` | `enviado_cliente` | Master | `canais` (padrão `app`, `email`). | `liberadoAoClienteEm = agora`. Aud. `envio_cliente`. Notif. **clientes ativos da obra**: `rdo_validado` (prazo = agora + `clienteHoras[0]`). |
-| Reenviar notificação (`reenviarNotificacaoCliente`) | `enviado_cliente` | igual | Master | — | Mantém `liberadoAoClienteEm`. Aud. `envio_cliente`. Notif. clientes. |
-| Reenviar entrega que falhou (`reenviarEntrega`) | — | — | Master | Notificação do tipo `falha_entrega`. | Marca a notificação como `lida` e `resolvida` e as entregas com falha como `entregue`. Aud. `envio_cliente` no RDO. |
-| Ciência / ressalva (`assinarComoCliente`) | `enviado_cliente` | `finalizado` | Cliente da obra | `tipo = ciencia` ou `ressalva`; em `ressalva`, `texto` obrigatório. `assinatura` (desenho + 2º fator). | Calcula `hashFinal` (seção 4). Grava `assinaturas.cliente`, `finalizadoEm`. `esclarecimentoPendente = false`. Aud. `ciencia_cliente` ou `ressalva_cliente` + `finalizacao` (usuário `sistema`). Notif. masters e autor: `cliente_manifestou`. |
-| Pedir esclarecimento (`assinarComoCliente`) | `enviado_cliente` | igual | Cliente da obra | `tipo = esclarecimento`, `texto` obrigatório. | `esclarecimentoPendente = true`. Comentário `tipo: esclarecimento` (visível ao cliente). Aud. `esclarecimento_cliente`. Notif. masters: `esclarecimento`. |
-| Retificar (`retificarRdo`) | `validado`, `enviado_cliente`, `finalizado` | original: `retificado`. Novo RDO: `rascunho` | Master | `motivo` obrigatório. | Novo RDO copia o conteúdo técnico, mesmo `numero`, `versao + 1`, `retificaDe = original`, `motivoRetificacao`, `declaracao` zerada, sem assinaturas, sem comentários. Original recebe `retificadoPor`. Aud. `retificacao` nos dois. Notif. autor: `rdo_devolvido` ("Retificação aberta"). |
-| Cancelar (`cancelarRdo`) | qualquer, menos `cancelado` e `retificado` | `cancelado` | Master | `motivo` obrigatório. | Grava `cancelamento { motivo, por, em }`; `esclarecimentoPendente = false`. Aud. `cancelamento`. Notif. autor e, se já foi liberado, os clientes: `sistema`. |
-| Registrar PDF (`registrarPdf`) | qualquer, menos `cancelado` | igual | Quem pode ver | — | Aud. `pdf_gerado`. |
+| Ação (função no app)                                | De                                             | Para                                              | Quem pode                     | Condições e dados                                                                                                                       | Efeitos                                                                                                                                                                                                                                                                                   |
+| --------------------------------------------------- | ---------------------------------------------- | ------------------------------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Criar (`criarRdo`)                                  | —                                              | `rascunho`                                        | Operacional vinculado à obra  | `obraId`, `data`, `turno`. `numero` e `id` vêm do servidor.                                                                             | Aud. `criacao`.                                                                                                                                                                                                                                                                           |
+| Salvar rascunho (`salvarRdo`)                       | `rascunho`, `devolvido`                        | igual                                             | O autor (operacional)         | Conteúdo do RDO. Qualquer outro status: ignora. O servidor deve responder erro `409`.                                                   | Aud. `rascunho_salvo` só se for salvamento manual. Campos de controle (`status`, `assinaturas`, hashes, `auditoria`…) nunca vêm do cliente.                                                                                                                                               |
+| Submeter (`submeterRdo`)                            | `rascunho`                                     | `submetido`                                       | O autor                       | Passa em **todas** as validações de erro (seção 3).                                                                                     | Grava `submetidoEm`, `declaracao.dataHora`; `devolucao = null`. Aud. `submissao`. Notif. **masters** ativos: `rdo_submetido` (prazo = agora + `masterHoras`).                                                                                                                             |
+| Corrigir e reenviar (`submeterRdo`)                 | `devolvido`                                    | `submetido`                                       | O autor                       | Idem.                                                                                                                                   | Aud. `correcao_reenvio`. Notif. masters: `rdo_submetido` ("corrigido e reenviado").                                                                                                                                                                                                       |
+| Iniciar análise (`iniciarAnalise`)                  | `submetido`                                    | `em_analise`                                      | Master                        | O app chama sozinho quando o master **abre** o RDO.                                                                                     | Aud. `analise_iniciada`.                                                                                                                                                                                                                                                                  |
+| Registrar visualização (`registrarVisualizacao`)    | qualquer                                       | igual                                             | Qualquer usuário que pode ver | Não repete se o mesmo usuário já visualizou nos últimos **10 minutos**.                                                                 | Aud. `visualizacao`.                                                                                                                                                                                                                                                                      |
+| Comentar (`comentarRdo`)                            | ver 2                                          | igual                                             | Ver 2                         | `texto` obrigatório. `visibilidade`: o cliente sempre `cliente`; o master escolhe `interno` ou `cliente` (só se o RDO já foi liberado). | Aud. `comentario`. Notif. o outro lado: master → autor (interno) ou clientes da obra (visibilidade cliente); operacional/cliente → masters.                                                                                                                                               |
+| Responder esclarecimento (`comentarRdo`)            | `enviado_cliente` com `esclarecimentoPendente` | igual (pendência cai)                             | Master                        | Quando há esclarecimento pendente, o comentário do master vira `tipo: resposta` e fica visível ao cliente.                              | `esclarecimentoPendente = false`. Aud. `comentario` + `esclarecimento_respondido`. Notif. clientes.                                                                                                                                                                                       |
+| Devolver (`devolverRdo`)                            | `submetido`, `em_analise`                      | `devolvido`                                       | Master                        | `motivo` obrigatório, `prazo` (data e hora limite).                                                                                     | Grava `devolucao { motivo, prazo, por, em }` e um comentário `tipo: devolucao` (interno). Aud. `devolucao`. Notif. autor: `rdo_devolvido` (com prazo).                                                                                                                                    |
+| Editar como master (`editarComoMaster`)             | `submetido`, `em_analise`                      | igual                                             | Master                        | `justificativa` e lista `alteracoes` (antes/depois) obrigatórias e não vazias.                                                          | Substitui o conteúdo preservando os campos de controle. Comentário `tipo: sistema`. Aud. `edicao_master` com `meta { justificativa, alteracoes }`. Notif. autor: `sistema`.                                                                                                               |
+| Validar e assinar (`validarEAssinar`)               | `submetido`, `em_analise`                      | `validado` (e `enviado_cliente` se `enviarAgora`) | Master                        | `assinatura` (desenho + 2º fator).                                                                                                      | Calcula `hashTecnico` (seção 4). Grava `assinaturas.master`. Aud. `validacao`. Notif. autor: `sistema`. Depois, ver "Enviar ao cliente".                                                                                                                                                  |
+| Enviar ao cliente (`enviarAoCliente`)               | `validado`                                     | `enviado_cliente`                                 | Master                        | `canais` (padrão `app`, `email`).                                                                                                       | `liberadoAoClienteEm = agora`. Aud. `envio_cliente`. Notif. **clientes ativos da obra**: `rdo_validado` (prazo = agora + `clienteHoras[0]`).                                                                                                                                              |
+| Reenviar notificação (`reenviarNotificacaoCliente`) | `enviado_cliente`                              | igual                                             | Master                        | —                                                                                                                                       | Mantém `liberadoAoClienteEm`. Aud. `envio_cliente`. Notif. clientes.                                                                                                                                                                                                                      |
+| Reenviar entrega que falhou (`reenviarEntrega`)     | —                                              | —                                                 | Master                        | Notificação do tipo `falha_entrega`.                                                                                                    | Marca a notificação como `lida` e `resolvida` e as entregas com falha como `entregue`. Aud. `envio_cliente` no RDO.                                                                                                                                                                       |
+| Ciência / ressalva (`assinarComoCliente`)           | `enviado_cliente`                              | `finalizado`                                      | Cliente da obra               | `tipo = ciencia` ou `ressalva`; em `ressalva`, `texto` obrigatório. `assinatura` (desenho + 2º fator).                                  | Calcula `hashFinal` (seção 4). Grava `assinaturas.cliente`, `finalizadoEm`. `esclarecimentoPendente = false`. Aud. `ciencia_cliente` ou `ressalva_cliente` + `finalizacao` (usuário `sistema`). Notif. masters e autor: `cliente_manifestou`.                                             |
+| Pedir esclarecimento (`assinarComoCliente`)         | `enviado_cliente`                              | igual                                             | Cliente da obra               | `tipo = esclarecimento`, `texto` obrigatório.                                                                                           | `esclarecimentoPendente = true`. Comentário `tipo: esclarecimento` (visível ao cliente). Aud. `esclarecimento_cliente`. Notif. masters: `esclarecimento`.                                                                                                                                 |
+| Retificar (`retificarRdo`)                          | `validado`, `enviado_cliente`, `finalizado`    | original: `retificado`. Novo RDO: `rascunho`      | Master                        | `motivo` obrigatório.                                                                                                                   | Novo RDO copia o conteúdo técnico, mesmo `numero`, `versao + 1`, `retificaDe = original`, `motivoRetificacao`, `declaracao` zerada, sem assinaturas, sem comentários. Original recebe `retificadoPor`. Aud. `retificacao` nos dois. Notif. autor: `rdo_devolvido` ("Retificação aberta"). |
+| Cancelar (`cancelarRdo`)                            | qualquer, menos `cancelado` e `retificado`     | `cancelado`                                       | Master                        | `motivo` obrigatório.                                                                                                                   | Grava `cancelamento { motivo, por, em }`; `esclarecimentoPendente = false`. Aud. `cancelamento`. Notif. autor e, se já foi liberado, os clientes: `sistema`.                                                                                                                              |
+| Registrar PDF (`registrarPdf`)                      | qualquer, menos `cancelado`                    | igual                                             | Quem pode ver                 | —                                                                                                                                       | Aud. `pdf_gerado`.                                                                                                                                                                                                                                                                        |
 
 ### 1.2 Excluir (exceção)
 
-| Ação | De | Quem pode | Condições | Efeitos |
-| --- | --- | --- | --- | --- |
-| Excluir (`excluirRdo`) | `rascunho`, `submetido`, `em_analise`, `devolvido` (**só não assinados**) | Master | `motivo` obrigatório | Remove o RDO **e todas as notificações dele**. Grava na auditoria **global** (`exclusao`: número, obra e motivo). RDO assinado nunca é apagado: usa cancelar. |
+| Ação                   | De                                                                        | Quem pode | Condições            | Efeitos                                                                                                                                                       |
+| ---------------------- | ------------------------------------------------------------------------- | --------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Excluir (`excluirRdo`) | `rascunho`, `submetido`, `em_analise`, `devolvido` (**só não assinados**) | Master    | `motivo` obrigatório | Remove o RDO **e todas as notificações dele**. Grava na auditoria **global** (`exclusao`: número, obra e motivo). RDO assinado nunca é apagado: usa cancelar. |
 
 ⚠️ Proposta: no servidor, fazer exclusão **lógica** (marcar como excluído) para manter a trilha, ou então exigir que a auditoria global guarde o conteúdo mínimo necessário. A decidir com o solicitante.
 
@@ -82,50 +82,50 @@ Legenda de efeitos: **Aud.** = evento gravado na auditoria do RDO; **Notif.** = 
 
 **Visibilidade** (`workflow.js`):
 
-| Regra | Descrição |
-| --- | --- |
-| `usuarioNaObra` | Master vê **todas** as obras. Operacional e cliente só as obras em que estão vinculados (`obra.usuarioIds`). |
-| `liberadoAoCliente` | O cliente só vê RDO em `enviado_cliente` ou `finalizado`. Também vê `retificado` e `cancelado` **se** o RDO já tinha sido liberado (`liberadoAoClienteEm` preenchido). |
-| `podeVerRdo` | Precisa estar na obra e, se for cliente, o RDO precisa estar liberado. |
-| `podeEditarOperacional` | Perfil operacional **e** status `rascunho` ou `devolvido` **e** é o autor. |
-| Auditoria para o cliente | Só os eventos públicos: `validacao`, `envio_cliente`, `ciencia_cliente`, `ressalva_cliente`, `esclarecimento_cliente`, `esclarecimento_respondido`, `finalizacao`, `retificacao`. |
-| Comentários para o cliente | Só os de `visibilidade = cliente`. |
-| Notificações | Cada usuário vê só as dele (`usuarioId`). |
+| Regra                      | Descrição                                                                                                                                                                         |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `usuarioNaObra`            | Master vê **todas** as obras. Operacional e cliente só as obras em que estão vinculados (`obra.usuarioIds`).                                                                      |
+| `liberadoAoCliente`        | O cliente só vê RDO em `enviado_cliente` ou `finalizado`. Também vê `retificado` e `cancelado` **se** o RDO já tinha sido liberado (`liberadoAoClienteEm` preenchido).            |
+| `podeVerRdo`               | Precisa estar na obra e, se for cliente, o RDO precisa estar liberado.                                                                                                            |
+| `podeEditarOperacional`    | Perfil operacional **e** status `rascunho` ou `devolvido` **e** é o autor.                                                                                                        |
+| Auditoria para o cliente   | Só os eventos públicos: `validacao`, `envio_cliente`, `ciencia_cliente`, `ressalva_cliente`, `esclarecimento_cliente`, `esclarecimento_respondido`, `finalizacao`, `retificacao`. |
+| Comentários para o cliente | Só os de `visibilidade = cliente`.                                                                                                                                                |
+| Notificações               | Cada usuário vê só as dele (`usuarioId`).                                                                                                                                         |
 
 **Ações por perfil e estado** (resumo de `acoesDisponiveis`):
 
-| Perfil | Status | Ações permitidas |
-| --- | --- | --- |
-| Operacional (na obra) | `rascunho`, `devolvido` (se for o autor) | Editar, revisar e enviar, comentar |
-| Operacional (na obra) | qualquer exceto `cancelado` | Comentar |
-| Master | `submetido`, `em_analise` | Validar e assinar, devolver, comentar, editar com justificativa |
-| Master | `validado` | Enviar ao cliente, retificar |
-| Master | `enviado_cliente` | Reenviar notificação, comentar (responder esclarecimento), retificar |
-| Master | `finalizado` | Retificar |
-| Master | `rascunho`, `devolvido` | Comentar |
-| Master | todos exceto `cancelado` e `retificado` | Cancelar |
-| Master | `rascunho`, `submetido`, `em_analise`, `devolvido` | Excluir (exceção) |
-| Cliente (na obra) | `enviado_cliente` | Dar ciência, ressalva ou pedir esclarecimento; comentar |
-| Cliente (na obra) | `finalizado` | Comentar |
-| Todos | todos exceto `cancelado` | Ver PDF (pré-visualização ou final) |
+| Perfil                | Status                                             | Ações permitidas                                                     |
+| --------------------- | -------------------------------------------------- | -------------------------------------------------------------------- |
+| Operacional (na obra) | `rascunho`, `devolvido` (se for o autor)           | Editar, revisar e enviar, comentar                                   |
+| Operacional (na obra) | qualquer exceto `cancelado`                        | Comentar                                                             |
+| Master                | `submetido`, `em_analise`                          | Validar e assinar, devolver, comentar, editar com justificativa      |
+| Master                | `validado`                                         | Enviar ao cliente, retificar                                         |
+| Master                | `enviado_cliente`                                  | Reenviar notificação, comentar (responder esclarecimento), retificar |
+| Master                | `finalizado`                                       | Retificar                                                            |
+| Master                | `rascunho`, `devolvido`                            | Comentar                                                             |
+| Master                | todos exceto `cancelado` e `retificado`            | Cancelar                                                             |
+| Master                | `rascunho`, `submetido`, `em_analise`, `devolvido` | Excluir (exceção)                                                    |
+| Cliente (na obra)     | `enviado_cliente`                                  | Dar ciência, ressalva ou pedir esclarecimento; comentar              |
+| Cliente (na obra)     | `finalizado`                                       | Comentar                                                             |
+| Todos                 | todos exceto `cancelado`                           | Ver PDF (pré-visualização ou final)                                  |
 
 **Matriz de permissões geral** (`MATRIZ_PERMISSOES`, seção 4 do documento-base):
 
-| Permissão | Master | Operacional | Cliente |
-| --- | --- | --- | --- |
-| Acessar obras e RDOs | todas | só as atribuídas | só as suas, RDOs liberados |
-| Cadastrar usuários, obras e clientes | sim | não | não |
-| Indicadores e acadêmico | sim | não | não |
-| Criar e preencher RDO | não | sim | não |
-| Salvar rascunho e enviar ao master | não | sim | não |
-| Responder devoluções | não | sim | não |
-| Ler e comentar | sim | sim | só RDOs liberados |
-| Devolver, editar com justificativa, validar e assinar | sim | não | não |
-| Ciência, ressalva ou esclarecimento | não | não | sim |
-| Baixar PDF e ver histórico | sim | sim | sim |
-| Exportar dados (CSV) | sim | não | não |
-| Cancelar / retificar RDO assinado | sim | não | não |
-| Excluir (exceção, não assinados) | sim | não | não |
+| Permissão                                             | Master | Operacional      | Cliente                    |
+| ----------------------------------------------------- | ------ | ---------------- | -------------------------- |
+| Acessar obras e RDOs                                  | todas  | só as atribuídas | só as suas, RDOs liberados |
+| Cadastrar usuários, obras e clientes                  | sim    | não              | não                        |
+| Indicadores e acadêmico                               | sim    | não              | não                        |
+| Criar e preencher RDO                                 | não    | sim              | não                        |
+| Salvar rascunho e enviar ao master                    | não    | sim              | não                        |
+| Responder devoluções                                  | não    | sim              | não                        |
+| Ler e comentar                                        | sim    | sim              | só RDOs liberados          |
+| Devolver, editar com justificativa, validar e assinar | sim    | não              | não                        |
+| Ciência, ressalva ou esclarecimento                   | não    | não              | sim                        |
+| Baixar PDF e ver histórico                            | sim    | sim              | sim                        |
+| Exportar dados (CSV)                                  | sim    | não              | não                        |
+| Cancelar / retificar RDO assinado                     | sim    | não              | não                        |
+| Excluir (exceção, não assinados)                      | sim    | não              | não                        |
 
 ## 3. Validações de submissão (`validarRdo`)
 
@@ -135,121 +135,121 @@ Contexto necessário: a obra, os outros RDOs da obra e a **hora do servidor** (p
 
 ### A. Identificação
 
-| Regra | Tipo | Mensagem |
-| --- | --- | --- |
-| `obraId` vazio | erro | Selecione a obra. |
-| `data` vazia | erro | Informe a data do RDO. |
-| `data` posterior a hoje (fuso UTC−3) | erro | A data do RDO não pode ser futura. |
-| `turno` vazio | erro | Informe o turno. |
-| `identificacao.responsavelPreenchimento` vazio | erro | Informe o responsável pelo preenchimento. |
+| Regra                                                                                                     | Tipo  | Mensagem                                           |
+| --------------------------------------------------------------------------------------------------------- | ----- | -------------------------------------------------- |
+| `obraId` vazio                                                                                            | erro  | Selecione a obra.                                  |
+| `data` vazia                                                                                              | erro  | Informe a data do RDO.                             |
+| `data` posterior a hoje (fuso UTC−3)                                                                      | erro  | A data do RDO não pode ser futura.                 |
+| `turno` vazio                                                                                             | erro  | Informe o turno.                                   |
+| `identificacao.responsavelPreenchimento` vazio                                                            | erro  | Informe o responsável pelo preenchimento.          |
 | Existe outro RDO **ativo** (nem cancelado nem retificado) com mesma obra, data e turno e **outro número** | aviso | Já existe o RDO 000X para esta obra, data e turno. |
 
 ### B. Clima
 
-| Regra | Tipo |
-| --- | --- |
-| Nenhum período (manhã, tarde, noite) com `condicao` | erro |
-| `temperatura` preenchida e não numérica | erro |
-| `choveu` = true e não há duração (início **e** fim) nem `precipitacaoMm` válida | erro |
-| `choveu` com duração: horário inválido (fora de `HH:MM`) | erro |
-| `choveu` com duração: fim anterior ao início | erro |
-| `choveu` sem `impacto` | erro |
-| `choveu`, `impacto` ≠ `nenhum` e `horasParalisadas` inválida | erro |
-| Condição de chuva em algum período e `choveu` = false | aviso |
+| Regra                                                                           | Tipo  |
+| ------------------------------------------------------------------------------- | ----- |
+| Nenhum período (manhã, tarde, noite) com `condicao`                             | erro  |
+| `temperatura` preenchida e não numérica                                         | erro  |
+| `choveu` = true e não há duração (início **e** fim) nem `precipitacaoMm` válida | erro  |
+| `choveu` com duração: horário inválido (fora de `HH:MM`)                        | erro  |
+| `choveu` com duração: fim anterior ao início                                    | erro  |
+| `choveu` sem `impacto`                                                          | erro  |
+| `choveu`, `impacto` ≠ `nenhum` e `horasParalisadas` inválida                    | erro  |
+| Condição de chuva em algum período e `choveu` = false                           | aviso |
 
 ### C. Mão de obra (por item)
 
-| Regra | Tipo |
-| --- | --- |
-| `funcao` vazia | erro |
-| `quantidade` < 1 | erro |
-| `horas` fora de 0 < h ≤ 24 | erro |
+| Regra                                                                 | Tipo  |
+| --------------------------------------------------------------------- | ----- |
+| `funcao` vazia                                                        | erro  |
+| `quantidade` < 1                                                      | erro  |
+| `horas` fora de 0 < h ≤ 24                                            | erro  |
 | Mesma combinação `empresa + funcao` duas vezes (evita dupla contagem) | aviso |
-| Lista vazia e "Dia sem produção" desligado | aviso |
+| Lista vazia e "Dia sem produção" desligado                            | aviso |
 
 ### D. Equipamentos (por item)
 
-| Regra | Tipo |
-| --- | --- |
-| `tipo` vazio | erro |
-| `quantidade` < 1 | erro |
-| `horasProdutivas + horasParadas` > `horasDisponiveis` (tolerância de 0,001) | erro |
+| Regra                                                                                                | Tipo |
+| ---------------------------------------------------------------------------------------------------- | ---- |
+| `tipo` vazio                                                                                         | erro |
+| `quantidade` < 1                                                                                     | erro |
+| `horasProdutivas + horasParadas` > `horasDisponiveis` (tolerância de 0,001)                          | erro |
 | Equipamento parado (`condicao` = `parado` ou `manutencao`, ou `horasParadas` > 0) sem `motivoParada` | erro |
-| Equipamento parado com `horasParadas` ≤ 0 | erro |
+| Equipamento parado com `horasParadas` ≤ 0                                                            | erro |
 
 ### E. Atividades
 
-| Regra | Tipo |
-| --- | --- |
-| Nenhuma atividade e "Dia sem produção" desligado | erro |
-| "Dia sem produção" ligado e `justificativa` vazia | erro |
-| Atividade sem `servico` | erro |
-| Atividade sem `unidade` | erro |
+| Regra                                                         | Tipo |
+| ------------------------------------------------------------- | ---- |
+| Nenhuma atividade e "Dia sem produção" desligado              | erro |
+| "Dia sem produção" ligado e `justificativa` vazia             | erro |
+| Atividade sem `servico`                                       | erro |
+| Atividade sem `unidade`                                       | erro |
 | `quantidadeDia` inválida (precisa ser número, aceita vírgula) | erro |
-| `percentual` preenchido fora de 0–100 | erro |
+| `percentual` preenchido fora de 0–100                         | erro |
 
 ### F e G. Materiais e qualidade
 
-| Regra | Tipo |
-| --- | --- |
-| Material sem `material`, sem `unidade` ou com `quantidade` inválida | erro |
-| Material `recebido` sem `notaRomaneio` | aviso |
-| Qualidade sem `descricao` | erro |
-| Qualidade `nao_conformidade` sem `responsavel` | aviso |
+| Regra                                                               | Tipo  |
+| ------------------------------------------------------------------- | ----- |
+| Material sem `material`, sem `unidade` ou com `quantidade` inválida | erro  |
+| Material `recebido` sem `notaRomaneio`                              | aviso |
+| Qualidade sem `descricao`                                           | erro  |
+| Qualidade `nao_conformidade` sem `responsavel`                      | aviso |
 
 ### H. Segurança
 
-| Regra | Tipo |
-| --- | --- |
+| Regra                                                    | Tipo  |
+| -------------------------------------------------------- | ----- |
 | Sem "Sem incidentes" marcado e lista de incidentes vazia | aviso |
-| Incidente sem `tipo` ou sem `descricao` | erro |
+| Incidente sem `tipo` ou sem `descricao`                  | erro  |
 
 ### I e J. Ocorrências e visitas
 
-| Regra | Tipo |
-| --- | --- |
-| Ocorrência sem `fato` | erro |
-| Ocorrência sem `horario` válido (`HH:MM`) | erro |
-| Ocorrência sem `local` | aviso |
-| Ocorrência sem `responsavel` | aviso |
-| Visita sem `visitante` ou sem `motivo` | erro |
-| Visita com `saida` anterior a `entrada` | aviso |
+| Regra                                     | Tipo  |
+| ----------------------------------------- | ----- |
+| Ocorrência sem `fato`                     | erro  |
+| Ocorrência sem `horario` válido (`HH:MM`) | erro  |
+| Ocorrência sem `local`                    | aviso |
+| Ocorrência sem `responsavel`              | aviso |
+| Visita sem `visitante` ou sem `motivo`    | erro  |
+| Visita com `saida` anterior a `entrada`   | aviso |
 
 ### K. Fotos
 
-| Regra | Tipo |
-| --- | --- |
-| Foto sem `legenda` | erro |
-| Foto com legenda mas sem `local` | aviso |
+| Regra                                | Tipo  |
+| ------------------------------------ | ----- |
+| Foto sem `legenda`                   | erro  |
+| Foto com legenda mas sem `local`     | aviso |
 | Nenhuma foto (recomendado 3 ou mais) | aviso |
 
 ### L. Pendências
 
-| Regra | Tipo |
-| --- | --- |
+| Regra                                                              | Tipo |
+| ------------------------------------------------------------------ | ---- |
 | Pendência sem `descricao`, `responsavel`, `prazo` ou `criticidade` | erro |
 
 ### M. Aprovações
 
-| Regra | Tipo |
-| --- | --- |
-| `declaracao.aceita` falsa | erro |
+| Regra                                                                   | Tipo |
+| ----------------------------------------------------------------------- | ---- |
+| `declaracao.aceita` falsa                                               | erro |
 | Obra com `exigeAssinaturaOperacional` e RDO sem `assinaturaOperacional` | erro |
 
 **Resultado esperado da API** (mesmos nomes do app): `{ valido, erros[], avisos[], porPasso, progresso }`. `porPasso[passo]` traz `{ erros, avisos, estado }` com estado `erro`, `atencao`, `completo` ou `vazio`; `progresso` é `{ completos, total }` (o passo de revisão não conta).
 
 ### 3.1 Cálculos que o servidor precisa saber
 
-| Cálculo | Regra |
-| --- | --- |
-| Total de trabalhadores | Soma de `quantidade` em `maoDeObra`. |
-| Homem-hora | Soma de `quantidade × horas`. |
-| Equipamentos | Horas disponíveis, produtivas e paradas multiplicadas pela quantidade (mínimo 1). |
-| Horas de um turno | `fim − início`; se a jornada passa de 6 h, desconta 1 h de intervalo. |
-| Duração da chuva | `chuvaFim − chuvaInicio` em minutos; nulo se algum horário é inválido ou o fim é anterior. |
-| Acumulado anterior do serviço | Ver `modelo-de-dados.md`, seção 3.9. |
-| Número formatado | `numero` com 4 dígitos (`0005`); com sufixo ` · v2` quando `versao` > 1. |
-| Nota final acadêmica | Média ponderada das notas pelos pesos dos critérios preenchidos (`notaFinal` em `seedAcademico.js`). |
+| Cálculo                       | Regra                                                                                                |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Total de trabalhadores        | Soma de `quantidade` em `maoDeObra`.                                                                 |
+| Homem-hora                    | Soma de `quantidade × horas`.                                                                        |
+| Equipamentos                  | Horas disponíveis, produtivas e paradas multiplicadas pela quantidade (mínimo 1).                    |
+| Horas de um turno             | `fim − início`; se a jornada passa de 6 h, desconta 1 h de intervalo.                                |
+| Duração da chuva              | `chuvaFim − chuvaInicio` em minutos; nulo se algum horário é inválido ou o fim é anterior.           |
+| Acumulado anterior do serviço | Ver `modelo-de-dados.md`, seção 3.9.                                                                 |
+| Número formatado              | `numero` com 4 dígitos (`0005`); com sufixo ` · v2` quando `versao` > 1.                             |
+| Nota final acadêmica          | Média ponderada das notas pelos pesos dos critérios preenchidos (`notaFinal` em `seedAcademico.js`). |
 
 ## 4. Hash de integridade (o servidor passa a gerar)
 
@@ -279,33 +279,33 @@ Isso quer dizer que o hash **cobre**: `id`, `obraId`, `numero`, `versao`, `data`
 
 ## 5. O que passa a ser responsabilidade do servidor
 
-| O que | Hoje (no app) | No servidor |
-| --- | --- | --- |
-| **Numeração do RDO** (RF-04) | `proximoNumero`: maior número da obra + 1, contando todos os RDOs (inclusive cancelados). | Gerar de forma atômica por obra (dois operacionais criando ao mesmo tempo não podem receber o mesmo número). Versões de retificação mantêm o número. |
-| **Data e hora oficial** | `nowISO()` do aparelho (pode estar errado). | Toda `dataHora`, `criadoEm`, `submetidoEm`, assinaturas e auditoria usam o relógio do servidor. |
-| **Hash SHA-256** | No aparelho. | Seção 4. |
-| **IP e dispositivo na assinatura** | IP simulado (`IP registrado pelo servidor (simulado)`). | Gravar o IP real da requisição. O app manda só o rótulo do aparelho e o método 2FA. |
-| **Segundo fator** | O código e a biometria são só simulados. | Validar o código de uso único (OTP) enviado por e-mail ou SMS; biometria continua local, e o servidor confia no resultado apenas junto com a sessão válida. ⚠️ A definir com o solicitante (premissa aberta da seção 20). |
-| **Login e senha** | Compara `user.senha` no aparelho. Recuperação mostra o código na tela. | Login por e-mail e senha com hash; token de sessão; recuperação por e-mail. Ver `docs/api.md`. |
-| **Push e e-mail** | Notificação e entregas simuladas (`entregasPara`). | Envio real, com registro por canal (`entregue`, `falha`…). A falha de e-mail gera notificação `falha_entrega` ao master. |
-| **Lembretes e escalonamento** | O app recalcula a cada minuto e ao abrir (`processarLembretes`). | Tarefa agendada no servidor (regras abaixo). O app só lê as notificações. |
-| **Auditoria** | Gravada dentro do RDO por cada ação. | Gravada pelo servidor em tabela de inclusão, a cada ação. Nunca vem do cliente. |
-| **Sincronização offline** | Marca `sync.pendente` e "sincroniza" depois com um temporizador. | O app manda a fila de ações quando a rede volta; o servidor aplica em ordem. Ver `docs/api.md`, seção "Fila offline". |
-| **Controle de acesso** | Esconde botões. | Conferir perfil, vínculo e status em toda rota. |
-| **Retificação** | Copia o conteúdo técnico. | Mesma cópia, feita pelo servidor. |
-| **Exportações** | CSV gerado no aparelho. | O servidor pode manter o CSV no aparelho, mas o relatório consulta o servidor (filtros do RF-16). |
+| O que                              | Hoje (no app)                                                                             | No servidor                                                                                                                                                                                                               |
+| ---------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Numeração do RDO** (RF-04)       | `proximoNumero`: maior número da obra + 1, contando todos os RDOs (inclusive cancelados). | Gerar de forma atômica por obra (dois operacionais criando ao mesmo tempo não podem receber o mesmo número). Versões de retificação mantêm o número.                                                                      |
+| **Data e hora oficial**            | `nowISO()` do aparelho (pode estar errado).                                               | Toda `dataHora`, `criadoEm`, `submetidoEm`, assinaturas e auditoria usam o relógio do servidor.                                                                                                                           |
+| **Hash SHA-256**                   | No aparelho.                                                                              | Seção 4.                                                                                                                                                                                                                  |
+| **IP e dispositivo na assinatura** | IP simulado (`IP registrado pelo servidor (simulado)`).                                   | Gravar o IP real da requisição. O app manda só o rótulo do aparelho e o método 2FA.                                                                                                                                       |
+| **Segundo fator**                  | O código e a biometria são só simulados.                                                  | Validar o código de uso único (OTP) enviado por e-mail ou SMS; biometria continua local, e o servidor confia no resultado apenas junto com a sessão válida. ⚠️ A definir com o solicitante (premissa aberta da seção 20). |
+| **Login e senha**                  | Compara `user.senha` no aparelho. Recuperação mostra o código na tela.                    | Login por e-mail e senha com hash; token de sessão; recuperação por e-mail. Ver `docs/api.md`.                                                                                                                            |
+| **Push e e-mail**                  | Notificação e entregas simuladas (`entregasPara`).                                        | Envio real, com registro por canal (`entregue`, `falha`…). A falha de e-mail gera notificação `falha_entrega` ao master.                                                                                                  |
+| **Lembretes e escalonamento**      | O app recalcula a cada minuto e ao abrir (`processarLembretes`).                          | Tarefa agendada no servidor (regras abaixo). O app só lê as notificações.                                                                                                                                                 |
+| **Auditoria**                      | Gravada dentro do RDO por cada ação.                                                      | Gravada pelo servidor em tabela de inclusão, a cada ação. Nunca vem do cliente.                                                                                                                                           |
+| **Sincronização offline**          | Marca `sync.pendente` e "sincroniza" depois com um temporizador.                          | O app manda a fila de ações quando a rede volta; o servidor aplica em ordem. Ver `docs/api.md`, seção "Fila offline".                                                                                                     |
+| **Controle de acesso**             | Esconde botões.                                                                           | Conferir perfil, vínculo e status em toda rota.                                                                                                                                                                           |
+| **Retificação**                    | Copia o conteúdo técnico.                                                                 | Mesma cópia, feita pelo servidor.                                                                                                                                                                                         |
+| **Exportações**                    | CSV gerado no aparelho.                                                                   | O servidor pode manter o CSV no aparelho, mas o relatório consulta o servidor (filtros do RF-16).                                                                                                                         |
 
 ### 5.1 Regras dos lembretes (`calcularLembretes`)
 
 Cada lembrete tem uma **chave** para não duplicar. O servidor roda a tarefa periodicamente (por exemplo a cada minuto) e só cria a notificação se a chave ainda não existe.
 
-| Para quem | Quando | Tipo | Chave |
-| --- | --- | --- | --- |
-| Masters ativos | RDO `submetido` ou `em_analise`, sincronizado e com `submetidoEm`, a cada múltiplo de `masterHoras` (24 h, 48 h…) desde a submissão | `lembrete` | `lem:master:<rdoId>:<horas>` |
-| Clientes ativos da obra | RDO `enviado_cliente` com `liberadoAoClienteEm`: uma vez para cada valor de `clienteHoras` já passado (24 h e 48 h) | `lembrete` | `lem:cliente:<rdoId>:<horas>` |
-| Masters ativos | RDO `enviado_cliente` há `escalonamentoHoras` (72 h) ou mais sem manifestação | `prazo_vencido` | `esc:master:<rdoId>` |
-| Autor do RDO | RDO `devolvido` com o `devolucao.prazo` já vencido | `prazo_vencido` | `lem:prazo:<rdoId>` |
-| Operacionais ativos da obra | Depois do horário `operacionalFimDia` (18:00), em obra `ativa` com dia útil hoje (`diasUteis`) que **não tem** RDO de hoje fora de `rascunho`, `devolvido` e `cancelado` | `lembrete` | `lem:fimdia:<obraId>:<AAAA-MM-DD>` |
+| Para quem                   | Quando                                                                                                                                                                   | Tipo            | Chave                              |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------- | ---------------------------------- |
+| Masters ativos              | RDO `submetido` ou `em_analise`, sincronizado e com `submetidoEm`, a cada múltiplo de `masterHoras` (24 h, 48 h…) desde a submissão                                      | `lembrete`      | `lem:master:<rdoId>:<horas>`       |
+| Clientes ativos da obra     | RDO `enviado_cliente` com `liberadoAoClienteEm`: uma vez para cada valor de `clienteHoras` já passado (24 h e 48 h)                                                      | `lembrete`      | `lem:cliente:<rdoId>:<horas>`      |
+| Masters ativos              | RDO `enviado_cliente` há `escalonamentoHoras` (72 h) ou mais sem manifestação                                                                                            | `prazo_vencido` | `esc:master:<rdoId>`               |
+| Autor do RDO                | RDO `devolvido` com o `devolucao.prazo` já vencido                                                                                                                       | `prazo_vencido` | `lem:prazo:<rdoId>`                |
+| Operacionais ativos da obra | Depois do horário `operacionalFimDia` (18:00), em obra `ativa` com dia útil hoje (`diasUteis`) que **não tem** RDO de hoje fora de `rascunho`, `devolvido` e `cancelado` | `lembrete`      | `lem:fimdia:<obraId>:<AAAA-MM-DD>` |
 
 `atrasoDeAcao` (`workflow.js`) calcula o mesmo atraso para exibir o selo "atrasado" nas listas; pode ser repetido no cliente.
 

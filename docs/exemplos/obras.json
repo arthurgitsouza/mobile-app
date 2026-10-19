@@ -14,22 +14,12 @@
     "fim": "2027-07-30",
     "engenheiroRTId": "u_master",
     "engenheiroRT": "Eng. Carlos Lima — CREA 123456789-0 MA",
-    "diasUteis": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6
-    ],
+    "diasUteis": [1, 2, 3, 4, 5, 6],
     "exigeAssinaturaOperacional": true,
     "status": "ativa",
     "avancoFisico": 38,
     "avancoPrevisto": 41,
-    "usuarioIds": [
-      "u_joao",
-      "u_fernanda"
-    ]
+    "usuarioIds": ["u_joao", "u_fernanda"]
   },
   {
     "id": "obra_beta",
@@ -46,23 +36,12 @@
     "fim": "2027-03-22",
     "engenheiroRTId": "u_master",
     "engenheiroRT": "Eng. Carlos Lima — CREA 123456789-0 MA",
-    "diasUteis": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6
-    ],
+    "diasUteis": [1, 2, 3, 4, 5, 6],
     "exigeAssinaturaOperacional": false,
     "status": "ativa",
     "avancoFisico": 61,
     "avancoPrevisto": 55,
-    "usuarioIds": [
-      "u_marcos",
-      "u_ana",
-      "u_roberto"
-    ]
+    "usuarioIds": ["u_marcos", "u_ana", "u_roberto"]
   },
   {
     "id": "obra_gama",
@@ -79,21 +58,11 @@
     "fim": "2027-01-26",
     "engenheiroRTId": "u_master",
     "engenheiroRT": "Eng. Carlos Lima — CREA 123456789-0 MA",
-    "diasUteis": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6
-    ],
+    "diasUteis": [1, 2, 3, 4, 5, 6],
     "exigeAssinaturaOperacional": false,
     "status": "ativa",
     "avancoFisico": 12,
     "avancoPrevisto": 15,
-    "usuarioIds": [
-      "u_marcos",
-      "u_paula"
-    ]
+    "usuarioIds": ["u_marcos", "u_paula"]
   }
 ]

@@ -114,21 +114,7 @@
     "Cal hidratada",
     "Madeira para formas"
   ],
-  "unidades": [
-    "m",
-    "m²",
-    "m³",
-    "kg",
-    "t",
-    "un",
-    "cj",
-    "vb",
-    "h",
-    "dia",
-    "l",
-    "saco",
-    "viagem"
-  ],
+  "unidades": ["m", "m²", "m³", "kg", "t", "un", "cj", "vb", "h", "dia", "l", "saco", "viagem"],
   "frentes": [
     "Pavimento térreo",
     "1º pavimento",
@@ -138,9 +124,5 @@
     "Cobertura",
     "Canteiro / almoxarifado"
   ],
-  "origensEmpresa": [
-    "Equipe própria",
-    "Empreiteira terceirizada",
-    "Subcontratada"
-  ]
+  "origensEmpresa": ["Equipe própria", "Empreiteira terceirizada", "Subcontratada"]
 }

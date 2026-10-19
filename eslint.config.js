@@ -9,6 +9,20 @@ module.exports = defineConfig([
   expoConfig,
   prettierRecommended,
   {
+    // O servidor falso roda no Node como CommonJS, não no app.
+    files: ['scripts/mock-server.js'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: {
+        __dirname: 'readonly',
+        require: 'readonly',
+        module: 'writable',
+        process: 'readonly',
+        console: 'readonly',
+      },
+    },
+  },
+  {
     // Regras pensadas para o React Compiler, que este projeto não usa. Ficam como aviso para
     // cada dono de pasta ajustar aos poucos, sem travar o CI nem mudar comportamento agora.
     rules: {

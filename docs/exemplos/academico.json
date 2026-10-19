@@ -87,11 +87,7 @@
     {
       "id": "g1",
       "nome": "Grupo 1 — Canteiro Digital",
-      "integrantes": [
-        "Beatriz Lima",
-        "Caio Mendes",
-        "Larissa Prado"
-      ],
+      "integrantes": ["Beatriz Lima", "Caio Mendes", "Larissa Prado"],
       "entregas": [
         {
           "faseId": 1,
@@ -267,11 +263,7 @@
     {
       "id": "g2",
       "nome": "Grupo 2 — Diário Vivo",
-      "integrantes": [
-        "Davi Rocha",
-        "Helena Sá",
-        "Otávio Brito"
-      ],
+      "integrantes": ["Davi Rocha", "Helena Sá", "Otávio Brito"],
       "entregas": [
         {
           "faseId": 1,
@@ -413,10 +405,7 @@
     {
       "id": "g3",
       "nome": "Grupo 3 — ObraLog",
-      "integrantes": [
-        "Marina Duarte",
-        "Pedro Alcântara"
-      ],
+      "integrantes": ["Marina Duarte", "Pedro Alcântara"],
       "entregas": [
         {
           "faseId": 1,
@@ -537,11 +526,7 @@
     {
       "id": "g4",
       "nome": "Grupo 4 — RDO Fácil",
-      "integrantes": [
-        "Júlia Freitas",
-        "Rafael Nunes",
-        "Thiago Pires"
-      ],
+      "integrantes": ["Júlia Freitas", "Rafael Nunes", "Thiago Pires"],
       "entregas": [
         {
           "faseId": 1,
