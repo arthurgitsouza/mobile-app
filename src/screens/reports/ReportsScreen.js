@@ -30,7 +30,7 @@ import ChartCard, { TabelaDados } from '../../components/charts/ChartCard';
 import BarList from '../../components/charts/BarList';
 import ColumnChart from '../../components/charts/ColumnChart';
 import LineChart from '../../components/charts/LineChart';
-import { Grade } from '../home/shared';
+import { Grade } from '../home/Shared';
 
 const PERIODOS = [
   { value: '7', label: '7 dias' },

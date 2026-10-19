@@ -25,7 +25,7 @@ import {
 } from '../../components/ui';
 import { RdoCard } from '../../components/rdo';
 import { StatTile } from '../../components/charts/StatTile';
-import { Grade } from '../home/shared';
+import { Grade } from '../home/Shared';
 import { STATUS_OBRA } from './ObrasListScreen';
 
 // Detalhe da obra: contrato, cronograma, avanço, equipe vinculada, RDO de hoje e últimos registros.
