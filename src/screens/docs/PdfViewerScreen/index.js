@@ -5,6 +5,7 @@ import { styles } from './styles';
 import { colors } from '../../../theme';
 import { EVENTOS_PUBLICOS } from '../../../constants';
 import { useApp } from '../../../store/AppContext';
+import useAcao from '../../../hooks/useAcao';
 import { hashCurto, payloadVerificacao, verificarIntegridade } from '../../../domain/integridade';
 import { numeroFormatado } from '../../../domain/rdo';
 import { nowISO } from '../../../utils/date';
@@ -33,6 +34,7 @@ export default function PdfViewerScreen({ route, navigation }) {
   const { notice, toast } = useUI();
   const [gerando, setGerando] = useState(null);
   const [check, setCheck] = useState(null);
+  const registrar = useAcao(actions.registrarPdf);
   const rdo = state.rdos.find((r) => r.id === rdoId);
   const obra = rdo ? state.obras.find((o) => o.id === rdo.obraId) : null;
 
@@ -66,7 +68,7 @@ export default function PdfViewerScreen({ route, navigation }) {
       const html = montarHtmlRdo({ rdo, obra, nomeDe, rdos: state.rdos, fotosBase64, geradoEm: nowISO() });
       if (modo === 'imprimir') await imprimir(html);
       else await compartilharPdf(html, nomeArquivo);
-      actions.registrarPdf({ rdoId, userId: currentUser.id });
+      registrar.executar({ rdoId, userId: currentUser.id });
       toast.show({
         type: 'success',
         title: modo === 'imprimir' ? 'Impressão iniciada' : 'PDF gerado',

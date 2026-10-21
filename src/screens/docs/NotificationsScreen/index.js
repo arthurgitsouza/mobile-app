@@ -4,6 +4,7 @@ import { useNavigation, useNavigationState } from '@react-navigation/native';
 import { styles } from './styles';
 import { colors } from '../../../theme';
 import { useApp } from '../../../store/AppContext';
+import useAcao from '../../../hooks/useAcao';
 import { useNow } from '../../../hooks/useNow';
 import { notificacoesDe } from '../../../domain/selectors';
 import { CANAIS, STATUS_ENTREGA, TIPOS_NOTIFICACAO, temFalhaDeEntrega } from '../../../domain/notificacoes';
@@ -48,6 +49,9 @@ export default function NotificationsScreen() {
   const [filtro, setFiltro] = useState('todas');
   const [abertaId, setAbertaId] = useState(null);
   const [email, setEmail] = useState(false);
+  const marcarLida = useAcao(actions.marcarNotificacaoLida);
+  const marcarTodas = useAcao(actions.marcarTodasLidas);
+  const reenviar = useAcao(actions.reenviarEntrega);
 
   const todas = useMemo(() => notificacoesDe(state, currentUser), [state, currentUser]);
   const naoLidas = todas.filter((n) => !n.lida).length;
@@ -68,7 +72,7 @@ export default function NotificationsScreen() {
   }, [lista, hoje]);
 
   const abrir = (n) => {
-    actions.marcarNotificacaoLida({ id: n.id });
+    marcarLida.executar({ id: n.id });
     setEmail(false);
     setAbertaId(n.id);
   };
@@ -94,7 +98,7 @@ export default function NotificationsScreen() {
             icon="check-all"
             label="Marcar todas como lidas"
             color={colors.white}
-            onPress={() => actions.marcarTodasLidas({ userId: currentUser.id })}
+            onPress={() => marcarTodas.executar({ userId: currentUser.id })}
           />
         ) : undefined
       }
@@ -244,8 +248,10 @@ export default function NotificationsScreen() {
                     variant="dangerSolid"
                     size="sm"
                     full={false}
-                    onPress={() => {
-                      actions.reenviarEntrega({ notificacaoId: aberta.id, userId: currentUser.id });
+                    loading={reenviar.carregando}
+                    onPress={async () => {
+                      const s = await reenviar.executar({ notificacaoId: aberta.id, userId: currentUser.id });
+                      if (!s) return;
                       toast.show({
                         type: 'success',
                         title: 'E-mail reenviado',

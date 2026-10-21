@@ -4,6 +4,7 @@ import { colors } from '../../theme';
 import { EVENTOS_PUBLICOS, PERFIL, STATUS } from '../../constants';
 import { useApp } from '../../store/AppContext';
 import { useNow } from '../../hooks/useNow';
+import useAcao from '../../hooks/useAcao';
 import { numeroFormatado } from '../../domain/rdo';
 import { acoesDisponiveis, estaBloqueado, podeVerRdo } from '../../domain/workflow';
 import { nomeUsuario, perfilUsuario } from '../../domain/selectors';
@@ -36,6 +37,10 @@ export default function RdoDetailScreen({ route, navigation }) {
   const [devolver, setDevolver] = useState(false);
   const [enviar, setEnviar] = useState(false);
   const [mais, setMais] = useState(false);
+  const reenviarCliente = useAcao(actions.reenviarNotificacaoCliente);
+  const retificar = useAcao(actions.retificarRdo);
+  const cancelar = useAcao(actions.cancelarRdo);
+  const excluir = useAcao(actions.excluirRdo);
 
   const rdo = state.rdos.find((r) => r.id === rdoId);
   const obra = rdo ? state.obras.find((o) => o.id === rdo.obraId) : null;
@@ -141,7 +146,8 @@ export default function RdoDetailScreen({ route, navigation }) {
           confirmLabel: 'Reenviar',
         });
         if (ok) {
-          actions.reenviarNotificacaoCliente({ rdoId, userId: currentUser.id });
+          const s = await reenviarCliente.executar({ rdoId, userId: currentUser.id });
+          if (!s) return undefined;
           toast.show({
             type: 'success',
             title: 'Notificação reenviada',
@@ -165,8 +171,7 @@ export default function RdoDetailScreen({ route, navigation }) {
           confirmLabel: 'Abrir retificação',
         });
         if (motivo) {
-          const s = await actions.retificarRdo({ rdoId, userId: currentUser.id, motivo }).catch(() => null);
-
+          const s = await retificar.executar({ rdoId, userId: currentUser.id, motivo });
           if (!s) return undefined;
           const nova = s.rdos.find((r) => r.retificaDe === rdoId);
           toast.show({
@@ -188,7 +193,8 @@ export default function RdoDetailScreen({ route, navigation }) {
           confirmLabel: 'Cancelar RDO',
         });
         if (motivo) {
-          actions.cancelarRdo({ rdoId, userId: currentUser.id, motivo });
+          const s = await cancelar.executar({ rdoId, userId: currentUser.id, motivo });
+          if (!s) return undefined;
           toast.show({ type: 'info', title: 'RDO cancelado', message: 'Histórico preservado.' });
         }
         return undefined;
@@ -209,7 +215,8 @@ export default function RdoDetailScreen({ route, navigation }) {
           confirmLabel: 'Excluir',
         });
         if (motivo) {
-          actions.excluirRdo({ rdoId, userId: currentUser.id, motivo });
+          const s = await excluir.executar({ rdoId, userId: currentUser.id, motivo });
+          if (!s) return undefined;
           toast.show({ type: 'info', title: 'RDO excluído', message: 'Evento registrado na auditoria geral.' });
           navigation.goBack();
         }
