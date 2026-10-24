@@ -1,7 +1,7 @@
 import { styles } from './styles';
 import React, { useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
-import { colors, radius } from '../../../theme';
+import { Pressable, TextInput, View } from 'react-native';
+import { colors } from '../../../theme';
 import { useApp } from '../../../store/AppContext';
 import { haptic } from '../../../utils/feedback';
 import { isEmail, mascararEmail } from '../../../utils/format';
@@ -136,7 +136,7 @@ export default function ForgotPasswordScreen({ navigation }) {
             minutos.
           </Txt>
           {codigoGerado ? (
-            <Card tone="gold" style={{ gap: 6 }}>
+            <Card tone="gold" style={styles.simCard}>
               <View style={styles.simHeader}>
                 <Icon name="email-fast-outline" size={18} color={colors.goldText} />
                 <Txt v="label" color={colors.goldText}>
@@ -149,7 +149,7 @@ export default function ForgotPasswordScreen({ navigation }) {
               <Txt
                 v="display"
                 color={colors.goldText}
-                style={{ letterSpacing: 6 }}
+                style={styles.codigoGerado}
                 accessibilityLabel={`Código ${codigoGerado.split('').join(' ')}`}
               >
                 {codigoGerado}
@@ -169,12 +169,12 @@ export default function ForgotPasswordScreen({ navigation }) {
             }}
             error={erroCodigo}
           />
-          <View style={{ alignItems: 'center' }}>
+          <View style={styles.acoes}>
             <Pressable
               onPress={reenviar}
               disabled={espera > 0}
               accessibilityRole="button"
-              style={{ minHeight: 40, justifyContent: 'center' }}
+              style={styles.linkAcao}
             >
               <Txt v="smallStrong" color={espera > 0 ? colors.textSubtle : colors.blue500}>
                 {espera > 0 ? `Reenviar código em ${espera}s` : 'Reenviar código'}
@@ -183,7 +183,7 @@ export default function ForgotPasswordScreen({ navigation }) {
             <Pressable
               onPress={() => setPasso(1)}
               accessibilityRole="button"
-              style={{ minHeight: 40, justifyContent: 'center' }}
+              style={styles.linkAcao}
             >
               <Txt v="smallStrong" color={colors.blue500}>
                 Usar outro e-mail
@@ -219,7 +219,7 @@ export default function ForgotPasswordScreen({ navigation }) {
             required
             error={erroSenha}
           />
-          <Card style={{ gap: 8 }}>
+          <Card style={styles.regrasCard}>
             {regras.map((r) => (
               <View key={r.texto} style={styles.rule}>
                 <Icon
@@ -237,14 +237,14 @@ export default function ForgotPasswordScreen({ navigation }) {
       ) : null}
 
       {passo === 4 ? (
-        <View style={{ alignItems: 'center', gap: 10, paddingVertical: 24 }}>
+        <View style={styles.sucesso}>
           <View style={[styles.okIcon]}>
             <Icon name="check-decagram" size={40} color={colors.success} />
           </View>
-          <Txt v="h2" style={{ textAlign: 'center' }}>
+          <Txt v="h2" style={styles.centro}>
             Senha redefinida
           </Txt>
-          <Txt v="body" muted style={{ textAlign: 'center' }}>
+          <Txt v="body" muted style={styles.centro}>
             Sua nova senha já está valendo. Por segurança, todas as sessões anteriores foram encerradas (simulado).
           </Txt>
         </View>
@@ -257,12 +257,12 @@ export default function ForgotPasswordScreen({ navigation }) {
 function CodeInput({ value, onChange, error }) {
   const ref = useRef(null);
   return (
-    <View style={{ gap: 6 }}>
+    <View style={styles.codeWrap}>
       <Pressable onPress={() => ref.current?.focus()} accessibilityRole="none" style={styles.codeRow}>
         {Array.from({ length: 6 }, (_, i) => (
           <View
             key={i}
-            style={[styles.codeBox, value.length === i && styles.codeActive, !!error && { borderColor: colors.danger }]}
+            style={[styles.codeBox, value.length === i && styles.codeActive, !!error && styles.codeErro]}
           >
             <Txt v="h1">{value[i] || ''}</Txt>
           </View>
@@ -281,7 +281,7 @@ function CodeInput({ value, onChange, error }) {
         style={styles.hiddenInput}
       />
       {error ? (
-        <Txt v="caption" color={colors.danger} style={{ textAlign: 'center' }}>
+        <Txt v="caption" color={colors.danger} style={styles.centro}>
           {error}
         </Txt>
       ) : null}
