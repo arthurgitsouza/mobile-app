@@ -35,6 +35,4 @@ export const styles = StyleSheet.create({
   centro: { textAlign: 'center' },
   codeWrap: { gap: 6 },
   codeErro: { borderColor: colors.danger },
-
-  
 });

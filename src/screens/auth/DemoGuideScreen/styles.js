@@ -14,5 +14,4 @@ export const styles = StyleSheet.create({
   now: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   passoCard: { gap: 10 },
   passoInfo: { flex: 1, gap: 4 },
-  
 });

@@ -127,7 +127,7 @@ export default function LoginScreen({ navigation }) {
       >
         <View style={[styles.hero, dinamico.hero(insets.top)]}>
           <BrandMark size={72} />
-          <Txt v="display" color={colors.white} style={styles.titulo}accessibilityRole="header">
+          <Txt v="display" color={colors.white} style={styles.titulo} accessibilityRole="header">
             RDO Mobile
           </Txt>
           <Txt v="body" color={colors.textOnDarkMuted} style={styles.titulo}>

@@ -170,21 +170,12 @@ export default function ForgotPasswordScreen({ navigation }) {
             error={erroCodigo}
           />
           <View style={styles.acoes}>
-            <Pressable
-              onPress={reenviar}
-              disabled={espera > 0}
-              accessibilityRole="button"
-              style={styles.linkAcao}
-            >
+            <Pressable onPress={reenviar} disabled={espera > 0} accessibilityRole="button" style={styles.linkAcao}>
               <Txt v="smallStrong" color={espera > 0 ? colors.textSubtle : colors.blue500}>
                 {espera > 0 ? `Reenviar código em ${espera}s` : 'Reenviar código'}
               </Txt>
             </Pressable>
-            <Pressable
-              onPress={() => setPasso(1)}
-              accessibilityRole="button"
-              style={styles.linkAcao}
-            >
+            <Pressable onPress={() => setPasso(1)} accessibilityRole="button" style={styles.linkAcao}>
               <Txt v="smallStrong" color={colors.blue500}>
                 Usar outro e-mail
               </Txt>
@@ -260,10 +251,7 @@ function CodeInput({ value, onChange, error }) {
     <View style={styles.codeWrap}>
       <Pressable onPress={() => ref.current?.focus()} accessibilityRole="none" style={styles.codeRow}>
         {Array.from({ length: 6 }, (_, i) => (
-          <View
-            key={i}
-            style={[styles.codeBox, value.length === i && styles.codeActive, !!error && styles.codeErro]}
-          >
+          <View key={i} style={[styles.codeBox, value.length === i && styles.codeActive, !!error && styles.codeErro]}>
             <Txt v="h1">{value[i] || ''}</Txt>
           </View>
         ))}

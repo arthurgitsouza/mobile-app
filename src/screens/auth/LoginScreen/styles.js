@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, radius } from '../../../theme'; 
+import { colors, radius } from '../../../theme';
 
 export const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
@@ -38,7 +38,6 @@ export const styles = StyleSheet.create({
   demo: { gap: 10 },
   quickInfo: { flex: 1, gap: 1 },
   centro: { textAlign: 'center' },
-
 });
 
 // Valores que dependem do aparelho (área segura) viram funções aqui mesmo.
