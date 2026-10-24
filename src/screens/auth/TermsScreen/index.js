@@ -1,3 +1,4 @@
+import { styles } from './styles';
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { colors } from '../../../theme';
@@ -61,9 +62,9 @@ export default function TermsScreen({ route, navigation }) {
         value={aba}
         onChange={setAba}
       />
-      <Card style={{ gap: 14 }}>
+      <Card style={styles.conteudo}>
         {conteudo.map((s) => (
-          <View key={s.titulo} style={{ gap: 4 }}>
+          <View key={s.titulo} style={styles.secao}>
             <Txt v="h3" color={colors.navy600}>
               {s.titulo}
             </Txt>
@@ -105,9 +106,9 @@ export default function TermsScreen({ route, navigation }) {
           />
         </>
       ) : (
-        <Card tone="soft" style={{ flexDirection: 'row', gap: 10 }}>
+        <Card tone="soft" style={styles.aviso}>
           <Icon name="information-outline" size={20} color={colors.navy600} />
-          <Txt v="small" muted style={{ flex: 1 }}>
+          <Txt v="small" muted style={styles.avisoTexto}>
             Este é um texto de exemplo para o protótipo. Termos e base legal definitivos devem ser validados pelo
             controlador dos dados (empresa).
           </Txt>
