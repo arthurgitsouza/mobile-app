@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { colors } from '../../theme';
 import { PERFIL, PERFIS } from '../../constants';
@@ -6,6 +6,7 @@ import { useApp } from '../../store/AppContext';
 import { addDays, hojeObra, nomesDiasCurtos } from '../../utils/date';
 import { toNumber, uid } from '../../utils/format';
 import { haptic } from '../../utils/feedback';
+import useAcao from '../../hooks/useAcao';
 import { Banner, Button, Card, EmptyState, LinkButton, Screen, SectionTitle, Txt, useUI } from '../../components/ui';
 import { ChipGroup, DateField, NumberField, SelectField, SwitchField, TextField } from '../../components/form';
 
@@ -20,6 +21,12 @@ export default function ObraFormScreen({ route, navigation }) {
   const obraId = route.params?.obraId;
   const { state, actions, currentUser } = useApp();
   const { toast } = useUI();
+  const salvarObra = useAcao(actions.salvarObra);
+
+  useEffect(() => {
+    if (salvarObra.erro)
+      toast.show({ type: 'error', title: 'Não foi possível salvar a obra', message: salvarObra.erro.mensagem });
+  }, [salvarObra.erro, toast]);
   const existente = obraId ? state.obras.find((o) => o.id === obraId) : null;
 
   const [f, setF] = useState(() =>
@@ -72,7 +79,7 @@ export default function ObraFormScreen({ route, navigation }) {
     );
   }
 
-  const salvar = () => {
+  const salvar = async () => {
     const e = {};
     if (!f.nome.trim()) e.nome = 'Informe o nome da obra.';
     if (!f.contrato.trim()) e.contrato = 'Informe o contrato.';
@@ -85,7 +92,7 @@ export default function ObraFormScreen({ route, navigation }) {
       haptic.warning();
       return;
     }
-    actions.salvarObra({
+    const resultado = await salvarObra.executar({
       userId: currentUser.id,
       obra: {
         ...f,
@@ -94,6 +101,7 @@ export default function ObraFormScreen({ route, navigation }) {
         avancoPrevisto: Math.max(0, Math.min(100, toNumber(f.avancoPrevisto))),
       },
     });
+    if (!resultado) return; // falhou: o aviso aparece e a tela continua aberta
     haptic.success();
     toast.show({
       type: 'success',
@@ -116,6 +124,7 @@ export default function ObraFormScreen({ route, navigation }) {
             title={existente ? 'Salvar alterações' : 'Cadastrar obra'}
             icon="check"
             onPress={salvar}
+            loading={salvarObra.carregando}
             style={{ flex: 1.6 }}
           />
         </View>
