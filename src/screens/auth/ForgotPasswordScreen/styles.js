@@ -2,6 +2,14 @@ import { StyleSheet } from 'react-native';
 import { colors, radius } from '../../../theme';
 
 export const styles = StyleSheet.create({
+  gap6: { gap: 6 },
+  gap8: { gap: 8 },
+  codigoTexto: { letterSpacing: 6 },
+  codigoErro: { borderColor: colors.danger },
+  centralizado: { alignItems: 'center' },
+  centro: { textAlign: 'center' },
+  link: { minHeight: 40, justifyContent: 'center' },
+  sucesso: { alignItems: 'center', gap: 10, paddingVertical: 24 },
   simHeader: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   rule: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   okIcon: {

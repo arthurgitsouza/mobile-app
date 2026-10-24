@@ -134,11 +134,11 @@ test('Código correto na quinta tentativa ainda permite redefinir a senha', asyn
   assert.equal(app.state().users.find((u) => u.id === user.id).senha, 'NovaSenha123');
 });
 
-test('Contrato ausente mostra erro e preserva rascunho e fila', async () => {
+test('Cliente HTTP ausente mostra erro e preserva rascunho e fila', async () => {
   const app = preparar({ useMock: false });
   const rdo = app.state().rdos.find((r) => r.status === 'rascunho');
   await assert.rejects(app.api.salvarRdo({ rdo: { ...rdo, observacoes: 'Não perder este texto' } }), {
-    codigo: 'CONTRATO_PENDENTE',
+    codigo: 'CONFIGURACAO',
   });
   assert.equal(app.state().rdos.find((r) => r.id === rdo.id).observacoes, 'Não perder este texto');
   assert.equal(app.salvo().filaOffline.length, 1);
@@ -286,4 +286,51 @@ test('Modo real rejeita acesso por userId e exige id e número oficiais ao criar
     codigo: 'RESPOSTA_INVALIDA',
   });
   assert.equal(app.state().rdos.length, quantidade);
+});
+
+test('Configuração de inatividade depende do servidor; forçar offline continua local', async () => {
+  const chamadas = [];
+  const app = preparar({
+    useMock: false,
+    remoto: async (acao, args) => {
+      chamadas.push({ acao, args });
+      return { alteracoes: { settings: { inatividadeMin: 20 } } };
+    },
+  });
+  await app.api.atualizarConfiguracoes({ patch: { forceOffline: true } });
+  assert.equal(chamadas.length, 0);
+  await app.api.atualizarConfiguracoes({ patch: { inatividadeMin: 15 } });
+  assert.equal(chamadas.length, 1);
+  assert.equal(chamadas[0].acao, 'atualizarConfiguracoes');
+  assert.equal(app.state().settings.inatividadeMin, 20);
+  assert.equal(app.state().settings.forceOffline, true);
+});
+
+test('Salvar no servidor não apaga fotos que ainda aguardam upload na fila', async () => {
+  const app = preparar({
+    useMock: false,
+    remoto: async (acao, args) => {
+      if (acao === 'salvarRdo') return { alteracoes: { rdos: [{ ...args.rdo, fotos: [] }] } };
+      throw new ApiError({ codigo: 'REDE' });
+    },
+  });
+  app.online(false);
+  const rdo = app.state().rdos.find((r) => r.status === 'devolvido');
+  app.trocar({
+    ...app.state(),
+    rdos: app
+      .state()
+      .rdos.map((r) => (r.id === rdo.id ? { ...r, fotos: r.fotos.map((f) => ({ ...f, envio: 'local' })) } : r)),
+  });
+  await app.api.submeterRdo({ rdoId: rdo.id });
+  app.online(true);
+  await assert.rejects(app.api.sincronizarPendentes(), { codigo: 'REDE' });
+  const guardado = app.state().rdos.find((r) => r.id === rdo.id);
+  assert.deepEqual(
+    guardado.fotos.map((f) => f.id),
+    rdo.fotos.map((f) => f.id),
+  );
+  assert.ok(guardado.fotos.every((f) => f.envio === 'local'));
+  assert.equal(guardado.sync.pendente, true);
+  assert.equal(app.state().filaOffline[0].acao, 'enviarFoto');
 });

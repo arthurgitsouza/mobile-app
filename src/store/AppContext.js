@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { AppState } from 'react-native';
+import { AppState, Platform } from 'react-native';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { criarApi } from '../services/api/index.js';
 import { criarCliente } from '../services/api/client.js';
@@ -72,6 +72,10 @@ export function AppProvider({ children }) {
         : env.USE_MOCK
           ? { ...gerarSeed(), session: sessaoInicial(), filaOffline: [] }
           : estadoServidorVazio(sessaoInicial());
+      inicial.session.deviceLabel =
+        Platform.OS === 'android'
+          ? `Android (API ${Platform.Version})`
+          : `${Platform.OS} ${Platform.Version || ''}`.trim();
       try {
         const token = await sessaoSegura.restaurar();
         if (!token || !inicial.session.manter) {

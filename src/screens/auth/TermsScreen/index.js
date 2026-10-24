@@ -1,8 +1,10 @@
+import { styles } from './styles';
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { colors } from '../../../theme';
 import { POLITICA_PRIVACIDADE, TERMOS_USO } from '../../../constants/texts';
 import { useApp } from '../../../store/AppContext';
+import useAcao from '../../../hooks/useAcao';
 import { haptic } from '../../../utils/feedback';
 import { primeiroNome } from '../../../utils/format';
 import { Banner, Button, Card, Icon, Screen, SegmentedTabs, SectionTitle, Txt } from '../../../components/ui';
@@ -10,7 +12,7 @@ import CheckboxField from '../../../components/form/CheckboxField';
 
 // Aceite de termos e LGPD (seção 13 — "Login, recuperação de acesso e aceite de termos").
 // Também serve como consulta (readOnly) a partir de Configurações.
-export default function TermsScreen({ route, navigation }) {
+export default function TermsScreen({ route }) {
   const readOnly = route?.params?.readOnly;
   const { currentUser, actions } = useApp();
   const [aba, setAba] = useState('termos');
@@ -22,15 +24,20 @@ export default function TermsScreen({ route, navigation }) {
 
   const conteudo = aba === 'termos' ? TERMOS_USO : POLITICA_PRIVACIDADE;
 
-  const aceitar = () => {
+  const aceite = useAcao(async () => {
+    if (whatsapp) await actions.atualizarCanais({ userId: currentUser.id, canais: { whatsapp: true } });
+    const resultado = await actions.aceitarTermos({ userId: currentUser.id, opcoes: { localizacao, whatsapp } });
+    haptic.success();
+    return resultado;
+  });
+
+  const aceitar = async () => {
     setTocou(true);
     if (!termos || !privacidade) {
       haptic.warning();
       return;
     }
-    if (whatsapp) actions.atualizarCanais({ userId: currentUser.id, canais: { whatsapp: true } });
-    actions.aceitarTermos({ userId: currentUser.id, opcoes: { localizacao, whatsapp } });
-    haptic.success();
+    await aceite.executar();
   };
 
   return (
@@ -41,12 +48,19 @@ export default function TermsScreen({ route, navigation }) {
       footer={
         readOnly ? undefined : (
           <>
-            <Button title="Aceitar e continuar" icon="check-decagram-outline" onPress={aceitar} size="lg" />
+            <Button
+              title="Aceitar e continuar"
+              icon="check-decagram-outline"
+              onPress={aceitar}
+              size="lg"
+              loading={aceite.carregando}
+            />
             <Button title="Recusar e sair" variant="ghost" size="sm" onPress={() => actions.sair()} />
           </>
         )
       }
     >
+      {aceite.erro ? <Banner tone="danger" message={aceite.erro.mensagem} /> : null}
       {!readOnly ? (
         <Banner
           tone="info"
@@ -61,9 +75,9 @@ export default function TermsScreen({ route, navigation }) {
         value={aba}
         onChange={setAba}
       />
-      <Card style={{ gap: 14 }}>
+      <Card style={styles.conteudo}>
         {conteudo.map((s) => (
-          <View key={s.titulo} style={{ gap: 4 }}>
+          <View key={s.titulo} style={styles.paragrafo}>
             <Txt v="h3" color={colors.navy600}>
               {s.titulo}
             </Txt>
@@ -105,9 +119,9 @@ export default function TermsScreen({ route, navigation }) {
           />
         </>
       ) : (
-        <Card tone="soft" style={{ flexDirection: 'row', gap: 10 }}>
+        <Card tone="soft" style={styles.aviso}>
           <Icon name="information-outline" size={20} color={colors.navy600} />
-          <Txt v="small" muted style={{ flex: 1 }}>
+          <Txt v="small" muted style={styles.flex}>
             Este é um texto de exemplo para o protótipo. Termos e base legal definitivos devem ser validados pelo
             controlador dos dados (empresa).
           </Txt>

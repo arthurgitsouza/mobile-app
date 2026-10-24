@@ -1,11 +1,13 @@
-import { styles } from './styles';
+import { styles, dinamico } from './styles';
 import React, { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors, radius } from '../../../theme';
+import { colors } from '../../../theme';
 import { PERFIS } from '../../../constants';
 import { useApp } from '../../../store/AppContext';
+import useAcao from '../../../hooks/useAcao';
+import { env } from '../../../config/env';
 import { autenticarBiometria, biometriaDisponivel } from '../../../services/biometrics';
 import { haptic } from '../../../utils/feedback';
 import { isEmail, primeiroNome } from '../../../utils/format';
@@ -36,11 +38,11 @@ export default function LoginScreen({ navigation }) {
   const [tentativas, setTentativas] = useState(0);
   const [bloqueadoAte, setBloqueadoAte] = useState(0);
   const [agora, setAgora] = useState(Date.now());
-  const [carregando, setCarregando] = useState(false);
   const [bioOk, setBioOk] = useState(false);
 
   const ultimo = state.users.find((u) => u.id === state.session.ultimoUserId);
-  const podeBiometria = bioOk && ultimo && state.session.biometria?.[ultimo.id];
+  const demoAtiva = env.USE_MOCK && env.DEMO;
+  const podeBiometria = demoAtiva && bioOk && ultimo && state.session.biometria?.[ultimo.id];
   const segundosRestantes = Math.max(0, Math.ceil((bloqueadoAte - agora) / 1000));
   const bloqueado = segundosRestantes > 0;
 
@@ -70,6 +72,19 @@ export default function LoginScreen({ navigation }) {
     }
   };
 
+  const acesso = useAcao(async (credenciais) => {
+    try {
+      const resultado = await actions.entrar(credenciais);
+      haptic.success();
+      return resultado;
+    } catch (e) {
+      if (['CREDENCIAIS', 'CREDENCIAIS_INVALIDAS'].includes(e.codigo)) falhar('E-mail ou senha incorretos.');
+      else setErro(e.mensagem || 'Não foi possível entrar. Tente novamente.');
+      throw e;
+    }
+  });
+  const carregando = acesso.carregando;
+
   const entrarComSenha = async () => {
     if (bloqueado || carregando) return;
     setErro('');
@@ -80,57 +95,42 @@ export default function LoginScreen({ navigation }) {
     setErros(e);
     if (Object.keys(e).length) return;
 
-    setCarregando(true);
-    await new Promise((r) => setTimeout(r, 450)); // latência simulada (o back-end virá depois)
-    const user = state.users.find((u) => u.email.toLowerCase() === mail);
-    setCarregando(false);
-    if (!user || user.senha !== senha) return falhar('E-mail ou senha incorretos.');
-    if (!user.ativo) {
-      haptic.error();
-      return setErro('Este usuário está bloqueado. Fale com o administrador da empresa.');
-    }
-
-    // Primeira autenticação neste aparelho: oferece a biometria (RF-01).
-    if (state.session.biometria?.[user.id] === undefined && (await biometriaDisponivel())) {
+    const resultado = await acesso.executar({ email: mail, senha, manter });
+    const user = resultado?.users.find((u) => u.id === resultado.session.userId);
+    if (env.USE_MOCK && user && resultado.session.biometria?.[user.id] === undefined && (await biometriaDisponivel())) {
       const ativar = await confirm({
         icon: 'fingerprint',
         title: 'Ativar biometria?',
-        message:
-          'Nos próximos acessos você poderá entrar com a biometria do aparelho. Suas assinaturas continuarão exigindo confirmação adicional.',
+        message: 'Nos próximos acessos você poderá entrar com a biometria do aparelho.',
         confirmLabel: 'Ativar',
         cancelLabel: 'Agora não',
       });
-      actions.definirBiometria({ userId: user.id, ativo: ativar });
+      await actions.definirBiometria({ userId: user.id, ativo: ativar });
     }
-    haptic.success();
-    actions.entrar({ userId: user.id, manter });
   };
 
   const entrarComBiometria = async () => {
+    if (carregando || bloqueado) return;
     const ok = await autenticarBiometria(`Entrar como ${primeiroNome(ultimo.nome)}`);
-    if (ok) {
-      haptic.success();
-      actions.entrar({ userId: ultimo.id, manter });
-    } else {
-      setErro('Não foi possível confirmar a biometria. Entre com e-mail e senha.');
-    }
+    if (ok) await acesso.executar({ userId: ultimo.id, manter });
+    else setErro('Não foi possível confirmar a biometria. Entre com e-mail e senha.');
   };
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'padding'} style={styles.root}>
       <StatusBar style="light" />
       <ScrollView
-        contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
+        contentContainerStyle={dinamico.conteudo(insets.bottom)}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
       >
-        <View style={[styles.hero, { paddingTop: insets.top + 28 }]}>
+        <View style={[styles.hero, dinamico.hero(insets.top)]}>
           <BrandMark size={72} />
-          <Txt v="display" color={colors.white} style={{ marginTop: 14 }} accessibilityRole="header">
+          <Txt v="display" color={colors.white} style={styles.titulo} accessibilityRole="header">
             RDO Mobile
           </Txt>
-          <Txt v="body" color={colors.textOnDarkMuted} style={{ textAlign: 'center', maxWidth: 320 }}>
+          <Txt v="body" color={colors.textOnDarkMuted} style={styles.descricao}>
             Registro Diário de Obra: do canteiro à assinatura, com histórico verificável.
           </Txt>
           <View style={styles.proto}>
@@ -183,9 +183,10 @@ export default function LoginScreen({ navigation }) {
               textContentType="password"
               returnKeyType="go"
               onSubmitEditing={entrarComSenha}
+              editable={!carregando}
             />
             <View style={styles.rowBetween}>
-              <View style={{ flex: 1 }}>
+              <View style={styles.flex}>
                 <CheckboxField plain label="Manter conectado" value={manter} onValueChange={setManter} />
               </View>
               <LinkButton title="Esqueci a senha" onPress={() => navigation.navigate('ForgotPassword')} />
@@ -195,7 +196,7 @@ export default function LoginScreen({ navigation }) {
               icon="login-variant"
               onPress={entrarComSenha}
               loading={carregando}
-              disabled={bloqueado}
+              disabled={bloqueado || carregando}
               size="lg"
             />
             {podeBiometria ? (
@@ -208,45 +209,51 @@ export default function LoginScreen({ navigation }) {
             ) : null}
           </Card>
 
-          <View style={{ gap: 10 }}>
-            <View style={styles.demoHeader}>
-              <Icon name="flash-outline" size={18} color={colors.navy600} />
-              <Txt v="label" color={colors.navy600} accessibilityRole="header">
-                ACESSO RÁPIDO · DEMONSTRAÇÃO
+          {demoAtiva ? (
+            <View style={styles.acessoRapido}>
+              <View style={styles.demoHeader}>
+                <Icon name="flash-outline" size={18} color={colors.navy600} />
+                <Txt v="label" color={colors.navy600} accessibilityRole="header">
+                  ACESSO RÁPIDO · DEMONSTRAÇÃO
+                </Txt>
+              </View>
+              {RAPIDO.map((r) => {
+                const u = state.users.find((x) => x.id === r.userId);
+                if (!u) return null;
+                return (
+                  <Card
+                    key={r.userId}
+                    onPress={() => {
+                      if (!carregando && !bloqueado) acesso.executar({ userId: u.id, manter: false });
+                    }}
+                    accessibilityLabel={`Entrar como ${PERFIS[r.perfil].longo}: ${u.nome}`}
+                    style={styles.quick}
+                  >
+                    <Avatar nome={u.nome} size={44} />
+                    <View style={styles.persona}>
+                      <Txt v="bodyStrong">{PERFIS[r.perfil].longo}</Txt>
+                      <Txt v="small" muted>
+                        {u.nome} · {r.detalhe}
+                      </Txt>
+                    </View>
+                    <Icon name="chevron-right" size={22} color={colors.textSubtle} />
+                  </Card>
+                );
+              })}
+              <Txt v="caption" muted style={styles.centro}>
+                Senha de todos os usuários de demonstração: 123456
               </Txt>
             </View>
-            {RAPIDO.map((r) => {
-              const u = state.users.find((x) => x.id === r.userId);
-              if (!u) return null;
-              return (
-                <Card
-                  key={r.userId}
-                  onPress={() => actions.entrar({ userId: u.id, manter: false })}
-                  accessibilityLabel={`Entrar como ${PERFIS[r.perfil].longo}: ${u.nome}`}
-                  style={styles.quick}
-                >
-                  <Avatar nome={u.nome} size={44} />
-                  <View style={{ flex: 1, gap: 1 }}>
-                    <Txt v="bodyStrong">{PERFIS[r.perfil].longo}</Txt>
-                    <Txt v="small" muted>
-                      {u.nome} · {r.detalhe}
-                    </Txt>
-                  </View>
-                  <Icon name="chevron-right" size={22} color={colors.textSubtle} />
-                </Card>
-              );
-            })}
-            <Txt v="caption" muted style={{ textAlign: 'center' }}>
-              Senha de todos os usuários de demonstração: 123456
-            </Txt>
-          </View>
+          ) : null}
 
           <View style={styles.footer}>
-            <LinkButton
-              title="Roteiro de demonstração"
-              icon="map-marker-path"
-              onPress={() => navigation.navigate('DemoGuide')}
-            />
+            {demoAtiva ? (
+              <LinkButton
+                title="Roteiro de demonstração"
+                icon="map-marker-path"
+                onPress={() => navigation.navigate('DemoGuide')}
+              />
+            ) : null}
             <Txt v="caption" subtle>
               v1.0.0 · protótipo de interface — dados fictícios
             </Txt>

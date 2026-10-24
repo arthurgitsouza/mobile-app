@@ -45,11 +45,11 @@ export function aplicarResposta(state, resposta = {}) {
         ...next.settings,
         ...valor,
         forceOffline: next.settings.forceOffline,
-        inatividadeMin: next.settings.inatividadeMin,
       };
     } else if (Array.isArray(valor)) {
       const ids = new Set(valor.map((item) => item.id));
-      next[key] = [...(next[key] || []).filter((item) => !ids.has(item.id)), ...valor];
+      const anteriores = resposta.substituir?.includes(key) ? [] : next[key] || [];
+      next[key] = [...anteriores.filter((item) => !ids.has(item.id)), ...valor];
     } else next[key] = valor;
     if (key === 'users') next.users = next.users.map(({ senha: _senha, ...u }) => u);
   }
