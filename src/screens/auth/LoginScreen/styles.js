@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, radius } from '../../../theme'; // ajusta o caminho do arquivo de temas se necessário
+import { colors, radius } from '../../../theme'; 
 
 export const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
@@ -30,4 +30,19 @@ export const styles = StyleSheet.create({
   demoHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 },
   quick: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12 },
   footer: { alignItems: 'center', gap: 6, paddingTop: 4 },
+
+  //código adicionado
+  titulo: { marginTop: 14 },
+  subtitulo: { textAlign: 'center', maxWidth: 320 },
+  fill: { flex: 1 },
+  demo: { gap: 10 },
+  quickInfo: { flex: 1, gap: 1 },
+  centro: { textAlign: 'center' },
+
 });
+
+// Valores que dependem do aparelho (área segura) viram funções aqui mesmo.
+export const dinamico = {
+  scrollConteudo: (base) => ({ paddingBottom: base + 24 }),
+  hero: (topo) => ({ paddingTop: topo + 28 }),
+};
