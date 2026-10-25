@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import styles from './styles';
+import { styles } from './styles';
 
 import { colors } from '../../../theme';
 import { PERFIL } from '../../../constants';
@@ -104,13 +104,13 @@ export default function AcademicGroupScreen({ route, navigation }) {
   return (
     <Screen title={grupo.nome} subtitle={grupo.integrantes.join(' · ')} back>
       <Card tone="soft" style={styles.row}>
-        <View style={{ flex: 1 }}>
+        <View style={styles.fill}>
           <Txt v="caption" muted>
             Média ponderada
           </Txt>
           <Txt v="h1">{media != null ? formatNumber(media, 1) : '—'}</Txt>
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={styles.fill}>
           <Txt v="caption" muted>
             Avaliadas
           </Txt>
@@ -129,7 +129,7 @@ export default function AcademicGroupScreen({ route, navigation }) {
           <Card
             key={f.id}
             onPress={() => abrir(f)}
-            style={{ gap: 6 }}
+            style={styles.cartaoFase}
             accessibilityLabel={`Fase ${f.id}, ${f.titulo}, ${s.label}${nf != null ? `, nota ${nf}` : ''}`}
           >
             <View style={styles.row}>
@@ -138,14 +138,14 @@ export default function AcademicGroupScreen({ route, navigation }) {
                   {f.id}
                 </Txt>
               </View>
-              <Txt v="bodyStrong" style={{ flex: 1 }} numberOfLines={2}>
+              <Txt v="bodyStrong" style={styles.fill} numberOfLines={2}>
                 {f.titulo}
               </Txt>
               {nf != null ? <Txt v="h3">{formatNumber(nf, 1)}</Txt> : null}
             </View>
             <View style={styles.row}>
               <Badge label={s.label} color={s.color} bg={s.bg} icon={s.icon} size="sm" />
-              <Txt v="caption" muted style={{ flex: 1 }}>
+              <Txt v="caption" muted style={styles.fill}>
                 {e.versoes.length
                   ? `${e.versoes.length} versão(ões) · última ${formatDateTime(e.versoes[e.versoes.length - 1].data)}`
                   : 'Sem entrega'}
@@ -164,9 +164,9 @@ export default function AcademicGroupScreen({ route, navigation }) {
         fullHeight
         footer={
           entrega && entrega.status !== 'pendente' ? (
-            <View style={{ flexDirection: 'row', gap: 10 }}>
-              <Button title="Cancelar" variant="secondary" onPress={() => setFaseId(null)} style={{ flex: 1 }} />
-              <Button title="Salvar avaliação" icon="check" onPress={salvar} style={{ flex: 1.5 }} />
+            <View style={styles.acoes}>
+              <Button title="Cancelar" variant="secondary" onPress={() => setFaseId(null)} style={styles.fill} />
+              <Button title="Salvar avaliação" icon="check" onPress={salvar} style={styles.botaoSalvar} />
             </View>
           ) : (
             <Button title="Registrar entrega (simulado)" icon="upload-outline" onPress={registrarEntrega} />
@@ -180,7 +180,7 @@ export default function AcademicGroupScreen({ route, navigation }) {
               entrega.versoes.map((v) => (
                 <View key={v.numero} style={styles.versao}>
                   <Icon name="file-document-outline" size={20} color={colors.navy600} />
-                  <View style={{ flex: 1 }}>
+                  <View style={styles.fill}>
                     <Txt v="smallStrong">
                       v{v.numero} · {v.arquivo}
                     </Txt>
@@ -212,7 +212,7 @@ export default function AcademicGroupScreen({ route, navigation }) {
                   />
                 ))}
                 <Card tone="soft" style={styles.row}>
-                  <Txt v="bodyStrong" style={{ flex: 1 }}>
+                  <Txt v="bodyStrong" style={styles.fill}>
                     Nota final ponderada
                   </Txt>
                   <Txt v="h2">{previa != null ? formatNumber(previa, 1) : '—'}</Txt>
