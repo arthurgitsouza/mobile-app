@@ -1,11 +1,12 @@
 import React from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { colors, radius } from '../../theme';
-import { useApp } from '../../store/AppContext';
-import { contar } from '../../utils/format';
-import Icon from './Icon';
-import Txt from './Txt';
+import { colors } from '../../../theme';
+import { useApp } from '../../../store/AppContext';
+import { contar } from '../../../utils/format';
+import Icon from '../Icon';
+import Txt from '../Txt';
+import { styles, dinamico } from './styles';
 
 // Estado de conexão/sincronização sempre visível (RNF-03 / critério de aceite: "indica claramente o que ainda não foi enviado").
 export default function SyncBanner({ style }) {
@@ -30,10 +31,10 @@ export default function SyncBanner({ style }) {
       onPress={() => nav.navigate('Sync')}
       accessibilityRole="button"
       accessibilityLabel={`${texto} Abrir central de sincronização.`}
-      style={[styles.wrap, { backgroundColor: tone.bg }, style]}
+      style={[styles.wrap, dinamico.fundo(tone.bg), style]}
     >
       <Icon name={tone.icon} size={20} color={tone.fg} />
-      <View style={{ flex: 1 }}>
+      <View style={styles.fill}>
         <Txt v="smallStrong" color={tone.fg}>
           {texto}
         </Txt>
@@ -42,14 +43,3 @@ export default function SyncBanner({ style }) {
     </Pressable>
   );
 }
-
-const styles = StyleSheet.create({
-  wrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: radius.md,
-  },
-});
