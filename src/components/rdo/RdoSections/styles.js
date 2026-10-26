@@ -1,0 +1,63 @@
+import { StyleSheet } from 'react-native';
+import { colors, radius } from '../../../theme';
+
+export const styles = StyleSheet.create({
+  linha: { flexDirection: 'row', gap: 10 },
+  comentar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    minWidth: 36,
+    minHeight: 36,
+    justifyContent: 'center',
+  },
+  item: {
+    borderWidth: 1,
+    borderColor: colors.divider,
+    backgroundColor: colors.blue50,
+    borderRadius: radius.md,
+    padding: 10,
+    gap: 4,
+  },
+  rowBetween: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  periodos: { flexDirection: 'row', gap: 8 },
+  periodo: {
+    flex: 1,
+    alignItems: 'center',
+    gap: 3,
+    padding: 10,
+    borderRadius: radius.md,
+    backgroundColor: colors.blue50,
+    minHeight: 104,
+  },
+  chuva: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    padding: 10,
+    borderRadius: radius.md,
+    backgroundColor: colors.infoBg,
+  },
+  tr: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    gap: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
+  },
+  th: { paddingVertical: 4 },
+  total: { backgroundColor: colors.blue50, borderBottomWidth: 0, paddingHorizontal: 4 },
+  tdNum: { width: 44, textAlign: 'right' },
+  qtd: { flexDirection: 'row', alignItems: 'baseline', gap: 6, flexWrap: 'wrap' },
+  chipsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  assin: {
+    backgroundColor: colors.white,
+    borderRadius: radius.md,
+    padding: 10,
+    gap: 6,
+    borderWidth: 1,
+    borderColor: colors.gold200,
+  },
+});
