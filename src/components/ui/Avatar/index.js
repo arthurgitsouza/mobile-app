@@ -1,10 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { colors } from '../../theme';
-import { iniciais } from '../../utils/format';
-
-// Todas as cores mantêm ≥ 4,5:1 com o texto branco.
-const CORES = [colors.navy700, colors.teal, colors.purple, colors.info, colors.success, colors.warning];
+import { Text, View } from 'react-native';
+import { iniciais } from '../../../utils/format';
+import { styles, dinamico, CORES } from './styles';
 
 function corDe(nome = '') {
   let h = 0;
@@ -14,16 +11,8 @@ function corDe(nome = '') {
 
 export default function Avatar({ nome, size = 40, style }) {
   return (
-    <View
-      style={[styles.wrap, { width: size, height: size, borderRadius: size / 2, backgroundColor: corDe(nome) }, style]}
-      accessible={false}
-    >
-      <Text style={[styles.text, { fontSize: size * 0.38 }]}>{iniciais(nome)}</Text>
+    <View style={[styles.wrap, dinamico.avatar(size, corDe(nome)), style]} accessible={false}>
+      <Text style={[styles.text, dinamico.inicial(size)]}>{iniciais(nome)}</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  wrap: { alignItems: 'center', justifyContent: 'center' },
-  text: { color: colors.white, fontWeight: '800' },
-});
