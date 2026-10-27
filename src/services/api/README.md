@@ -8,6 +8,8 @@ O cliente HTTP suporta JSON, multipart, bearer token, tempo limite de 15 segundo
 
 As telas usam as ações de serviço e aguardam a resposta antes de avançar. A divisão entre `index.js` e `styles.js` foi mantida.
 
+A organização de auth da branch `pessoa1/fix-auth-academic` (`17dde52`) foi incorporada como dependência, com a autoria preservada. A integração de API usa os mesmos arquivos de estilos dessa atualização.
+
 Login envia e-mail, senha e a opção de manter conectado. Acesso rápido por usuário e biometria de demonstração ficam restritos ao mock. O login real carrega os dados do servidor, sem senhas no estado, e substitui as coleções da sessão anterior. Rascunhos do usuário com itens pendentes na fila são preservados.
 
 No Android e iOS, o token é armazenado com `expo-secure-store` quando o usuário marca manter conectado. No navegador fica na memória. Mock e real usam chaves diferentes para sessão e dados locais. O logout tenta revogar o token no servidor e sempre limpa a sessão do aparelho.
@@ -40,7 +42,7 @@ Execute `npm test`. Os testes de cobertura comparam todas as ações do store co
 
 `api-servidor.test.js` inicia o servidor de `scripts/mock-server.js` numa porta local livre e executa a camada real com `useMock: false`. Cobre login, restauração, troca de perfil, notificações, logout e preservação dos dados quando uma escrita é rejeitada.
 
-A branch `pessoa-3`, no commit `511f03e`, também implementa criação, conteúdo, submissão, devolução, validação, manifestação e comentários do RDO. A camada foi testada contra essa versão em uma cópia separada, sem trazer o trabalho dos colegas para este PR: 68 testes passaram, incluindo duas edições offline consecutivas, o fluxo entre operacional/master/cliente e conflito entre dois aparelhos.
+A branch `pessoa-3`, no commit `511f03e`, também implementa criação, conteúdo, submissão, devolução, validação, manifestação e comentários do RDO. A camada foi testada contra essa versão em uma cópia separada, sem incluir o servidor nem a refatoração dos componentes neste PR: 68 testes passaram, incluindo duas edições offline consecutivas, o fluxo entre operacional/master/cliente e conflito entre dois aparelhos.
 
 Os dois testes novos de escrita são explicitamente ignorados apenas se a criação devolver `501`, pois a main `9f2dc8f` ainda não recebeu essas rotas. Nessa base, são 66 testes aprovados e dois ignorados; com o servidor atualizado, os 68 executam. Outros erros não viram testes ignorados.
 

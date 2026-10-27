@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, radius } from '../../../theme';
+import { colors } from '../../../theme';
 
 export const styles = StyleSheet.create({
   head: { flexDirection: 'row', gap: 12, alignItems: 'flex-start' },
@@ -12,4 +12,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   now: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  passoCard: { gap: 10 },
+  passoInfo: { flex: 1, gap: 4 },
 });
