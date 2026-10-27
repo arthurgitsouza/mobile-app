@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { executarRemoto, rotasRemotas } from '../src/services/api/remoto.js';
-import { conteudoParaApi } from '../src/services/api/payloads.js';
+import { conteudoParaApi, rdoParaTela } from '../src/services/api/payloads.js';
 import { montarUploadFoto } from '../src/services/api/upload.js';
 import { gerarSeed } from '../src/data/seed.js';
 
@@ -160,4 +160,33 @@ test('Retificação recarrega a versão antiga e preserva a nova para a navegaç
     resposta.alteracoes.rdos.map((r) => r.id),
     ['novo', 'antigo'],
   );
+});
+
+test('Salvamento envia a revisão do servidor, mesmo depois de uma edição local ou confirmação da fila', () => {
+  const rdo = rdoParaTela({ id: 'r1', numero: 1, atualizadoEm: 'revisao-1' });
+  const editado = { ...rdo, atualizadoEm: 'hora-da-edicao' };
+  assert.equal(rotasRemotas.salvarRdo({ rdo: editado }, {}).body.atualizadoEm, 'revisao-1');
+  const state = { rdos: [{ ...rdo, sync: { atualizadoEmServidor: 'revisao-2' } }] };
+  assert.equal(rotasRemotas.salvarRdo({ rdo: editado }, state).body.atualizadoEm, 'revisao-2');
+});
+
+test('RDO novo e evidências do servidor são adaptados aos campos usados pelas telas', () => {
+  const rdo = rdoParaTela({
+    id: 'oficial',
+    numero: 12,
+    atualizadoEm: 'hora-oficial',
+    clima: {},
+    auditoria: [{ tipo: 'rdo_criado', usuarioId: 'u1' }],
+    comentarios: [{ id: 'c1', usuarioId: 'u1', texto: 'Texto' }],
+    devolucao: { usuarioId: 'u2', dataHora: 'hora-oficial', motivo: 'Corrigir' },
+  });
+  assert.equal(rdo.id, 'oficial');
+  assert.equal(rdo.numero, 12);
+  assert.equal(rdo.clima.periodos.manha.condicao, '');
+  assert.equal(rdo.seguranca.dds.realizado, false);
+  assert.deepEqual(rdo.materiais, []);
+  assert.equal(rdo.auditoria[0].evento, 'rdo_criado');
+  assert.equal(rdo.comentarios[0].autorId, 'u1');
+  assert.equal(rdo.devolucao.por, 'u2');
+  assert.equal(rdo.devolucao.em, 'hora-oficial');
 });

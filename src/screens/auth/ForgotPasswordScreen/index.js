@@ -162,7 +162,7 @@ export default function ForgotPasswordScreen({ navigation }) {
             para redefinir a senha.
           </Txt>
           {codigoGerado ? (
-            <Card tone="gold" style={styles.gap6}>
+            <Card tone="gold" style={styles.simCard}>
               <View style={styles.simHeader}>
                 <Icon name="email-fast-outline" size={18} color={colors.goldText} />
                 <Txt v="label" color={colors.goldText}>
@@ -175,7 +175,7 @@ export default function ForgotPasswordScreen({ navigation }) {
               <Txt
                 v="display"
                 color={colors.goldText}
-                style={styles.codigoTexto}
+                style={styles.codigoGerado}
                 accessibilityLabel={`Código ${codigoGerado.split('').join(' ')}`}
               >
                 {codigoGerado}
@@ -196,12 +196,12 @@ export default function ForgotPasswordScreen({ navigation }) {
             error={erroCodigo}
             disabled={carregando}
           />
-          <View style={styles.centralizado}>
+          <View style={styles.acoes}>
             <Pressable
               onPress={reenviar}
               disabled={espera > 0 || carregando}
               accessibilityRole="button"
-              style={styles.link}
+              style={styles.linkAcao}
             >
               <Txt v="smallStrong" color={espera > 0 ? colors.textSubtle : colors.blue500}>
                 {espera > 0 ? `Reenviar código em ${espera}s` : 'Reenviar código'}
@@ -215,7 +215,7 @@ export default function ForgotPasswordScreen({ navigation }) {
               }}
               disabled={carregando}
               accessibilityRole="button"
-              style={styles.link}
+              style={styles.linkAcao}
             >
               <Txt v="smallStrong" color={colors.blue500}>
                 Usar outro e-mail
@@ -240,7 +240,7 @@ export default function ForgotPasswordScreen({ navigation }) {
             }}
             disabled={carregando}
             accessibilityRole="button"
-            style={styles.link}
+            style={styles.linkAcao}
           >
             <Txt v="smallStrong" color={colors.blue500}>
               Corrigir código
@@ -267,7 +267,7 @@ export default function ForgotPasswordScreen({ navigation }) {
             required
             error={erroSenha}
           />
-          <Card style={styles.gap8}>
+          <Card style={styles.regrasCard}>
             {regras.map((r) => (
               <View key={r.texto} style={styles.rule}>
                 <Icon
@@ -305,10 +305,10 @@ export default function ForgotPasswordScreen({ navigation }) {
 function CodeInput({ value, onChange, error, disabled }) {
   const ref = useRef(null);
   return (
-    <View style={styles.gap6}>
+    <View style={styles.codeWrap}>
       <Pressable onPress={() => ref.current?.focus()} accessibilityRole="none" style={styles.codeRow}>
         {Array.from({ length: 6 }, (_, i) => (
-          <View key={i} style={[styles.codeBox, value.length === i && styles.codeActive, !!error && styles.codigoErro]}>
+          <View key={i} style={[styles.codeBox, value.length === i && styles.codeActive, !!error && styles.codeErro]}>
             <Txt v="h1">{value[i] || ''}</Txt>
           </View>
         ))}

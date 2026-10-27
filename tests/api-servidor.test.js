@@ -24,6 +24,7 @@ after(async () => {
 });
 
 function preparar() {
+  let online = true;
   let state = estadoServidorVazio({
     userId: null,
     ultimoUserId: null,
@@ -62,8 +63,18 @@ function preparar() {
     },
     sessao,
     request,
+    isOnline: () => online,
   });
-  return { api, sessao, state: () => state, request, encerramento: () => encerramento };
+  return {
+    api,
+    sessao,
+    state: () => state,
+    request,
+    encerramento: () => encerramento,
+    online: (valor) => {
+      online = valor;
+    },
+  };
 }
 
 test('USE_MOCK=false: login e restauração carregam os dados do servidor do Francisco, sem senhas', async () => {
@@ -142,17 +153,25 @@ test('USE_MOCK=false: 401 protegido encerra a sessão', async () => {
   await app.encerramento().catch(() => {});
 });
 
-test('USE_MOCK=false: escrita ainda não implementada no servidor mantém rascunho e fila', async () => {
+test('USE_MOCK=false: escrita rejeitada pelo servidor mantém rascunho e fila', async () => {
   const app = preparar();
   await app.api.entrar({ email: 'master@planengen.com.br', senha: '123456' });
   const rdo = app.state().rdos.find((r) => r.status === 'rascunho');
-  await assert.rejects(app.api.salvarRdo({ rdo: { ...rdo, observacoesGerais: 'Texto que não pode se perder' } }), {
-    status: 501,
-    codigo: 'NAO_IMPLEMENTADO',
-  });
+  let rejeicao;
+  await assert.rejects(
+    app.api.salvarRdo({ rdo: { ...rdo, observacoesGerais: 'Texto que não pode se perder' } }),
+    (erro) => {
+      rejeicao = erro;
+      // A main antiga não tem a rota; a pessoa-3 rejeita a edição pelo master.
+      return (
+        (erro.status === 501 && erro.codigo === 'NAO_IMPLEMENTADO') ||
+        (erro.status === 403 && erro.codigo === 'SEM_PERMISSAO')
+      );
+    },
+  );
   assert.equal(app.state().rdos.find((r) => r.id === rdo.id).observacoesGerais, 'Texto que não pode se perder');
   assert.equal(app.state().filaOffline.length, 1);
-  assert.equal(app.state().filaOffline[0].erro.status, 501);
+  assert.equal(app.state().filaOffline[0].erro.status, rejeicao.status);
 });
 
 test('USE_MOCK=false: servidor ainda sem aceite e recuperação não confirma essas operações', async () => {
@@ -162,4 +181,106 @@ test('USE_MOCK=false: servidor ainda sem aceite e recuperação não confirma es
   assert.equal(app.state().session.termosAceitos.u_master, null);
   await assert.rejects(app.api.solicitarRecuperacao({ email: 'master@planengen.com.br' }), { status: 401 });
   assert.equal(app.state().session.userId, 'u_master');
+});
+
+async function criarRdoNoServidor(t, app, data) {
+  await app.api.entrar({ email: 'operacional@planengen.com.br', senha: '123456' });
+  const obra = app.state().obras.find((o) => o.usuarioIds.includes('u_joao'));
+  try {
+    await app.api.criarRdo({ obraId: obra.id, data, turno: 'diurno' });
+  } catch (erro) {
+    if (erro.status !== 501) throw erro;
+    t.skip('A main ainda não recebeu as escritas da branch pessoa-3.');
+    return null;
+  }
+  const rdo = app.state().rdos.find((r) => r.data === data && r.obraId === obra.id);
+  assert.ok(rdo?.id);
+  assert.ok(rdo.numero > 0);
+  return rdo;
+}
+
+const assinaturaTeste = {
+  tracos: [
+    [
+      { x: 1, y: 1 },
+      { x: 20, y: 15 },
+    ],
+  ],
+  largura: 300,
+  altura: 100,
+};
+
+test('USE_MOCK=false: cria, sincroniza edições offline, submete, devolve, valida e recebe a manifestação do cliente', async (t) => {
+  const operacional = preparar();
+  const novo = await criarRdoNoServidor(t, operacional, '2020-01-11');
+  if (!novo) return;
+  const rdoId = novo.id;
+  const atual = () => operacional.state().rdos.find((r) => r.id === rdoId);
+  const preenchido = {
+    ...novo,
+    identificacao: { ...novo.identificacao, responsavelPreenchimento: 'João Ribeiro' },
+    clima: {
+      ...novo.clima,
+      periodos: { ...novo.clima.periodos, manha: { condicao: 'ensolarado', temperatura: '28' } },
+    },
+    atividades: [{ id: 'a1', servico: 'Concretagem', unidade: 'm3', quantidadeDia: '12,5' }],
+    declaracao: { aceita: true },
+    assinaturaOperacional: assinaturaTeste,
+    observacoesGerais: 'Primeiro salvamento',
+  };
+  await operacional.api.salvarRdo({ rdo: preenchido });
+  assert.equal(atual().observacoesGerais, 'Primeiro salvamento');
+  assert.equal(atual().atividades[0].quantidadeDia, '12.5');
+  operacional.online(false);
+  await operacional.api.salvarRdo({ rdo: { ...atual(), observacoesGerais: 'Primeira edição offline' } });
+  await operacional.api.salvarRdo({ rdo: { ...atual(), observacoesGerais: 'Segunda edição offline' } });
+  assert.equal(operacional.state().filaOffline.length, 2);
+  operacional.online(true);
+  await operacional.api.sincronizarPendentes();
+  assert.equal(operacional.state().filaOffline.length, 0);
+  assert.equal(atual().observacoesGerais, 'Segunda edição offline');
+  await operacional.api.submeterRdo({ rdoId });
+  assert.equal(atual().status, 'submetido');
+  assert.equal(atual().sync.pendente, false);
+  const master = preparar();
+  await master.api.entrar({ email: 'master@planengen.com.br', senha: '123456' });
+  await master.api.devolverRdo({ rdoId, motivo: 'Detalhar observação' });
+  await operacional.api.restaurarSessao();
+  assert.equal(atual().status, 'devolvido');
+  assert.equal(atual().devolucao.por, 'u_master');
+  await operacional.api.salvarRdo({ rdo: { ...atual(), observacoesGerais: 'Observação corrigida' } });
+  await operacional.api.submeterRdo({ rdoId });
+  await master.api.restaurarSessao();
+  await master.api.validarEAssinar({ rdoId, assinatura: assinaturaTeste, enviarAgora: true });
+  const validado = master.state().rdos.find((r) => r.id === rdoId);
+  assert.equal(validado.status, 'enviado_cliente');
+  assert.ok(validado.hashTecnico);
+  const cliente = preparar();
+  await cliente.api.entrar({ email: 'cliente@horizonte.com.br', senha: '123456' });
+  await cliente.api.comentarRdo({ rdoId, texto: 'Conferido pelo cliente', contexto: 'geral' });
+  const comentado = cliente.state().rdos.find((r) => r.id === rdoId);
+  assert.equal(comentado.comentarios.at(-1).autorId, 'u_fernanda');
+  await cliente.api.assinarComoCliente({ rdoId, tipo: 'ciencia', assinatura: assinaturaTeste });
+  const finalizado = cliente.state().rdos.find((r) => r.id === rdoId);
+  assert.equal(finalizado.status, 'finalizado');
+  assert.ok(finalizado.hashFinal);
+  assert.ok(finalizado.auditoria.every((evento) => evento.evento));
+});
+
+test('USE_MOCK=false: edição em outro aparelho gera conflito e preserva o rascunho local', async (t) => {
+  const primeiro = preparar();
+  const novo = await criarRdoNoServidor(t, primeiro, '2020-01-12');
+  if (!novo) return;
+  const segundo = preparar();
+  await segundo.api.entrar({ email: 'operacional@planengen.com.br', senha: '123456' });
+  await primeiro.api.salvarRdo({ rdo: { ...novo, observacoesGerais: 'Gravado no primeiro aparelho' } });
+  const desatualizado = segundo.state().rdos.find((r) => r.id === novo.id);
+  await assert.rejects(
+    segundo.api.salvarRdo({ rdo: { ...desatualizado, observacoesGerais: 'Rascunho no segundo aparelho' } }),
+    { status: 409, codigo: 'CONFLITO' },
+  );
+  assert.equal(segundo.state().rdos.find((r) => r.id === novo.id).observacoesGerais, 'Rascunho no segundo aparelho');
+  assert.equal(segundo.state().filaOffline.length, 1);
+  const salvo = await segundo.request(`/api/v1/rdos/${novo.id}`);
+  assert.equal(salvo.observacoesGerais, 'Gravado no primeiro aparelho');
 });

@@ -46,13 +46,16 @@ export const rotasRemotas = {
       selecionar(a, ['data', 'turno', 'reaproveitarDe', 'idLocal', 'confirmarDuplicado']),
       'rdo',
     ),
-  salvarRdo: (a) =>
+  salvarRdo: (a, s) =>
     rota(
       'PUT',
       `/rdos/${id(a.rdo?.id)}/conteudo`,
       {
         conteudo: conteudoParaApi(a.rdo),
-        atualizadoEm: a.rdo.atualizadoEm,
+        atualizadoEm:
+          s.rdos?.find((r) => r.id === a.rdo.id)?.sync?.atualizadoEmServidor ||
+          a.rdo.sync?.atualizadoEmServidor ||
+          a.rdo.atualizadoEm,
         manual: !!a.manual,
       },
       'rdo',

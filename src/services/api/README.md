@@ -30,12 +30,18 @@ As requisições levam a identificação do aparelho. Escritas recebem uma chave
 
 As fotos nativas recebem uma cópia na pasta de documentos antes do enfileiramento. Respostas do servidor preservam as fotos que ainda aguardam upload e os rascunhos com alterações posteriores. A apresentação do progresso continua com a tela de fotos.
 
+O horário da edição local e a revisão do servidor ficam separados. O salvamento envia a última revisão confirmada em `atualizadoEm`, inclusive entre itens da fila, para que o servidor detecte edições concorrentes sem recusar um salvamento apenas porque o usuário editou o formulário. Um conflito real preserva o rascunho e o item da fila.
+
 `forceOffline` é uma opção local. Inatividade e lembretes usam `/configuracoes`, conforme o contrato.
 
 ## Validação e limites do servidor falso
 
 Execute `npm test`. Os testes de cobertura comparam todas as ações do store com os módulos da API e as rotas, falhando se um módulo voltar vazio ou uma ação ficar sem função.
 
-`api-servidor.test.js` inicia o servidor de `scripts/mock-server.js` numa porta local livre e executa a camada real com `useMock: false`. Cobre login, restauração, troca de perfil, notificações, logout e rejeição de operações ainda indisponíveis.
+`api-servidor.test.js` inicia o servidor de `scripts/mock-server.js` numa porta local livre e executa a camada real com `useMock: false`. Cobre login, restauração, troca de perfil, notificações, logout e preservação dos dados quando uma escrita é rejeitada.
 
-O servidor falso atual implementa autenticação básica, consultas e notificações. Ainda faltam handlers de recuperação, termos e várias escritas, incluindo RDO e uploads. Nessas operações, o app mostra o erro e preserva o estado pendente; os testes não tratam rejeição como sucesso. As rotas estão preparadas pelo contrato, mas o fluxo completo depende desses handlers e de uma conferência no Expo Go.
+A branch `pessoa-3`, no commit `511f03e`, também implementa criação, conteúdo, submissão, devolução, validação, manifestação e comentários do RDO. A camada foi testada contra essa versão em uma cópia separada, sem trazer o trabalho dos colegas para este PR: 68 testes passaram, incluindo duas edições offline consecutivas, o fluxo entre operacional/master/cliente e conflito entre dois aparelhos.
+
+Os dois testes novos de escrita são explicitamente ignorados apenas se a criação devolver `501`, pois a main `9f2dc8f` ainda não recebeu essas rotas. Nessa base, são 66 testes aprovados e dois ignorados; com o servidor atualizado, os 68 executam. Outros erros não viram testes ignorados.
+
+Recuperação, aceite de termos, fotos e várias outras escritas continuam sem handlers nessa versão do servidor. O app mostra o erro e preserva o estado pendente; os testes não tratam rejeição como sucesso. Esses fluxos ainda dependem do servidor e de uma conferência manual no Expo Go.

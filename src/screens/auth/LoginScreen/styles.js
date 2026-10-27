@@ -2,12 +2,6 @@ import { StyleSheet } from 'react-native';
 import { colors, radius } from '../../../theme';
 
 export const styles = StyleSheet.create({
-  titulo: { marginTop: 14 },
-  descricao: { textAlign: 'center', maxWidth: 320 },
-  flex: { flex: 1 },
-  persona: { flex: 1, gap: 1 },
-  centro: { textAlign: 'center' },
-  acessoRapido: { gap: 10 },
   root: { flex: 1, backgroundColor: colors.bg },
   hero: {
     backgroundColor: colors.navy700,
@@ -36,9 +30,18 @@ export const styles = StyleSheet.create({
   demoHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 },
   quick: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12 },
   footer: { alignItems: 'center', gap: 6, paddingTop: 4 },
+
+  //código adicionado
+  titulo: { marginTop: 14 },
+  subtitulo: { textAlign: 'center', maxWidth: 320 },
+  fill: { flex: 1 },
+  demo: { gap: 10 },
+  quickInfo: { flex: 1, gap: 1 },
+  centro: { textAlign: 'center' },
 });
 
+// Valores que dependem do aparelho (área segura) viram funções aqui mesmo.
 export const dinamico = {
-  conteudo: (bottom) => ({ paddingBottom: bottom + 24 }),
-  hero: (top) => ({ paddingTop: top + 28 }),
+  scrollConteudo: (base) => ({ paddingBottom: base + 24 }),
+  hero: (topo) => ({ paddingTop: topo + 28 }),
 };

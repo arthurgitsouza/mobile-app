@@ -120,7 +120,7 @@ export default function LoginScreen({ navigation }) {
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'padding'} style={styles.root}>
       <StatusBar style="light" />
       <ScrollView
-        contentContainerStyle={dinamico.conteudo(insets.bottom)}
+        contentContainerStyle={dinamico.scrollConteudo(insets.bottom)}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
@@ -130,7 +130,7 @@ export default function LoginScreen({ navigation }) {
           <Txt v="display" color={colors.white} style={styles.titulo} accessibilityRole="header">
             RDO Mobile
           </Txt>
-          <Txt v="body" color={colors.textOnDarkMuted} style={styles.descricao}>
+          <Txt v="body" color={colors.textOnDarkMuted} style={styles.subtitulo}>
             Registro Diário de Obra: do canteiro à assinatura, com histórico verificável.
           </Txt>
           <View style={styles.proto}>
@@ -186,7 +186,7 @@ export default function LoginScreen({ navigation }) {
               editable={!carregando}
             />
             <View style={styles.rowBetween}>
-              <View style={styles.flex}>
+              <View style={styles.fill}>
                 <CheckboxField plain label="Manter conectado" value={manter} onValueChange={setManter} />
               </View>
               <LinkButton title="Esqueci a senha" onPress={() => navigation.navigate('ForgotPassword')} />
@@ -210,7 +210,7 @@ export default function LoginScreen({ navigation }) {
           </Card>
 
           {demoAtiva ? (
-            <View style={styles.acessoRapido}>
+            <View style={styles.demo}>
               <View style={styles.demoHeader}>
                 <Icon name="flash-outline" size={18} color={colors.navy600} />
                 <Txt v="label" color={colors.navy600} accessibilityRole="header">
@@ -230,7 +230,7 @@ export default function LoginScreen({ navigation }) {
                     style={styles.quick}
                   >
                     <Avatar nome={u.nome} size={44} />
-                    <View style={styles.persona}>
+                    <View style={styles.quickInfo}>
                       <Txt v="bodyStrong">{PERFIS[r.perfil].longo}</Txt>
                       <Txt v="small" muted>
                         {u.nome} · {r.detalhe}

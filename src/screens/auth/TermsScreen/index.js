@@ -77,7 +77,7 @@ export default function TermsScreen({ route }) {
       />
       <Card style={styles.conteudo}>
         {conteudo.map((s) => (
-          <View key={s.titulo} style={styles.paragrafo}>
+          <View key={s.titulo} style={styles.secao}>
             <Txt v="h3" color={colors.navy600}>
               {s.titulo}
             </Txt>
@@ -121,7 +121,7 @@ export default function TermsScreen({ route }) {
       ) : (
         <Card tone="soft" style={styles.aviso}>
           <Icon name="information-outline" size={20} color={colors.navy600} />
-          <Txt v="small" muted style={styles.flex}>
+          <Txt v="small" muted style={styles.avisoTexto}>
             Este é um texto de exemplo para o protótipo. Termos e base legal definitivos devem ser validados pelo
             controlador dos dados (empresa).
           </Txt>

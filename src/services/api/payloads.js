@@ -1,3 +1,5 @@
+import { novoClima, novaSeguranca } from '../../domain/rdo.js';
+
 const numeros = new Set([
   'temperatura',
   'precipitacaoMm',
@@ -72,8 +74,41 @@ export function conteudoParaApi(rdo = {}) {
 
 export function rdoParaTela(rdo) {
   const convertido = converterNumeros(rdo, true);
+  const clima = novoClima();
+  const seguranca = novaSeguranca();
+  const listas = Object.fromEntries(
+    ['maoDeObra', 'equipamentos', 'atividades', 'materiais', 'qualidade', 'ocorrencias', 'visitas', 'pendencias'].map(
+      (campo) => [campo, convertido[campo] || []],
+    ),
+  );
   return {
     ...convertido,
+    ...listas,
+    clima: { ...clima, ...convertido.clima, periodos: { ...clima.periodos, ...convertido.clima?.periodos } },
+    seguranca: {
+      ...seguranca,
+      ...convertido.seguranca,
+      dds: { ...seguranca.dds, ...convertido.seguranca?.dds },
+      epiEpc: { ...seguranca.epiEpc, ...convertido.seguranca?.epiEpc },
+    },
+    planejamento: { proximoDia: '', restricoes: '', ...convertido.planejamento },
+    semRegistro: { ...convertido.semRegistro },
+    semProducao: { ativo: false, justificativa: '', ...convertido.semProducao },
+    sync: { ...convertido.sync, atualizadoEmServidor: rdo.atualizadoEm },
+    auditoria: (convertido.auditoria || []).map((evento) => ({ ...evento, evento: evento.evento || evento.tipo })),
+    comentarios: (convertido.comentarios || []).map((comentario) => ({
+      ...comentario,
+      autorId: comentario.autorId || comentario.usuarioId,
+    })),
+    ...(convertido.devolucao
+      ? {
+          devolucao: {
+            ...convertido.devolucao,
+            por: convertido.devolucao.por || convertido.devolucao.usuarioId,
+            em: convertido.devolucao.em || convertido.devolucao.dataHora,
+          },
+        }
+      : {}),
     fotos: (convertido.fotos || []).map((foto) => ({
       ...foto,
       uri: foto.url || foto.uri,

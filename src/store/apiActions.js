@@ -79,7 +79,9 @@ export function criarActions({
       }
       if (posteriores.some((x) => x.acao === 'salvarRdo' && x.args.rdo.id === rdoId)) {
         const rdo = atual.rdos.find((r) => r.id === rdoId);
-        next.rdos = next.rdos.map((r) => (r.id === rdoId ? rdo : r));
+        next.rdos = next.rdos.map((r) =>
+          r.id === rdoId ? { ...rdo, sync: { ...rdo.sync, atualizadoEmServidor: r.sync?.atualizadoEmServidor } } : r,
+        );
       }
       if (item.acao === 'enviarFoto') {
         next.rdos = next.rdos.map((r) =>
