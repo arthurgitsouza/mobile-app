@@ -1,0 +1,57 @@
+import { StyleSheet } from 'react-native';
+import { colors, radius } from '../../../theme';
+
+export const styles = StyleSheet.create({
+  option: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    minHeight: 52,
+    paddingHorizontal: 12,
+    borderRadius: radius.md,
+  },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  switchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    minHeight: 56,
+    borderRadius: radius.md,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    backgroundColor: colors.white,
+  },
+  stepper: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  stepBtn: {
+    width: 52,
+    height: 52,
+    borderRadius: radius.md,
+    borderWidth: 1.5,
+    borderColor: colors.borderStrong,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.blue50,
+  },
+  stepValue: {
+    flex: 1,
+    minHeight: 52,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    borderRadius: radius.md,
+    borderWidth: 1.5,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.white,
+  },
+  stepInput: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: colors.text,
+    textAlign: 'center',
+    minWidth: 48,
+    paddingVertical: 6,
+  },
+});
