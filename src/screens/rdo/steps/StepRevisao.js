@@ -12,6 +12,7 @@ import { Banner, Button, Card, Icon, ListRow, SectionTitle, Txt, useUI } from '.
 import CheckboxField from '../../../components/form/CheckboxField';
 import { SignaturePad } from '../../../components/rdo';
 import SubmitProgress from './SubmitProgress';
+import useAcao from '../../../hooks/useAcao';
 
 function Numero({ icone, valor, rotulo }) {
   return (
@@ -40,6 +41,13 @@ export default function StepRevisao({
   const { actions, online, currentUser } = useApp();
   const { confirm, toast } = useUI();
   const [enviando, setEnviando] = useState(false);
+  const salvarRdo = useAcao(actions.salvarRdo);
+  const submeter = useAcao(actions.submeterRdo);
+  const erroEnvio = salvarRdo.erro || submeter.erro;
+
+  useEffect(() => {
+    if (erroEnvio) toast.show({ type: 'error', title: 'Não foi possível enviar o RDO', message: erroEnvio.mensagem });
+  }, [erroEnvio, toast]);
   const eq = resumoEquipamentos(rdo);
   const { valido, erros, avisos } = validacao;
   const nomeDe = (chave) => PASSOS_RDO.find((p) => p.key === chave);
@@ -62,10 +70,11 @@ export default function StepRevisao({
     setEnviando(true);
   };
 
-  const concluir = () => {
-    actions.salvarRdo({ rdo });
-    actions.submeterRdo({ rdoId: rdo.id, userId: currentUser.id, online });
+  const concluir = async () => {
+    const salvo = await salvarRdo.executar({ rdo });
+    const enviado = salvo && (await submeter.executar({ rdoId: rdo.id, userId: currentUser.id, online }));
     setEnviando(false);
+    if (!enviado) return; // falhou: o aviso aparece e você continua na revisão
     haptic.success();
     toast.show(
       online
