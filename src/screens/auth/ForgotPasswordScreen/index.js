@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, TextInput, View } from 'react-native';
 import { colors } from '../../../theme';
 import { useApp } from '../../../store/AppContext';
+import useAcao from '../../../hooks/useAcao';
+import { env } from '../../../config/env';
 import { haptic } from '../../../utils/feedback';
 import { isEmail, mascararEmail } from '../../../utils/format';
 import { Banner, Button, Card, Icon, Screen, Txt } from '../../../components/ui';
@@ -11,19 +13,24 @@ import { PasswordField, TextField } from '../../../components/form';
 // Recuperação de acesso (RF-01): e-mail → código de uso único → nova senha.
 // O código é exibido na tela apenas porque o envio de e-mail é simulado no protótipo.
 export default function ForgotPasswordScreen({ navigation }) {
-  const { state, actions } = useApp();
+  const { actions } = useApp();
   const [passo, setPasso] = useState(1);
   const [email, setEmail] = useState('');
   const [erroEmail, setErroEmail] = useState('');
   const [codigo, setCodigo] = useState('');
-  const [codigoGerado, setCodigoGerado] = useState(null);
+  const [recuperacao, setRecuperacao] = useState(null);
+  const [verificacao, setVerificacao] = useState(null);
   const [erroCodigo, setErroCodigo] = useState('');
-  const [tentativas, setTentativas] = useState(0);
   const [espera, setEspera] = useState(0);
   const [senha, setSenha] = useState('');
   const [confirma, setConfirma] = useState('');
   const [erroSenha, setErroSenha] = useState('');
-  const usuarioRef = useRef(null);
+  const solicitar = useAcao(actions.solicitarRecuperacao);
+  const verificar = useAcao(actions.verificarCodigo);
+  const redefinir = useAcao(actions.redefinirSenha);
+  const carregando = solicitar.carregando || verificar.carregando || redefinir.carregando;
+  const codigoGerado = env.USE_MOCK && env.DEMO ? recuperacao?.codigoDemo : null;
+  const erroAcao = passo === 1 ? solicitar.erro : passo === 2 ? verificar.erro || solicitar.erro : redefinir.erro;
 
   useEffect(() => {
     if (espera <= 0) return undefined;
@@ -31,43 +38,37 @@ export default function ForgotPasswordScreen({ navigation }) {
     return () => clearTimeout(t);
   }, [espera]);
 
-  const gerarCodigo = () => String(Math.floor(100000 + Math.random() * 900000));
-
-  const enviarCodigo = () => {
+  const enviarCodigo = async () => {
+    if (carregando) return;
     const mail = email.trim().toLowerCase();
     if (!isEmail(mail)) return setErroEmail('Informe um e-mail válido.');
     setErroEmail('');
-    usuarioRef.current = state.users.find((u) => u.email.toLowerCase() === mail && u.ativo) || null;
-    setCodigoGerado(usuarioRef.current ? gerarCodigo() : null);
+    const resultado = await solicitar.executar({ email: mail });
+    if (!resultado) return;
+    setRecuperacao({ ...resultado, email: mail });
+    setVerificacao(null);
     setCodigo('');
     setErroCodigo('');
-    setTentativas(0);
     setEspera(30);
     setPasso(2);
   };
 
-  const reenviar = () => {
-    if (espera > 0) return;
-    if (usuarioRef.current) setCodigoGerado(gerarCodigo());
-    setCodigo('');
-    setErroCodigo('');
-    setEspera(30);
+  const reenviar = async () => {
+    if (espera > 0 || carregando) return;
+    await enviarCodigo();
   };
 
-  const conferirCodigo = () => {
+  const conferirCodigo = async () => {
+    if (carregando) return;
     if (codigo.length !== 6) return setErroCodigo('Digite os 6 dígitos do código.');
-    if (codigoGerado && codigo === codigoGerado) {
-      haptic.success();
-      setPasso(3);
-      return;
-    }
-    haptic.error();
-    const n = tentativas + 1;
-    setTentativas(n);
-    if (n >= 5) {
-      setPasso(1);
-      setErroEmail('Muitas tentativas incorretas. Solicite um novo código.');
-    } else setErroCodigo(`Código incorreto. Restam ${5 - n} tentativas.`);
+    const resultado = await verificar.executar({
+      solicitacaoId: recuperacao?.solicitacaoId,
+      email: recuperacao?.email,
+      codigo,
+    });
+    if (!resultado) return;
+    setVerificacao(resultado);
+    setPasso(3);
   };
 
   const regras = [
@@ -76,10 +77,20 @@ export default function ForgotPasswordScreen({ navigation }) {
     { ok: senha.length > 0 && senha === confirma, texto: 'As duas senhas coincidem' },
   ];
 
-  const salvarSenha = () => {
+  const salvarSenha = async () => {
+    if (carregando || !verificacao) return;
     if (!regras.every((r) => r.ok)) return setErroSenha('Confira os requisitos da senha abaixo.');
-    actions.alterarSenha({ userId: usuarioRef.current.id, senha });
+    const resultado = await redefinir.executar({
+      solicitacaoId: recuperacao?.solicitacaoId,
+      resetToken: verificacao.resetToken,
+      email: recuperacao?.email,
+      codigo,
+      senha,
+    });
+    if (!resultado) return;
     haptic.success();
+    setSenha('');
+    setConfirma('');
     setPasso(4);
   };
 
@@ -91,23 +102,37 @@ export default function ForgotPasswordScreen({ navigation }) {
       keyboard
       footer={
         passo === 1 ? (
-          <Button title="Enviar código" icon="email-fast-outline" onPress={enviarCodigo} size="lg" />
+          <Button
+            title="Enviar código"
+            icon="email-fast-outline"
+            onPress={enviarCodigo}
+            size="lg"
+            loading={solicitar.carregando}
+          />
         ) : passo === 2 ? (
           <Button
-            title="Confirmar código"
+            title={env.USE_MOCK ? 'Confirmar código' : 'Continuar'}
             icon="check"
             onPress={conferirCodigo}
             size="lg"
-            disabled={codigo.length !== 6}
+            disabled={codigo.length !== 6 || carregando}
+            loading={verificar.carregando}
           />
         ) : passo === 3 ? (
-          <Button title="Salvar nova senha" icon="lock-check-outline" onPress={salvarSenha} size="lg" />
+          <Button
+            title="Salvar nova senha"
+            icon="lock-check-outline"
+            onPress={salvarSenha}
+            size="lg"
+            loading={redefinir.carregando}
+          />
         ) : (
           <Button title="Voltar ao login" icon="login-variant" onPress={() => navigation.popToTop()} size="lg" />
         )
       }
       hideFooterOnKeyboard={false}
     >
+      {erroAcao ? <Banner tone="danger" message={erroAcao.mensagem} /> : null}
       {passo === 1 ? (
         <>
           <Txt v="body" muted>
@@ -125,6 +150,7 @@ export default function ForgotPasswordScreen({ navigation }) {
             error={erroEmail}
             returnKeyType="send"
             onSubmitEditing={enviarCodigo}
+            editable={!carregando}
           />
         </>
       ) : null}
@@ -132,8 +158,8 @@ export default function ForgotPasswordScreen({ navigation }) {
       {passo === 2 ? (
         <>
           <Txt v="body" muted>
-            Se o e-mail {mascararEmail(email.trim())} estiver cadastrado, enviamos um código de 6 dígitos válido por 10
-            minutos.
+            Se o e-mail {mascararEmail(recuperacao?.email || email.trim())} estiver cadastrado, enviaremos um código
+            para redefinir a senha.
           </Txt>
           {codigoGerado ? (
             <Card tone="gold" style={styles.simCard}>
@@ -155,12 +181,12 @@ export default function ForgotPasswordScreen({ navigation }) {
                 {codigoGerado}
               </Txt>
             </Card>
-          ) : (
+          ) : env.USE_MOCK && env.DEMO ? (
             <Banner
               tone="neutral"
               message="Modo demonstração: este e-mail não está cadastrado, então nenhum código foi gerado. Volte e tente master@planengen.com.br."
             />
-          )}
+          ) : null}
           <CodeInput
             value={codigo}
             onChange={(t) => {
@@ -168,14 +194,29 @@ export default function ForgotPasswordScreen({ navigation }) {
               setErroCodigo('');
             }}
             error={erroCodigo}
+            disabled={carregando}
           />
           <View style={styles.acoes}>
-            <Pressable onPress={reenviar} disabled={espera > 0} accessibilityRole="button" style={styles.linkAcao}>
+            <Pressable
+              onPress={reenviar}
+              disabled={espera > 0 || carregando}
+              accessibilityRole="button"
+              style={styles.linkAcao}
+            >
               <Txt v="smallStrong" color={espera > 0 ? colors.textSubtle : colors.blue500}>
                 {espera > 0 ? `Reenviar código em ${espera}s` : 'Reenviar código'}
               </Txt>
             </Pressable>
-            <Pressable onPress={() => setPasso(1)} accessibilityRole="button" style={styles.linkAcao}>
+            <Pressable
+              onPress={() => {
+                setPasso(1);
+                setRecuperacao(null);
+                setVerificacao(null);
+              }}
+              disabled={carregando}
+              accessibilityRole="button"
+              style={styles.linkAcao}
+            >
               <Txt v="smallStrong" color={colors.blue500}>
                 Usar outro e-mail
               </Txt>
@@ -187,8 +228,24 @@ export default function ForgotPasswordScreen({ navigation }) {
       {passo === 3 ? (
         <>
           <Txt v="body" muted>
-            Crie uma nova senha para {usuarioRef.current?.nome}.
+            Crie uma nova senha para {mascararEmail(recuperacao?.email || email)}.
           </Txt>
+          {!env.USE_MOCK ? (
+            <Banner tone="info" message="O código será verificado pelo servidor ao salvar a nova senha." />
+          ) : null}
+          <Pressable
+            onPress={() => {
+              setPasso(2);
+              setVerificacao(null);
+            }}
+            disabled={carregando}
+            accessibilityRole="button"
+            style={styles.linkAcao}
+          >
+            <Txt v="smallStrong" color={colors.blue500}>
+              Corrigir código
+            </Txt>
+          </Pressable>
           <PasswordField
             label="Nova senha"
             value={senha}
@@ -236,7 +293,7 @@ export default function ForgotPasswordScreen({ navigation }) {
             Senha redefinida
           </Txt>
           <Txt v="body" muted style={styles.centro}>
-            Sua nova senha já está valendo. Por segurança, todas as sessões anteriores foram encerradas (simulado).
+            Sua senha foi redefinida. Volte ao login e entre com a nova senha.
           </Txt>
         </View>
       ) : null}
@@ -245,7 +302,7 @@ export default function ForgotPasswordScreen({ navigation }) {
 }
 
 // Seis caixas visuais sobre um único TextInput (melhor para colar código e para leitores de tela).
-function CodeInput({ value, onChange, error }) {
+function CodeInput({ value, onChange, error, disabled }) {
   const ref = useRef(null);
   return (
     <View style={styles.codeWrap}>
@@ -262,6 +319,7 @@ function CodeInput({ value, onChange, error }) {
         onChangeText={(t) => onChange(t.replace(/\D/g, '').slice(0, 6))}
         keyboardType="number-pad"
         maxLength={6}
+        editable={!disabled}
         autoFocus
         accessibilityLabel="Código de 6 dígitos"
         textContentType="oneTimeCode"

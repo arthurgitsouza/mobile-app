@@ -12,19 +12,20 @@ import * as cadastros from './cadastros.js';
 import * as relatorios from './relatorios.js';
 import * as academico from './academico.js';
 
-const recursos = {
-  ...auth,
-  ...obras,
-  ...rdos,
-  ...fotos,
-  ...comentarios,
-  ...usuarios,
-  ...notificacoes,
-  ...assinaturas,
-  ...cadastros,
-  ...relatorios,
-  ...academico,
+export const modulosApi = {
+  auth,
+  obras,
+  rdos,
+  fotos,
+  comentarios,
+  usuarios,
+  notificacoes,
+  assinaturas,
+  cadastros,
+  relatorios,
+  academico,
 };
+export const recursos = Object.assign({}, ...Object.values(modulosApi));
 
 export function criarApi({ useMock = env.USE_MOCK, demo = env.DEMO, ...opcoes }) {
   return criarActions({ recursos, useMock, demo, ...opcoes });

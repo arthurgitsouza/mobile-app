@@ -42,7 +42,7 @@ export function criarActions({
 
   async function chamar(nome, args, itemId) {
     const inicio = geracao;
-    const resposta = await remoto(nome, args, { request, itemId });
+    const resposta = await remoto(nome, args, { request, itemId, getState });
     garantirSessao(inicio);
     if (!resposta || typeof resposta !== 'object')
       throw new ApiError({
@@ -65,9 +65,23 @@ export function criarActions({
         throw new ApiError({ codigo: 'RESPOSTA_INVALIDA', mensagem: 'O servidor não confirmou o envio do RDO.' });
       }
       let next = aplicarResposta(atual, resposta);
+      const fotosPendentes = posteriores.filter((x) => x.acao === 'enviarFoto' && x.args.rdoId === rdoId);
+      if (fotosPendentes.length) {
+        next.rdos = next.rdos.map((r) => {
+          if (r.id !== rdoId) return r;
+          const fotos = [...r.fotos];
+          for (const pendente of fotosPendentes) {
+            const foto = pendente.args.foto;
+            if (!fotos.some((f) => f.id === foto.id || f.idLocal === foto.id)) fotos.push(foto);
+          }
+          return { ...r, fotos };
+        });
+      }
       if (posteriores.some((x) => x.acao === 'salvarRdo' && x.args.rdo.id === rdoId)) {
         const rdo = atual.rdos.find((r) => r.id === rdoId);
-        next.rdos = next.rdos.map((r) => (r.id === rdoId ? rdo : r));
+        next.rdos = next.rdos.map((r) =>
+          r.id === rdoId ? { ...rdo, sync: { ...rdo.sync, atualizadoEmServidor: r.sync?.atualizadoEmServidor } } : r,
+        );
       }
       if (item.acao === 'enviarFoto') {
         next.rdos = next.rdos.map((r) =>
@@ -116,7 +130,13 @@ export function criarActions({
 
   async function executar(nome, args = {}) {
     if (!getState()) throw new ApiError({ codigo: 'CARREGANDO', mensagem: 'Aguarde o carregamento do aplicativo.' });
-    if (nome === 'sair') return encerrar();
+    if (nome === 'sair') {
+      const token = sessao?.getToken();
+      if (!useMock && request && token) {
+        remoto('sair', {}, { request, getState, token }).catch(() => {});
+      }
+      return encerrar();
+    }
     if (nome === 'resetarDemo' && (!useMock || !demo))
       throw new ApiError({ status: 403, mensagem: 'Demonstração desativada.' });
     if (nome === 'entrar' && args.userId && !useMock)
@@ -140,10 +160,7 @@ export function criarActions({
 
     if (nome === 'processarLembretes') return getState();
     if (nome === 'definirBiometria') return publicar(ACTIONS.definirBiometria(getState(), args));
-    if (
-      nome === 'atualizarConfiguracoes' &&
-      Object.keys(args.patch || {}).every((key) => ['forceOffline', 'inatividadeMin'].includes(key))
-    )
+    if (nome === 'atualizarConfiguracoes' && Object.keys(args.patch || {}).every((key) => key === 'forceOffline'))
       return publicar(ACTIONS.atualizarConfiguracoes(getState(), args));
 
     if (nome === 'sincronizarPendentes') return fila.processar();
@@ -233,6 +250,13 @@ export function criarActions({
           users: [...(dados.alteracoes?.users || []).filter((u) => u.id !== dados.usuario.id), dados.usuario],
         },
       });
+      const idsPendentes = new Set(
+        (getState().filaOffline || [])
+          .filter((item) => item.userId === dados.usuario.id)
+          .map((item) => item.args.rdoId || item.args.rdo?.id),
+      );
+      const rascunhos = getState().rdos.filter((r) => idsPendentes.has(r.id) && r.autorId === dados.usuario.id);
+      next.rdos = [...next.rdos.filter((r) => !rascunhos.some((local) => local.id === r.id)), ...rascunhos];
       return publicar({
         ...next,
         session: {
