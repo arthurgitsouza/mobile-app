@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../theme';
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   pos: {
     width: 34,
@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  cartao: { gap: 10 },
+  fill: { flex: 1 },
+  alinhaDireita: { alignItems: 'flex-end' },
 });
-
-export default styles;

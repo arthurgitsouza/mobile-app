@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import styles from './styles';
+import { styles } from './styles';
 
 import { colors } from '../../../theme';
 import { PERFIL } from '../../../constants';
@@ -49,7 +49,7 @@ export default function AcademicScreen({ navigation }) {
           <Card
             key={g.id}
             onPress={() => navigation.navigate('AcademicGroup', { grupoId: g.id })}
-            style={{ gap: 10 }}
+            style={styles.cartao}
             accessibilityLabel={`${g.nome}, média ${media ?? 'sem nota'}, ${avaliadas} de ${fases.length} avaliadas`}
           >
             <View style={styles.row}>
@@ -58,13 +58,13 @@ export default function AcademicScreen({ navigation }) {
                   {i + 1}º
                 </Txt>
               </View>
-              <View style={{ flex: 1 }}>
+              <View style={styles.fill}>
                 <Txt v="bodyStrong">{g.nome}</Txt>
                 <Txt v="caption" muted numberOfLines={1}>
                   {g.integrantes.join(' · ')}
                 </Txt>
               </View>
-              <View style={{ alignItems: 'flex-end' }}>
+              <View style={styles.alinhaDireita}>
                 <Txt v="h2">{media != null ? formatNumber(media, 1) : '—'}</Txt>
                 <Txt v="caption" muted>
                   média
@@ -76,7 +76,7 @@ export default function AcademicScreen({ navigation }) {
               label={`${avaliadas} de ${fases.length} entregas avaliadas`}
             />
             <View style={styles.row}>
-              <Txt v="caption" muted style={{ flex: 1 }}>
+              <Txt v="caption" muted style={styles.fill}>
                 {avaliadas} de {fases.length} avaliadas
               </Txt>
               {emAval ? (
@@ -95,10 +95,10 @@ export default function AcademicScreen({ navigation }) {
       })}
 
       <SectionTitle>Critérios de avaliação (peso)</SectionTitle>
-      <Card style={{ gap: 10 }}>
+      <Card style={styles.cartao}>
         {criterios.map((c) => (
           <View key={c.id} style={styles.row}>
-            <Txt v="small" style={{ flex: 1 }}>
+            <Txt v="small" style={styles.fill}>
               {c.nome}
             </Txt>
             <Badge label={`${c.peso}%`} color={colors.navy700} bg={colors.blue100} size="sm" />
