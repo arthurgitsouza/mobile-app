@@ -1,9 +1,9 @@
-import { styles } from './styles';
+import { styles, dinamico } from './styles';
 import React, { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors, radius } from '../../../theme';
+import { colors } from '../../../theme';
 import { PERFIS } from '../../../constants';
 import { useApp } from '../../../store/AppContext';
 import { autenticarBiometria, biometriaDisponivel } from '../../../services/biometrics';
@@ -120,17 +120,17 @@ export default function LoginScreen({ navigation }) {
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'padding'} style={styles.root}>
       <StatusBar style="light" />
       <ScrollView
-        contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
+        contentContainerStyle={dinamico.scrollConteudo(insets.bottom)}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
       >
-        <View style={[styles.hero, { paddingTop: insets.top + 28 }]}>
+        <View style={[styles.hero, dinamico.hero(insets.top)]}>
           <BrandMark size={72} />
-          <Txt v="display" color={colors.white} style={{ marginTop: 14 }} accessibilityRole="header">
+          <Txt v="display" color={colors.white} style={styles.titulo} accessibilityRole="header">
             RDO Mobile
           </Txt>
-          <Txt v="body" color={colors.textOnDarkMuted} style={{ textAlign: 'center', maxWidth: 320 }}>
+          <Txt v="body" color={colors.textOnDarkMuted} style={styles.titulo}>
             Registro Diário de Obra: do canteiro à assinatura, com histórico verificável.
           </Txt>
           <View style={styles.proto}>
@@ -185,7 +185,7 @@ export default function LoginScreen({ navigation }) {
               onSubmitEditing={entrarComSenha}
             />
             <View style={styles.rowBetween}>
-              <View style={{ flex: 1 }}>
+              <View style={styles.fill}>
                 <CheckboxField plain label="Manter conectado" value={manter} onValueChange={setManter} />
               </View>
               <LinkButton title="Esqueci a senha" onPress={() => navigation.navigate('ForgotPassword')} />
@@ -208,7 +208,7 @@ export default function LoginScreen({ navigation }) {
             ) : null}
           </Card>
 
-          <View style={{ gap: 10 }}>
+          <View style={styles.demo}>
             <View style={styles.demoHeader}>
               <Icon name="flash-outline" size={18} color={colors.navy600} />
               <Txt v="label" color={colors.navy600} accessibilityRole="header">
@@ -226,7 +226,7 @@ export default function LoginScreen({ navigation }) {
                   style={styles.quick}
                 >
                   <Avatar nome={u.nome} size={44} />
-                  <View style={{ flex: 1, gap: 1 }}>
+                  <View style={styles.quickInfo}>
                     <Txt v="bodyStrong">{PERFIS[r.perfil].longo}</Txt>
                     <Txt v="small" muted>
                       {u.nome} · {r.detalhe}
@@ -236,7 +236,7 @@ export default function LoginScreen({ navigation }) {
                 </Card>
               );
             })}
-            <Txt v="caption" muted style={{ textAlign: 'center' }}>
+            <Txt v="caption" muted style={styles.centro}>
               Senha de todos os usuários de demonstração: 123456
             </Txt>
           </View>
