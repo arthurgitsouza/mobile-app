@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useApp } from '../store/AppContext';
 import { useUI } from '../components/ui';
@@ -7,13 +7,21 @@ import { podeEditarOperacional } from '../domain/workflow';
 import { formatDate, hojeObra } from '../utils/date';
 import { numeroRdo } from '../utils/format';
 import { statusMeta } from '../theme';
+import useAcao from './useAcao';
 
-// Cria um novo RDO (rascunho) para obra/data/turno: alerta duplicidade e oferece reaproveitar o dia anterior.
 export default function useCriarRdo() {
   const nav = useNavigation();
   const { getState, actions, currentUser } = useApp();
   const { confirm, notice } = useUI();
   const criando = useRef(false);
+  const erroMostrado = useRef(null);
+  const { executar, erro } = useAcao(actions.criarRdo);
+
+  useEffect(() => {
+    if (!erro || erroMostrado.current === erro) return;
+    erroMostrado.current = erro;
+    notice({ title: 'Não foi possível criar o RDO', message: erro.mensagem });
+  }, [erro, notice]);
 
   return useCallback(
     async (obra, data = hojeObra(), turno = 'diurno') => {
@@ -41,7 +49,6 @@ export default function useCriarRdo() {
         }
 
         let reaproveitarDe;
-        // Prefere o último RDO já enviado (completo); só usa rascunho se não houver outro.
         const candidatos = rdosAtivos(state.rdos)
           .filter((r) => r.obraId === obra.id && r.data < data)
           .sort((a, b) => (a.data < b.data ? 1 : -1));
@@ -56,13 +63,9 @@ export default function useCriarRdo() {
           });
           if (reusar) reaproveitarDe = anterior.id;
         }
-        let atualizado;
-        try {
-          atualizado = await actions.criarRdo({ obraId: obra.id, data, turno, reaproveitarDe });
-        } catch (erro) {
-          await notice({ title: 'Não foi possível criar o RDO', message: erro.mensagem || erro.message });
-          return null;
-        }
+
+        const atualizado = await executar({ obraId: obra.id, data, turno, reaproveitarDe });
+        if (!atualizado) return null;
         const rdo = atualizado.rdos.find(
           (r) => r.obraId === obra.id && !state.rdos.some((antigo) => antigo.id === r.id),
         );
@@ -73,6 +76,6 @@ export default function useCriarRdo() {
         criando.current = false;
       }
     },
-    [nav, getState, actions, currentUser, confirm, notice],
+    [nav, getState, executar, currentUser, confirm],
   );
 }

@@ -1,6 +1,6 @@
 import { styles } from './styles';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { colors } from '../../../theme';
 import { PERFIS } from '../../../constants';
 import { useApp } from '../../../store/AppContext';
@@ -85,14 +85,14 @@ export default function DemoGuideScreen() {
       {PASSOS.map((p) => {
         const u = state.users.find((x) => x.id === p.userId);
         return (
-          <Card key={p.n} style={{ gap: 10 }}>
+          <Card key={p.n} style={styles.passoCard}>
             <View style={styles.head}>
               <View style={styles.num}>
                 <Txt v="bodyStrong" color={colors.white}>
                   {p.n}
                 </Txt>
               </View>
-              <View style={{ flex: 1, gap: 4 }}>
+              <View style={styles.passoInfo}>
                 <Txt v="bodyStrong">{p.titulo}</Txt>
                 <Badge
                   label={PERFIS[p.perfil].longo}

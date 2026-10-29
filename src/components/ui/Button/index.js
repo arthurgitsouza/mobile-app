@@ -1,25 +1,7 @@
-import { styles } from './styles';
 import React from 'react';
 import { ActivityIndicator, Pressable, Text } from 'react-native';
-import { colors } from '../../../theme';
-import Icon from '.././Icon';
-
-const VARIANTS = {
-  primary: { bg: colors.navy700, text: colors.white, border: colors.navy700 },
-  accent: { bg: colors.gold500, text: colors.navy900, border: colors.gold500 },
-  secondary: { bg: colors.white, text: colors.navy700, border: colors.navy700 },
-  tonal: { bg: colors.blue100, text: colors.navy700, border: colors.blue100 },
-  ghost: { bg: 'transparent', text: colors.navy600, border: 'transparent' },
-  danger: { bg: colors.white, text: colors.danger, border: colors.danger },
-  dangerSolid: { bg: colors.danger, text: colors.white, border: colors.danger },
-  onDark: { bg: 'rgba(255,255,255,0.14)', text: colors.white, border: 'rgba(255,255,255,0.35)' },
-};
-
-const SIZES = {
-  sm: { height: 40, px: 14, font: 14, icon: 18 },
-  md: { height: 50, px: 18, font: 16, icon: 20 },
-  lg: { height: 56, px: 22, font: 17, icon: 22 },
-};
+import { styles, dinamico, VARIANTS, SIZES } from './styles';
+import Icon from '../Icon';
 
 export default function Button({
   title,
@@ -47,7 +29,7 @@ export default function Button({
       accessibilityState={{ disabled: !!inactive, busy: !!loading }}
       style={({ pressed }) => [
         styles.base,
-        { height: s.height, paddingHorizontal: s.px, backgroundColor: v.bg, borderColor: v.border },
+        dinamico.base(s, v),
         full ? styles.full : styles.auto,
         inactive && styles.disabled,
         pressed && !inactive && styles.pressed,
@@ -59,7 +41,7 @@ export default function Button({
       ) : (
         <>
           {icon ? <Icon name={icon} size={s.icon} color={v.text} /> : null}
-          <Text style={[styles.text, { color: v.text, fontSize: s.font }]} numberOfLines={1}>
+          <Text style={[styles.text, dinamico.texto(s, v)]} numberOfLines={1}>
             {title}
           </Text>
           {iconRight ? <Icon name={iconRight} size={s.icon} color={v.text} /> : null}
