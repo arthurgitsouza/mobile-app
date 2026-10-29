@@ -1,0 +1,20 @@
+{
+  "name": "rdo-mobile-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "API do RDO Mobile (rotas do docs/api.md) sobre o Supabase.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch --env-file-if-exists=.env src/index.js",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.118.0",
+    "express": "^5.3.0"
+  }
+}

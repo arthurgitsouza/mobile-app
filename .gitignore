@@ -42,3 +42,7 @@ yarn-error.*
 .claude
 claude.md
 agents.md
+
+# chaves do back-end (Supabase): nunca no GitHub
+.env
+server/.env
