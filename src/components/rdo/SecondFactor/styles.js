@@ -16,4 +16,8 @@ export const styles = StyleSheet.create({
     color: colors.text,
     backgroundColor: colors.white,
   },
+  ocupa: { flex: 1 },
+  cartao: { gap: 12 },
+  cartaoCodigo: { gap: 4 },
+  codigo: { letterSpacing: 6 },
 });

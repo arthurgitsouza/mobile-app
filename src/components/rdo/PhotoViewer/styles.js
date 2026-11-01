@@ -6,4 +6,9 @@ export const styles = StyleSheet.create({
   bar: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16 },
   nav: { flexDirection: 'row', justifyContent: 'space-between' },
   card: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: 16, gap: 10 },
+  ocupa: { flex: 1 },
+  conteudo: { padding: 16, gap: 14 },
+  imagem: { alignItems: 'center' },
+  etiquetas: { flexDirection: 'row', gap: 6, flexWrap: 'wrap' },
+  acoes: { flexDirection: 'row', gap: 10, marginTop: 4 },
 });

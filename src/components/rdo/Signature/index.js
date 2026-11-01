@@ -114,7 +114,7 @@ export default function SignaturePad({ value, onChange, height = 190, onDrawingC
   const todos = atual ? [...tracos, atual] : tracos;
 
   return (
-    <View style={{ gap: 8 }}>
+    <View style={styles.raiz}>
       <View
         style={[styles.pad, { height }, disabled && { opacity: 0.5 }]}
         onLayout={(e) => setDim({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}
@@ -166,7 +166,7 @@ export default function SignaturePad({ value, onChange, height = 190, onDrawingC
         </View>
       </View>
       <View style={styles.actions}>
-        <Txt v="caption" muted style={{ flex: 1 }}>
+        <Txt v="caption" muted style={styles.ocupa}>
           {vazio ? 'Nenhum traço' : `${tracos.length} ${tracos.length === 1 ? 'traço' : 'traços'}`}
         </Txt>
         <ActionLink icon="undo" label="Desfazer" onPress={desfazer} disabled={vazio} />

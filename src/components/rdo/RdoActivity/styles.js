@@ -34,4 +34,7 @@ export const styles = StyleSheet.create({
   },
   trilho: { flex: 1, width: 2, backgroundColor: colors.border, marginTop: 2 },
   diff: { backgroundColor: colors.gold50, borderRadius: 8, padding: 8, gap: 2, marginTop: 4 },
+  ocupa: { flex: 1 },
+  destaque: { fontWeight: '800' },
+  corpo: { flex: 1, paddingBottom: 14, gap: 2 },
 });
