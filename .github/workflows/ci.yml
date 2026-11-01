@@ -16,10 +16,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm install --no-audit --no-fund
+        working-directory: server
       - run: npm test
       - run: npm run check:estilos
       - run: npm run lint
-      - run: npm install --no-audit --no-fund
-        working-directory: server
       - run: npm test
         working-directory: server
