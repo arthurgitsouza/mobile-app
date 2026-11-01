@@ -38,6 +38,7 @@
     "web": "expo start --web",
     "test": "node --test tests/*.test.js",
     "lint": "eslint .",
+    "check:estilos": "node --no-warnings scripts/check-estilos.js",
     "format": "prettier --write ."
   },
   "engines": {
