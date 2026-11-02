@@ -10,4 +10,5 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: radius.md,
   },
+  ocupa: { flex: 1 },
 });

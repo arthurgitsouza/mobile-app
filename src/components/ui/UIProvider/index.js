@@ -1,4 +1,4 @@
-import { styles } from './styles';
+import { styles, dinamico } from './styles';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, KeyboardAvoidingView, Modal, Pressable, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -51,7 +51,7 @@ export function UIProvider({ children }) {
 
   return (
     <UIContext.Provider value={value}>
-      <View style={{ flex: 1 }}>
+      <View style={styles.ocupa}>
         {children}
         <ToastView toast={toast} anim={anim} onClose={hideToast} />
         <DialogHost
@@ -98,14 +98,14 @@ function ToastView({ toast, anim, onClose }) {
         style={[styles.toast, shadows.raised, { backgroundColor: tone.bg }]}
       >
         <Icon name={toast.icon || tone.icon} size={22} color={colors.white} />
-        <View style={{ flex: 1, gap: 1 }}>
+        <View style={styles.toastTexto}>
           {toast.title ? (
             <Txt v="smallStrong" color={colors.white} numberOfLines={2}>
               {toast.title}
             </Txt>
           ) : null}
           {toast.message ? (
-            <Txt v="small" color={colors.textOnDarkMuted} numberOfLines={3} style={{ color: 'rgba(255,255,255,0.92)' }}>
+            <Txt v="small" color={colors.textOnDarkMuted} numberOfLines={3} style={styles.toastMensagem}>
               {toast.message}
             </Txt>
           ) : null}
@@ -161,17 +161,17 @@ function DialogHost({ dialog, close }) {
               />
             </View>
           ) : null}
-          <Txt v="h3" style={{ textAlign: opts.icon || destructive ? 'center' : 'left' }} accessibilityRole="header">
+          <Txt v="h3" style={dinamico.alinhar(opts.icon || destructive)} accessibilityRole="header">
             {opts.title}
           </Txt>
           {opts.message ? (
-            <Txt v="body" muted style={{ textAlign: opts.icon || destructive ? 'center' : 'left' }}>
+            <Txt v="body" muted style={dinamico.alinhar(opts.icon || destructive)}>
               {opts.message}
             </Txt>
           ) : null}
 
           {kind === 'prompt' ? (
-            <View style={{ gap: 6 }}>
+            <View style={styles.campo}>
               <TextInput
                 value={text}
                 onChangeText={(t) => {

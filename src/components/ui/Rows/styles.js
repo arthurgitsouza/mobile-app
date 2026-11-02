@@ -15,4 +15,6 @@ export const styles = StyleSheet.create({
   kvInline: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, justifyContent: 'space-between' },
   sectionTitle: { flexDirection: 'row', alignItems: 'center', marginTop: 8, marginBottom: 2, gap: 8 },
   link: { flexDirection: 'row', alignItems: 'center', gap: 4, minHeight: 32, alignSelf: 'flex-start' },
+  textos: { flex: 1, gap: 2 },
+  ocupa: { flex: 1 },
 });

@@ -12,11 +12,11 @@ export function EmptyState({ icon = 'clipboard-text-outline', title, message, ac
       <View style={styles.emptyIcon}>
         <Icon name={icon} size={30} color={colors.navy600} />
       </View>
-      <Txt v="h3" style={{ textAlign: 'center' }}>
+      <Txt v="h3" style={styles.centralizado}>
         {title}
       </Txt>
       {message ? (
-        <Txt v="small" muted style={{ textAlign: 'center', maxWidth: 300 }}>
+        <Txt v="small" muted style={styles.mensagemVazia}>
           {message}
         </Txt>
       ) : null}
@@ -27,7 +27,7 @@ export function EmptyState({ icon = 'clipboard-text-outline', title, message, ac
           full={false}
           size="sm"
           variant="tonal"
-          style={{ marginTop: 6 }}
+          style={styles.acaoVazia}
         />
       ) : null}
     </View>
@@ -48,8 +48,8 @@ export function Banner({ tone = 'info', title, message, icon, actionLabel, onAct
   const t = TONES[tone];
   return (
     <View style={[styles.banner, { backgroundColor: t.bg }, style]} accessibilityRole="alert">
-      <Icon name={icon || t.icon} size={20} color={t.fg} style={{ marginTop: 1 }} />
-      <View style={{ flex: 1, gap: 2 }}>
+      <Icon name={icon || t.icon} size={20} color={t.fg} style={styles.bannerIcone} />
+      <View style={styles.bannerTexto}>
         {title ? (
           <Txt v="smallStrong" color={t.fg}>
             {title}
@@ -69,7 +69,7 @@ export function Banner({ tone = 'info', title, message, icon, actionLabel, onAct
             style={styles.bannerAction}
             hitSlop={8}
           >
-            <Txt v="smallStrong" color={t.fg} style={{ textDecorationLine: 'underline' }}>
+            <Txt v="smallStrong" color={t.fg} style={styles.sublinhado}>
               {actionLabel}
             </Txt>
           </Pressable>
