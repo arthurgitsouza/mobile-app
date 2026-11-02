@@ -15,4 +15,6 @@ export const styles = StyleSheet.create({
   },
   plain: { flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 44 },
   on: { borderColor: colors.navy600, backgroundColor: colors.blue50 },
+  textos: { flex: 1, gap: 2 },
+  erro: { marginTop: 4 },
 });

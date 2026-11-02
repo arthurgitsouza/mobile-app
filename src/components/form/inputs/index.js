@@ -132,7 +132,7 @@ export function PasswordField({ label = 'Senha', ...props }) {
           accessibilityRole="button"
           accessibilityLabel={visible ? 'Ocultar senha' : 'Mostrar senha'}
           hitSlop={8}
-          style={{ flexDirection: 'row', alignItems: 'center', gap: 4, minHeight: 32 }}
+          style={styles.acaoLinha}
         >
           <Icon name={visible ? 'eye-off-outline' : 'eye-outline'} size={18} color={colors.blue500} />
           <Txt v="smallStrong" color={colors.blue500}>

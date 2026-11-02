@@ -10,7 +10,7 @@ export default function Field({ label, required, help, error, right, children, s
     <View style={[styles.field, style]}>
       {label ? (
         <View style={styles.labelRow}>
-          <Txt v="smallStrong" style={{ flex: 1 }}>
+          <Txt v="smallStrong" style={styles.ocupa}>
             {label}
             {required ? (
               <Txt v="smallStrong" color={colors.danger}>
@@ -30,7 +30,7 @@ export default function Field({ label, required, help, error, right, children, s
       {error ? (
         <View style={styles.errorRow} accessibilityRole="alert">
           <Icon name="alert-circle-outline" size={15} color={colors.danger} />
-          <Txt v="caption" color={colors.danger} style={{ flex: 1 }}>
+          <Txt v="caption" color={colors.danger} style={styles.ocupa}>
             {error}
           </Txt>
         </View>
