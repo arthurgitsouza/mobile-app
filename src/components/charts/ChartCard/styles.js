@@ -14,4 +14,5 @@ export const styles = StyleSheet.create({
     borderBottomColor: colors.divider,
   },
   num: { width: 76, textAlign: 'right' },
+  titulos: { gap: 2 },
 });

@@ -47,7 +47,7 @@ export function StatTile({ label, value, unit, icon, delta, onPress, sparkline, 
             <Icon name={icon} size={18} color={colors.navy600} />
           </View>
         ) : null}
-        <Txt v="small" muted style={{ flex: 1 }} numberOfLines={2}>
+        <Txt v="small" muted style={styles.ocupa} numberOfLines={2}>
           {label}
         </Txt>
       </View>
@@ -56,12 +56,12 @@ export function StatTile({ label, value, unit, icon, delta, onPress, sparkline, 
           {value}
         </Txt>
         {unit ? (
-          <Txt v="smallStrong" muted style={{ marginBottom: 4 }}>
+          <Txt v="smallStrong" muted style={styles.sufixo}>
             {unit}
           </Txt>
         ) : null}
         {sparkline ? (
-          <View style={{ marginLeft: 'auto' }}>
+          <View style={styles.aDireita}>
             <Sparkline data={sparkline} />
           </View>
         ) : null}
@@ -76,7 +76,7 @@ export function StatTile({ label, value, unit, icon, delta, onPress, sparkline, 
           <Txt
             v="caption"
             color={delta.bom == null ? colors.textMuted : delta.bom ? chart.deltaGood : chart.deltaBad}
-            style={{ fontWeight: '800' }}
+            style={styles.negrito}
           >
             {delta.valor}
           </Txt>

@@ -1,3 +1,4 @@
+import { dinamico } from './styles';
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import Svg, { Circle, Line, Path } from 'react-native-svg';
@@ -66,29 +67,17 @@ export default function LineChart({
       {largura > 0 ? (
         <>
           {[max, max / 2, 0].map((t, i) => (
-            <Txt
-              key={i}
-              v="caption"
-              muted
-              style={{
-                position: 'absolute',
-                left: 0,
-                width: padE - 6,
-                textAlign: 'right',
-                top: padT + h - (t / max) * h - 7,
-                fontSize: 10,
-              }}
-            >
+            <Txt key={i} v="caption" muted style={dinamico.rotuloY(padE - 6, padT + h - (t / max) * h - 7)}>
               {formatar(t)}
             </Txt>
           ))}
-          <Txt v="caption" muted style={{ position: 'absolute', left: padE, top: altura - 16, fontSize: 10 }}>
+          <Txt v="caption" muted style={dinamico.rotuloEsquerda(padE, altura - 16)}>
             {pontos[0].rotulo}
           </Txt>
-          <Txt v="caption" muted style={{ position: 'absolute', right: padD, top: altura - 16, fontSize: 10 }}>
+          <Txt v="caption" muted style={dinamico.rotuloDireita(padD, altura - 16)}>
             {ultimo.rotulo}
           </Txt>
-          <Txt v="smallStrong" style={{ position: 'absolute', right: padD, top: Math.max(0, y(ultimo.valor) - 26) }}>
+          <Txt v="smallStrong" style={dinamico.valorFinal(padD, Math.max(0, y(ultimo.valor) - 26))}>
             {formatar(ultimo.valor)} {unidade}
           </Txt>
         </>
