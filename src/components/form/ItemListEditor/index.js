@@ -82,7 +82,7 @@ export default function ItemListEditor({
   const podeAdicionar = !max || items.length < max;
 
   return (
-    <View style={{ gap: 10 }}>
+    <View style={styles.lista}>
       {semRegistro ? (
         <SwitchField
           label={semRegistro.label}
@@ -112,7 +112,7 @@ export default function ItemListEditor({
                       <Icon name={r.icone} size={22} color={colors.navy600} />
                     </View>
                   ) : null}
-                  <View style={{ flex: 1, gap: 3 }}>
+                  <View style={styles.textos}>
                     <Txt v="bodyStrong" numberOfLines={2}>
                       {r.titulo}
                     </Txt>
@@ -131,7 +131,7 @@ export default function ItemListEditor({
                     {r.alerta ? (
                       <View style={styles.alert}>
                         <Icon name="alert-circle-outline" size={14} color={colors.warning} />
-                        <Txt v="caption" color={colors.warning} style={{ flex: 1 }}>
+                        <Txt v="caption" color={colors.warning} style={styles.ocupa}>
                           {r.alerta}
                         </Txt>
                       </View>
@@ -161,7 +161,7 @@ export default function ItemListEditor({
           {erros.lista ? (
             <View style={styles.alert}>
               <Icon name="alert-circle-outline" size={15} color={colors.danger} />
-              <Txt v="caption" color={colors.danger} style={{ flex: 1 }}>
+              <Txt v="caption" color={colors.danger} style={styles.ocupa}>
                 {erros.lista}
               </Txt>
             </View>
@@ -176,10 +176,15 @@ export default function ItemListEditor({
         title={edit ? `${edit.novo ? 'Novo' : 'Editar'} ${tituloItem.toLowerCase()}` : ''}
         fullHeight
         footer={
-          <View style={{ gap: 8 }}>
-            <View style={{ flexDirection: 'row', gap: 10 }}>
-              <Button title="Cancelar" variant="secondary" onPress={() => setEdit(null)} style={{ flex: 1 }} />
-              <Button title={edit?.novo ? 'Adicionar' : 'Salvar'} icon="check" onPress={salvar} style={{ flex: 1.3 }} />
+          <View style={styles.edicao}>
+            <View style={styles.botoes}>
+              <Button title="Cancelar" variant="secondary" onPress={() => setEdit(null)} style={styles.ocupa} />
+              <Button
+                title={edit?.novo ? 'Adicionar' : 'Salvar'}
+                icon="check"
+                onPress={salvar}
+                style={styles.botaoPrincipal}
+              />
             </View>
             {edit && !edit.novo ? (
               <Button

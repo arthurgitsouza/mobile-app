@@ -1,4 +1,4 @@
-import { styles } from './styles';
+import { styles, dinamico } from './styles';
 import React from 'react';
 import { View } from 'react-native';
 import { isFilled } from '../../../utils/format';
@@ -135,7 +135,7 @@ export default function SchemaForm({ fields, values, onChange, errors = {}, ctx 
     } else blocos.push([f]);
   }
   return (
-    <View style={{ gap }}>
+    <View style={dinamico.coluna(gap)}>
       {blocos.map((b) =>
         b.length === 2 ? (
           <View key={b[0].key} style={styles.pair}>

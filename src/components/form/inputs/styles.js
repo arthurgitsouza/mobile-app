@@ -32,4 +32,5 @@ export const styles = StyleSheet.create({
   searchLight: { backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.borderStrong },
   searchDark: { backgroundColor: 'rgba(255,255,255,0.14)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.28)' },
   searchInput: { flex: 1, fontSize: 15, paddingVertical: 0 },
+  acaoLinha: { flexDirection: 'row', alignItems: 'center', gap: 4, minHeight: 32 },
 });

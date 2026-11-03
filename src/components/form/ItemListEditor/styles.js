@@ -15,4 +15,10 @@ export const styles = StyleSheet.create({
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 2 },
   alert: { flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 2 },
   del: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
+  lista: { gap: 10 },
+  textos: { flex: 1, gap: 3 },
+  ocupa: { flex: 1 },
+  edicao: { gap: 8 },
+  botoes: { flexDirection: 'row', gap: 10 },
+  botaoPrincipal: { flex: 1.3 },
 });
