@@ -7,7 +7,7 @@ import { normalizar, toNumber } from '../../../utils/format';
 import { BottomSheet, Chip, Icon, Txt } from '../../ui';
 import CalendarMonth from '../../ui/CalendarMonth';
 import Field from '.././Field';
-import { inputStyles } from '.././inputs';
+import { inputStyles } from '../inputs/styles';
 
 const normalizeOptions = (options = []) => options.map((o) => (typeof o === 'string' ? { value: o, label: o } : o));
 

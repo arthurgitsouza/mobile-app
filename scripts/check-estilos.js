@@ -17,7 +17,6 @@ const PENDENTES = [
   'src/components/form',
   'src/components/charts',
   'src/components/rdo',
-  'src/screens/obras',
   'src/screens/rdo',
   'src/screens/reports',
 ];
