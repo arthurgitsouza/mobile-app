@@ -1,15 +1,15 @@
 import React, { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { chart, colors, statusMeta } from '../../theme';
-import { PERFIL, STATUS_ORDEM } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { calcularIndicadores, formatarHorasMin, intervaloPeriodo } from '../../domain/reports';
-import { csvAtividades, csvMaoDeObra, csvRdos } from '../../domain/exportacao';
-import { numeroFormatado } from '../../domain/rdo';
-import { compartilharCsv } from '../../services/arquivos';
-import { formatDateShort, hojeObra, nomeDiaCurto } from '../../utils/date';
-import { formatNumber, formatQuantidade } from '../../utils/format';
-import { haptic } from '../../utils/feedback';
+import { ScrollView, View } from 'react-native';
+import { chart, colors, statusMeta } from '../../../theme';
+import { PERFIL, STATUS_ORDEM } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { calcularIndicadores, formatarHorasMin, intervaloPeriodo } from '../../../domain/reports';
+import { csvAtividades, csvMaoDeObra, csvRdos } from '../../../domain/exportacao';
+import { numeroFormatado } from '../../../domain/rdo';
+import { compartilharCsv } from '../../../services/arquivos';
+import { formatDateShort, hojeObra, nomeDiaCurto } from '../../../utils/date';
+import { formatNumber, formatQuantidade } from '../../../utils/format';
+import { haptic } from '../../../utils/feedback';
 import {
   Badge,
   Banner,
@@ -24,13 +24,14 @@ import {
   SectionTitle,
   Txt,
   useUI,
-} from '../../components/ui';
-import { StatTile } from '../../components/charts/StatTile';
-import ChartCard, { TabelaDados } from '../../components/charts/ChartCard';
-import BarList from '../../components/charts/BarList';
-import ColumnChart from '../../components/charts/ColumnChart';
-import LineChart from '../../components/charts/LineChart';
-import { Grade } from '../home/Shared';
+} from '../../../components/ui';
+import { StatTile } from '../../../components/charts/StatTile';
+import ChartCard, { TabelaDados } from '../../../components/charts/ChartCard';
+import BarList from '../../../components/charts/BarList';
+import ColumnChart from '../../../components/charts/ColumnChart';
+import LineChart from '../../../components/charts/LineChart';
+import { Grade } from '../../home/Shared';
+import { styles, dinamico } from './styles';
 
 const PERIODOS = [
   { value: '7', label: '7 dias' },
@@ -38,13 +39,6 @@ const PERIODOS = [
   { value: '90', label: '90 dias' },
   { value: 'todos', label: 'Tudo' },
 ];
-const COR_STATUS_CRIT = {
-  baixa: chart.status.good,
-  media: chart.status.warning,
-  alta: chart.status.serious,
-  critica: chart.status.critical,
-};
-
 // Relatórios e indicadores (seção 14): forma escolhida pela função de cada dado, cor pela regra da paleta validada.
 export default function ReportsScreen({ navigation }) {
   const { state, actions, currentUser } = useApp();
@@ -150,12 +144,12 @@ export default function ReportsScreen({ navigation }) {
 
   return (
     <Screen title="Relatórios e indicadores" subtitle={`${ind.totalRdos} RDOs no período`} back>
-      <View style={{ gap: 10 }}>
+      <View style={styles.gap10}>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ gap: 8, paddingRight: 16 }}
-          style={{ flexGrow: 0 }}
+          contentContainerStyle={styles.gap8PaddingRight16}
+          style={styles.flexGrow0}
         >
           <Chip label="Todas as obras" selected={!obraId} onPress={() => setObraId('')} />
           {state.obras.map((o) => (
@@ -182,9 +176,9 @@ export default function ReportsScreen({ navigation }) {
 
       {/* 1 · RDOs — KPIs */}
       <SectionTitle>RDOs no período</SectionTitle>
-      <Card style={{ gap: 8 }}>
+      <Card style={styles.gap8}>
         <View style={styles.row}>
-          <Txt v="bodyStrong" style={{ flex: 1 }}>
+          <Txt v="bodyStrong" style={styles.flex1}>
             Preenchimento: {c.preenchidos} de {c.previstos} previstos
           </Txt>
           <Txt v="h3">{pctPreench}%</Txt>
@@ -329,7 +323,7 @@ export default function ReportsScreen({ navigation }) {
       <SectionTitle>Quantidades executadas por serviço (EAP)</SectionTitle>
       {ind.servicos.length ? (
         <>
-          <Card style={{ gap: 8 }}>
+          <Card style={styles.gap8}>
             <Txt v="h3">Total executado no período</Txt>
             <Txt v="small" muted>
               Serviços têm unidades diferentes (m², m³, kg): por isso a leitura é em tabela, não em barras comparáveis.
@@ -346,8 +340,8 @@ export default function ReportsScreen({ navigation }) {
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ gap: 8 }}
-              style={{ flexGrow: 0 }}
+              contentContainerStyle={styles.gap8}
+              style={styles.flexGrow0}
             >
               {ind.servicos.slice(0, 6).map((s) => (
                 <Chip
@@ -414,27 +408,18 @@ export default function ReportsScreen({ navigation }) {
           linhas: ind.ocorrencias.pendenciasPorCriticidade.map((p) => [p.nivel, String(p.n)]),
         }}
       >
-        <View style={{ gap: 10 }}>
+        <View style={styles.gap10}>
           {ind.ocorrencias.pendenciasPorCriticidade.map((p) => {
             const max = Math.max(1, ...ind.ocorrencias.pendenciasPorCriticidade.map((x) => x.n));
             return (
               <View key={p.nivel} style={styles.row} accessible accessibilityLabel={`${p.nivel}: ${p.n} pendências`}>
-                <View style={{ width: 96 }}>
+                <View style={styles.width96}>
                   <CriticidadeBadge nivel={p.nivel} size="sm" />
                 </View>
-                <View style={{ flex: 1, height: 16, justifyContent: 'center' }}>
-                  <View
-                    style={{
-                      width: `${(p.n / max) * 100}%`,
-                      minWidth: p.n ? 4 : 0,
-                      height: 16,
-                      backgroundColor: COR_STATUS_CRIT[p.nivel],
-                      borderTopRightRadius: 4,
-                      borderBottomRightRadius: 4,
-                    }}
-                  />
+                <View style={styles.flex1Height16}>
+                  <View style={dinamico.barraNivel(p, max)} />
                 </View>
-                <Txt v="smallStrong" style={{ width: 28, textAlign: 'right' }}>
+                <Txt v="smallStrong" style={styles.width28TextAlignRight}>
                   {p.n}
                 </Txt>
               </View>
@@ -445,9 +430,9 @@ export default function ReportsScreen({ navigation }) {
 
       {/* 8 · Cobertura fotográfica e incompletos */}
       <SectionTitle>Cobertura fotográfica e registros incompletos</SectionTitle>
-      <Card style={{ gap: 8 }}>
+      <Card style={styles.gap8}>
         <View style={styles.row}>
-          <Txt v="bodyStrong" style={{ flex: 1 }}>
+          <Txt v="bodyStrong" style={styles.flex1}>
             RDOs com ao menos 3 fotos legendadas
           </Txt>
           <Txt v="h3">{ind.cobertura.pct}%</Txt>
@@ -471,11 +456,11 @@ export default function ReportsScreen({ navigation }) {
         </View>
       </Card>
       {ind.cobertura.incompletos.length ? (
-        <Card style={{ gap: 10 }}>
+        <Card style={styles.gap10}>
           <Txt v="h3">Registros incompletos ({ind.cobertura.incompletos.length})</Txt>
           {ind.cobertura.incompletos.slice(0, 6).map(({ rdo, faltas }) => (
             <View key={rdo.id} style={styles.row}>
-              <View style={{ flex: 1, gap: 2 }}>
+              <View style={styles.flex1Gap2}>
                 <Txt
                   v="smallStrong"
                   onPress={() => navigation.navigate('RdoDetail', { rdoId: rdo.id })}
@@ -501,7 +486,7 @@ export default function ReportsScreen({ navigation }) {
 
       {/* 9 · Exportação */}
       <SectionTitle>Exportação (Excel/CSV e Power BI)</SectionTitle>
-      <Card style={{ gap: 10 }}>
+      <Card style={styles.gap10}>
         <Txt v="small" muted>
           As bases seguem um esquema estável (uma linha por fato) e usam “;” e UTF-8 para abrir direto no Excel em pt-BR
           e ser lidas pelo Power BI. Respeitam a obra e o período escolhidos acima.
@@ -551,8 +536,3 @@ export default function ReportsScreen({ navigation }) {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-});
