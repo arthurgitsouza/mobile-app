@@ -31,4 +31,5 @@ export const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.divider,
   },
+  cabecalhoTexto: { flex: 1, gap: 2 },
 });

@@ -26,4 +26,13 @@ export const styles = StyleSheet.create({
     color: colors.text,
     backgroundColor: colors.white,
   },
+  ocupa: { flex: 1 },
+  toastTexto: { flex: 1, gap: 1 },
+  toastMensagem: { color: 'rgba(255,255,255,0.92)' },
+  campo: { gap: 6 },
 });
+
+// Valores que só se sabem em tempo de execução ficam em funções.
+export const dinamico = {
+  alinhar: (centralizar) => ({ textAlign: centralizar ? 'center' : 'left' }),
+};

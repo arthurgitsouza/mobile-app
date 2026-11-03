@@ -27,7 +27,7 @@ export function ListRow({
           <Icon name={icon} size={22} color={danger ? colors.danger : iconColor} />
         </View>
       ) : null}
-      <View style={{ flex: 1, gap: 2 }}>
+      <View style={styles.textos}>
         <Txt v="bodyStrong" color={danger ? colors.danger : colors.text} numberOfLines={2}>
           {title}
         </Txt>
@@ -79,7 +79,7 @@ export function KeyValue({ label, value, inline, style, valueStyle, muted, child
 export function SectionTitle({ children, right, style }) {
   return (
     <View style={[styles.sectionTitle, style]}>
-      <Txt v="label" color={colors.navy600} accessibilityRole="header" style={{ flex: 1 }}>
+      <Txt v="label" color={colors.navy600} accessibilityRole="header" style={styles.ocupa}>
         {String(children).toUpperCase()}
       </Txt>
       {right}

@@ -34,7 +34,7 @@ export default function SyncBanner({ style }) {
       style={[styles.wrap, { backgroundColor: tone.bg }, style]}
     >
       <Icon name={tone.icon} size={20} color={tone.fg} />
-      <View style={{ flex: 1 }}>
+      <View style={styles.ocupa}>
         <Txt v="smallStrong" color={tone.fg}>
           {texto}
         </Txt>

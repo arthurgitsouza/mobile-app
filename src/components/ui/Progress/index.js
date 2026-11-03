@@ -1,3 +1,4 @@
+import { dinamico } from './styles';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
@@ -14,7 +15,7 @@ export function ProgressBar({ value = 0, color = chart.seq[450], track = chart.t
       accessibilityLabel={label}
       accessibilityValue={{ min: 0, max: 100, now: Math.round(pct) }}
     >
-      <View style={{ width: `${pct}%`, height: '100%', backgroundColor: color, borderRadius: height / 2 }} />
+      <View style={dinamico.preenchimento(pct, color, height)} />
     </View>
   );
 }
@@ -33,7 +34,7 @@ export function ProgressRing({
   const pct = Math.max(0, Math.min(100, value));
   return (
     <View
-      style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}
+      style={dinamico.anel(size)}
       accessibilityRole="progressbar"
       accessibilityLabel={label}
       accessibilityValue={{ min: 0, max: 100, now: Math.round(pct) }}
