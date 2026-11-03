@@ -1,4 +1,4 @@
-import { styles } from './styles';
+import { styles, dinamico } from './styles';
 import React, { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { chart, colors } from '../../../theme';
@@ -19,15 +19,11 @@ function Pilha({ valores, series, max, altura }) {
     .reverse();
   const nos = [];
   partes.forEach((p, idx) => {
-    if (idx > 0) nos.push(<View key={`gap${p.si}`} style={{ height: 2 }} />);
+    if (idx > 0) nos.push(<View key={`gap${p.si}`} style={styles.vao} />);
     nos.push(
       <View
         key={p.si}
-        style={{
-          height: Math.max(2, (p.v / max) * (altura - 1)),
-          backgroundColor: series[p.si].cor,
-          ...(idx === 0 ? { borderTopLeftRadius: 4, borderTopRightRadius: 4 } : null),
-        }}
+        style={dinamico.segmento(Math.max(2, (p.v / max) * (altura - 1)), series[p.si].cor, idx === 0)}
       />,
     );
   });
@@ -55,7 +51,7 @@ export default function ColumnChart({
   const atual = sel != null ? dados[sel] : null;
 
   return (
-    <View style={{ gap: 8 }}>
+    <View style={styles.raiz}>
       <View style={styles.readout} accessibilityLiveRegion="polite">
         <Txt v="smallStrong" numberOfLines={2}>
           {atual
@@ -68,24 +64,16 @@ export default function ColumnChart({
           </Txt>
         ) : null}
       </View>
-      <View style={{ flexDirection: 'row', height: altura + 30 }}>
-        <View
-          style={{
-            width: 40,
-            height: altura,
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-            paddingRight: 6,
-          }}
-        >
+      <View style={dinamico.corpo(altura + 30)}>
+        <View style={dinamico.eixoY(altura)}>
           {ticks.map((t, i) => (
-            <Txt key={i} v="caption" muted style={{ fontSize: 10 }}>
+            <Txt key={i} v="caption" muted style={styles.tique}>
               {formatar(t)}
             </Txt>
           ))}
         </View>
-        <View style={{ flex: 1 }}>
-          <View style={{ height: altura }}>
+        <View style={styles.ocupa}>
+          <View style={dinamico.area(altura)}>
             {[0, 0.5, 1].map((p) => (
               <View
                 key={p}
@@ -113,7 +101,7 @@ export default function ColumnChart({
               ))}
             </View>
           </View>
-          <View style={{ flexDirection: 'row', height: 30 }}>
+          <View style={styles.eixoXLinha}>
             {dados.map((d, i) => (
               <View key={d.chave} style={styles.eixoX}>
                 <Txt v="caption" muted style={[styles.rot, sel === i && { color: colors.text, fontWeight: '800' }]}>

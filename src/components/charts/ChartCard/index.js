@@ -52,7 +52,7 @@ export default function ChartCard({ titulo, subtitulo, legenda, tabela, children
   const [modo, setModo] = useState('grafico');
   return (
     <Card style={[{ gap: 12 }, style]}>
-      <View style={{ gap: 2 }}>
+      <View style={styles.titulos}>
         <Txt v="h3" accessibilityRole="header">
           {titulo}
         </Txt>
