@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { colors } from '../../theme';
-import { PERFIL, PERFIS } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { addDays, hojeObra, nomesDiasCurtos } from '../../utils/date';
-import { toNumber, uid } from '../../utils/format';
-import { haptic } from '../../utils/feedback';
-import useAcao from '../../hooks/useAcao';
-import { Banner, Button, Card, EmptyState, LinkButton, Screen, SectionTitle, Txt, useUI } from '../../components/ui';
-import { ChipGroup, DateField, NumberField, SelectField, SwitchField, TextField } from '../../components/form';
+import { PERFIL, PERFIS } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { addDays, hojeObra, nomesDiasCurtos } from '../../../utils/date';
+import { toNumber, uid } from '../../../utils/format';
+import { haptic } from '../../../utils/feedback';
+import useAcao from '../../../hooks/useAcao';
+import { Banner, Button, Card, EmptyState, LinkButton, Screen, SectionTitle, Txt, useUI } from '../../../components/ui';
+import { ChipGroup, DateField, NumberField, SelectField, SwitchField, TextField } from '../../../components/form';
+import { styles, dinamico } from './styles';
 
 const STATUS_OPCOES = [
   { value: 'ativa', label: 'Ativa' },
@@ -118,14 +118,14 @@ export default function ObraFormScreen({ route, navigation }) {
       back
       keyboard
       footer={
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          <Button title="Cancelar" variant="secondary" onPress={() => navigation.goBack()} style={{ flex: 1 }} />
+        <View style={styles.linha10}>
+          <Button title="Cancelar" variant="secondary" onPress={() => navigation.goBack()} style={styles.fill} />
           <Button
             title={existente ? 'Salvar alterações' : 'Cadastrar obra'}
             icon="check"
             onPress={salvar}
             loading={salvarObra.carregando}
-            style={{ flex: 1.6 }}
+            style={styles.fillLargo}
           />
         </View>
       }
@@ -150,8 +150,8 @@ export default function ObraFormScreen({ route, navigation }) {
         onChangeText={set('descricao')}
         placeholder="Ex.: Residencial Alfa — Bloco A"
       />
-      <View style={{ flexDirection: 'row', gap: 12 }}>
-        <View style={{ flex: 1 }}>
+      <View style={styles.linha12}>
+        <View style={styles.fill}>
           <TextField
             label="Contrato"
             required
@@ -162,7 +162,7 @@ export default function ObraFormScreen({ route, navigation }) {
             autoCapitalize="characters"
           />
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={styles.fill}>
           <TextField
             label="OS"
             value={f.os}
@@ -192,11 +192,11 @@ export default function ObraFormScreen({ route, navigation }) {
       />
 
       <SectionTitle>Prazo e responsável</SectionTitle>
-      <View style={{ flexDirection: 'row', gap: 12 }}>
-        <View style={{ flex: 1 }}>
+      <View style={styles.linha12}>
+        <View style={styles.fill}>
           <DateField label="Início" required value={f.inicio} onChange={set('inicio')} />
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={styles.fill}>
           <DateField label="Fim previsto" required value={f.fim} onChange={set('fim')} error={erros.fim} />
         </View>
       </View>
@@ -226,11 +226,11 @@ export default function ObraFormScreen({ route, navigation }) {
       <ChipGroup label="Situação da obra" required options={STATUS_OPCOES} value={f.status} onChange={set('status')} />
 
       <SectionTitle>Avanço (opcional)</SectionTitle>
-      <View style={{ flexDirection: 'row', gap: 12 }}>
-        <View style={{ flex: 1 }}>
+      <View style={styles.linha12}>
+        <View style={styles.fill}>
           <NumberField label="Físico" value={f.avancoFisico} onChangeText={set('avancoFisico')} suffix="%" />
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={styles.fill}>
           <NumberField label="Previsto" value={f.avancoPrevisto} onChangeText={set('avancoPrevisto')} suffix="%" />
         </View>
       </View>
@@ -248,11 +248,11 @@ export default function ObraFormScreen({ route, navigation }) {
         tone="info"
         message="Operacionais preenchem os RDOs desta obra; clientes visualizam e assinam apenas os RDOs liberados. O Master acessa todas as obras."
       />
-      <Card style={{ gap: 4 }}>
+      <Card style={styles.gap4}>
         {vinculaveis.map((u) => {
           const on = f.usuarioIds.includes(u.id);
           return (
-            <View key={u.id} style={{ paddingVertical: 2 }}>
+            <View key={u.id} style={styles.respiro}>
               <SwitchField
                 label={u.nome}
                 description={`${PERFIS[u.perfil].label} · ${u.cargo}`}
@@ -260,7 +260,7 @@ export default function ObraFormScreen({ route, navigation }) {
                 onValueChange={(v) =>
                   set('usuarioIds')(v ? [...f.usuarioIds, u.id] : f.usuarioIds.filter((x) => x !== u.id))
                 }
-                style={{ borderWidth: 0, backgroundColor: on ? colors.blue50 : colors.white }}
+                style={dinamico.opcao(on)}
               />
             </View>
           );

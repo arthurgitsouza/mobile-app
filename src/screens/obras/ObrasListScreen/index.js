@@ -1,14 +1,26 @@
 import React, { useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
-import { chart, colors } from '../../theme';
-import { PERFIL } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { obrasVisiveis, rdosVisiveis } from '../../domain/selectors';
-import { formatDate } from '../../utils/date';
-import { normalizar } from '../../utils/format';
-import { Avatar, Badge, Card, Chip, EmptyState, Icon, IconButton, ProgressBar, Screen, Txt } from '../../components/ui';
-import { SearchBar } from '../../components/form';
+import { chart, colors } from '../../../theme';
+import { PERFIL } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { obrasVisiveis, rdosVisiveis } from '../../../domain/selectors';
+import { formatDate } from '../../../utils/date';
+import { normalizar } from '../../../utils/format';
+import {
+  Avatar,
+  Badge,
+  Card,
+  Chip,
+  EmptyState,
+  Icon,
+  IconButton,
+  ProgressBar,
+  Screen,
+  Txt,
+} from '../../../components/ui';
+import { SearchBar } from '../../../components/form';
+import { styles, dinamico } from './styles';
 
 export const STATUS_OBRA = {
   ativa: { label: 'Ativa', color: colors.success, bg: colors.successBg, icon: 'hard-hat' },
@@ -59,7 +71,7 @@ export default function ObrasListScreen() {
           value={busca}
           onChangeText={setBusca}
           placeholder="Buscar obra, contrato ou cliente"
-          style={{ marginTop: 8 }}
+          style={styles.topo}
         />
       }
     >
@@ -94,14 +106,14 @@ export default function ObrasListScreen() {
           <Card
             key={o.id}
             onPress={() => nav.navigate('ObraDetail', { obraId: o.id })}
-            style={{ gap: 12 }}
+            style={styles.cartao}
             accessibilityLabel={`${o.nome}, ${meta.label}, avanço ${o.avancoFisico}%`}
           >
             <View style={styles.row}>
               <View style={styles.icon}>
                 <Icon name="office-building-outline" size={26} color={colors.navy600} />
               </View>
-              <View style={{ flex: 1 }}>
+              <View style={styles.fill}>
                 <Txt v="h3">{o.nome}</Txt>
                 <Txt v="small" muted numberOfLines={1}>
                   {o.descricao} · {o.contrato}
@@ -109,9 +121,9 @@ export default function ObrasListScreen() {
               </View>
               <Badge label={meta.label} color={meta.color} bg={meta.bg} icon={meta.icon} size="sm" />
             </View>
-            <View style={{ gap: 4 }}>
+            <View style={styles.info}>
               <View style={styles.row}>
-                <Txt v="small" muted style={{ flex: 1 }}>
+                <Txt v="small" muted style={styles.fill}>
                   Avanço físico {o.avancoFisico}% · previsto {o.avancoPrevisto}%
                 </Txt>
                 <Txt v="smallStrong" color={dif >= 0 ? chart.deltaGood : chart.deltaBad}>
@@ -123,17 +135,12 @@ export default function ObrasListScreen() {
             </View>
             <View style={styles.row}>
               <Icon name="account-tie-outline" size={16} color={colors.textMuted} />
-              <Txt v="caption" muted style={{ flex: 1 }} numberOfLines={1}>
+              <Txt v="caption" muted style={styles.fill} numberOfLines={1}>
                 {o.clienteNome}
               </Txt>
-              <View style={{ flexDirection: 'row' }}>
+              <View style={styles.avatares}>
                 {equipe.slice(0, 4).map((u, i) => (
-                  <Avatar
-                    key={u.id}
-                    nome={u.nome}
-                    size={26}
-                    style={{ marginLeft: i ? -8 : 0, borderWidth: 2, borderColor: colors.white }}
-                  />
+                  <Avatar key={u.id} nome={u.nome} size={26} style={dinamico.avatar(i)} />
                 ))}
               </View>
             </View>
@@ -146,16 +153,3 @@ export default function ObrasListScreen() {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  icon: {
-    width: 46,
-    height: 46,
-    borderRadius: 14,
-    backgroundColor: colors.blue100,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { chart, colors } from '../../theme';
-import { PERFIL, PERFIS } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { useNow } from '../../hooks/useNow';
-import useCriarRdo from '../../hooks/useCriarRdo';
-import { diasSemRdo, ehDiaUtil, rdoDaData, rdosVisiveis } from '../../domain/selectors';
-import { formatDate, hojeObra, nomeDiaCurto, nomesDiasCurtos } from '../../utils/date';
+import { View } from 'react-native';
+import { chart, colors } from '../../../theme';
+import { PERFIL, PERFIS } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { useNow } from '../../../hooks/useNow';
+import useCriarRdo from '../../../hooks/useCriarRdo';
+import { diasSemRdo, ehDiaUtil, rdoDaData, rdosVisiveis } from '../../../domain/selectors';
+import { formatDate, hojeObra, nomeDiaCurto, nomesDiasCurtos } from '../../../utils/date';
 import {
   Avatar,
   Badge,
@@ -22,11 +22,12 @@ import {
   SectionTitle,
   StatusBadge,
   Txt,
-} from '../../components/ui';
-import { RdoCard } from '../../components/rdo';
-import { StatTile } from '../../components/charts/StatTile';
-import { Grade } from '../home/Shared';
-import { STATUS_OBRA } from './ObrasListScreen';
+} from '../../../components/ui';
+import { RdoCard } from '../../../components/rdo';
+import { StatTile } from '../../../components/charts/StatTile';
+import { Grade } from '../../home/Shared';
+import { STATUS_OBRA } from '../ObrasListScreen';
+import { styles } from './styles';
 
 // Detalhe da obra: contrato, cronograma, avanço, equipe vinculada, RDO de hoje e últimos registros.
 export default function ObraDetailScreen({ route, navigation }) {
@@ -117,9 +118,9 @@ export default function ObraDetailScreen({ route, navigation }) {
         />
       ) : null}
 
-      <Card style={{ gap: 10 }}>
+      <Card style={styles.gap10}>
         <View style={styles.row}>
-          <Txt v="bodyStrong" style={{ flex: 1 }}>
+          <Txt v="bodyStrong" style={styles.fill}>
             Avanço físico {obra.avancoFisico}%
           </Txt>
           <Txt v="smallStrong" color={dif >= 0 ? chart.deltaGood : chart.deltaBad}>
@@ -167,7 +168,7 @@ export default function ObraDetailScreen({ route, navigation }) {
       </Grade>
 
       <SectionTitle>Contrato e localização</SectionTitle>
-      <Card style={{ gap: 8 }}>
+      <Card style={styles.gap8}>
         <KeyValue inline label="Contrato / OS" value={[obra.contrato, obra.os].filter(Boolean).join(' · ')} />
         <KeyValue inline label="Cliente" value={obra.clienteNome} />
         <KeyValue inline label="Empresa executora" value={obra.empresaExecutora} />
@@ -183,12 +184,12 @@ export default function ObraDetailScreen({ route, navigation }) {
       </Card>
 
       <SectionTitle>Equipe e clientes vinculados</SectionTitle>
-      <Card style={{ gap: 12 }}>
+      <Card style={styles.gap12}>
         {equipe.length ? (
           equipe.map((u) => (
             <View key={u.id} style={styles.row}>
               <Avatar nome={u.nome} size={38} />
-              <View style={{ flex: 1 }}>
+              <View style={styles.fill}>
                 <Txt v="bodyStrong">{u.nome}</Txt>
                 <Txt v="caption" muted>
                   {PERFIS[u.perfil].label} · {u.cargo}
@@ -217,7 +218,7 @@ export default function ObraDetailScreen({ route, navigation }) {
         <>
           <SectionTitle>Pendências em aberto (último RDO)</SectionTitle>
           {abertas.slice(0, 3).map((p) => (
-            <Card key={p.id} onPress={() => navigation.navigate('RdoDetail', { rdoId: ultimo.id })} style={{ gap: 6 }}>
+            <Card key={p.id} onPress={() => navigation.navigate('RdoDetail', { rdoId: ultimo.id })} style={styles.gap6}>
               <CriticidadeBadge nivel={p.criticidade} size="sm" />
               <Txt v="small">{p.descricao}</Txt>
               <Txt v="caption" muted>
@@ -252,7 +253,7 @@ export default function ObraDetailScreen({ route, navigation }) {
           onPress={() => navigation.navigate('RdoList', { obraId })}
         />
       ) : null}
-      <Txt v="caption" subtle style={{ textAlign: 'center' }}>
+      <Txt v="caption" subtle style={styles.centro}>
         {nomeDiaCurto(hoje)}, {formatDate(hoje)}
       </Txt>
     </Screen>
@@ -267,7 +268,3 @@ const STATUS_TEXTO = {
   enviado_cliente: 'com o cliente',
   finalizado: 'finalizado',
 };
-
-const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center', gap: 10, flexWrap: 'wrap' },
-});
