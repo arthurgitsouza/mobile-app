@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { colors } from '../../../theme';
-import { formatDateTime } from '../../../utils/date';
-import { Banner, BottomSheet, Button, KeyValue, useUI } from '../../../components/ui';
-import { ChipGroup, SelectField, SwitchField, TextField } from '../../../components/form';
-import { PhotoTile } from '../../../components/rdo';
-import { obterCoordenada } from '../../../services/media';
+
+import { formatDateTime } from '../../../../utils/date';
+import { Banner, BottomSheet, Button, KeyValue, useUI } from '../../../../components/ui';
+import { ChipGroup, SelectField, SwitchField, TextField } from '../../../../components/form';
+import { PhotoTile } from '../../../../components/rdo';
+import { obterCoordenada } from '../../../../services/media';
+import { styles } from './styles';
 
 // Legenda obrigatória, local, vínculo com atividade/ocorrência e coordenada opcional/consentida (RF-10).
 export default function PhotoEditorSheet({ foto, rdo, catalogos, nomeAutor, onSalvar, onRemover, onClose }) {
@@ -52,10 +53,10 @@ export default function PhotoEditorSheet({ foto, rdo, catalogos, nomeAutor, onSa
       subtitle="Legenda, local e vínculo transformam a imagem em evidência."
       fullHeight
       footer={
-        <View style={{ gap: 8 }}>
-          <View style={{ flexDirection: 'row', gap: 10 }}>
-            <Button title="Cancelar" variant="secondary" onPress={onClose} style={{ flex: 1 }} />
-            <Button title="Salvar foto" icon="check" onPress={salvar} style={{ flex: 1.3 }} />
+        <View style={styles.gap8}>
+          <View style={styles.rowGap10}>
+            <Button title="Cancelar" variant="secondary" onPress={onClose} style={styles.flex1} />
+            <Button title="Salvar foto" icon="check" onPress={salvar} style={styles.flex13} />
           </View>
           <Button
             title="Remover foto"
@@ -67,7 +68,7 @@ export default function PhotoEditorSheet({ foto, rdo, catalogos, nomeAutor, onSa
         </View>
       }
     >
-      <View style={{ alignItems: 'center' }}>
+      <View style={styles.alignItemsCenter}>
         <PhotoTile foto={d} width={300} ratio={0.62} showState={false} />
       </View>
       <TextField
@@ -122,7 +123,7 @@ export default function PhotoEditorSheet({ foto, rdo, catalogos, nomeAutor, onSa
         onValueChange={alternarGps}
         disabled={buscandoGps}
       />
-      <View style={{ gap: 6, backgroundColor: colors.blue50, borderRadius: 12, padding: 12 }}>
+      <View style={styles.gap6BackgroundColorBlue50}>
         <KeyValue inline label="Data/hora" value={formatDateTime(d.dataHora)} />
         <KeyValue inline label="Autoria" value={nomeAutor(d.autorId)} />
         <KeyValue

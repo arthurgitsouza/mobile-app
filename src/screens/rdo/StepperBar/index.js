@@ -1,16 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { colors } from '../../theme';
-import { PASSOS_RDO } from '../../constants';
-import { Icon, ProgressBar, Txt } from '../../components/ui';
-
-// Estado visual de cada etapa: atual, completa, com pendência obrigatória, com aviso ou ainda vazia.
-const ESTILO = {
-  completo: { bg: colors.success, fg: colors.white, icon: 'check' },
-  atencao: { bg: colors.warning, fg: colors.white, icon: 'alert-outline' },
-  erro: { bg: colors.danger, fg: colors.white, icon: 'exclamation-thick' },
-  vazio: { bg: 'rgba(255,255,255,0.16)', fg: colors.white, icon: null },
-};
+import { Pressable, ScrollView, View } from 'react-native';
+import { colors } from '../../../theme';
+import { PASSOS_RDO } from '../../../constants';
+import { Icon, ProgressBar, Txt } from '../../../components/ui';
+import { styles, dinamico, ESTILO } from './styles';
 
 export default function StepperBar({ passos = PASSOS_RDO, indice, porPasso, visitados, onSelecionar, progresso }) {
   const ref = useRef(null);
@@ -22,7 +15,7 @@ export default function StepperBar({ passos = PASSOS_RDO, indice, porPasso, visi
   }, [indice]);
 
   return (
-    <View style={{ gap: 8, marginTop: 6 }}>
+    <View style={styles.gap8MarginTop6}>
       <ScrollView ref={ref} horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
         {passos.map((p, i) => {
           const atual = i === indice;
@@ -42,13 +35,7 @@ export default function StepperBar({ passos = PASSOS_RDO, indice, porPasso, visi
               accessibilityState={{ selected: atual }}
               style={styles.item}
             >
-              <View
-                style={[
-                  styles.dot,
-                  { backgroundColor: atual ? colors.gold500 : s.bg },
-                  atual && { borderColor: colors.gold200 },
-                ]}
-              >
+              <View style={[styles.dot, dinamico.fundoEtapa(atual, s), atual && styles.borderColorGold200]}>
                 {atual ? (
                   <Icon name={p.icone} size={20} color={colors.navy900} />
                 ) : s.icon ? (
@@ -60,7 +47,7 @@ export default function StepperBar({ passos = PASSOS_RDO, indice, porPasso, visi
               <Txt
                 v="caption"
                 color={atual ? colors.white : colors.textOnDarkMuted}
-                style={[styles.label, atual && { fontWeight: '800' }]}
+                style={[styles.label, atual && styles.fontWeight800]}
                 numberOfLines={1}
               >
                 {p.curto}
@@ -73,8 +60,8 @@ export default function StepperBar({ passos = PASSOS_RDO, indice, porPasso, visi
         })}
       </ScrollView>
       {progresso ? (
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <View style={{ flex: 1 }}>
+        <View style={styles.rowAlignItemsCenter}>
+          <View style={styles.flex1}>
             <ProgressBar
               value={(progresso.completos / progresso.total) * 100}
               color={colors.gold500}
@@ -91,19 +78,3 @@ export default function StepperBar({ passos = PASSOS_RDO, indice, porPasso, visi
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  row: { gap: 6, paddingRight: 8 },
-  item: { width: 66, alignItems: 'center', gap: 2, paddingVertical: 2 },
-  dot: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  label: { fontSize: 11, textAlign: 'center' },
-  letra: { fontSize: 10, letterSpacing: 0.5, opacity: 0.85 },
-});

@@ -1,12 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
-import { colors } from '../../../theme';
-import { CONDICOES_EQUIPAMENTO, rotuloDe } from '../../../constants';
-import { resumoEquipamentos } from '../../../domain/rdo';
-import { formatHoras, formatQuantidade, isFilled, isValidNumber, toNumber } from '../../../utils/format';
-import { Card, Txt } from '../../../components/ui';
-import { ItemListEditor } from '../../../components/form';
-import { alertaDoItem } from './helpers';
+import { colors } from '../../../../theme';
+import { CONDICOES_EQUIPAMENTO, rotuloDe } from '../../../../constants';
+import { resumoEquipamentos } from '../../../../domain/rdo';
+import { formatHoras, formatQuantidade, isFilled, isValidNumber, toNumber } from '../../../../utils/format';
+import { Card, Txt } from '../../../../components/ui';
+import { ItemListEditor } from '../../../../components/form';
+import { alertaDoItem } from '../helpers';
+import { styles } from './styles';
 
 const parado = (v) => ['parado', 'manutencao'].includes(v.condicao) || toNumber(v.horasParadas) > 0;
 
@@ -53,15 +54,15 @@ export default function StepEquipamentos({ rdo, update, ctx, validacao, mostrarE
   const contexto = { ...ctx, validacao, mostrarErros };
   const r = resumoEquipamentos(rdo);
   return (
-    <View style={{ gap: 14 }}>
+    <View style={styles.gap14}>
       {rdo.equipamentos.length ? (
-        <Card tone="soft" style={{ flexDirection: 'row', gap: 12 }}>
+        <Card tone="soft" style={styles.rowGap12}>
           {[
             ['Unidades', r.unidades],
             ['Produtivas', formatHoras(r.horasProdutivas)],
             ['Paradas', formatHoras(r.horasParadas)],
           ].map(([l, v]) => (
-            <View key={l} style={{ flex: 1 }}>
+            <View key={l} style={styles.flex1}>
               <Txt v="caption" muted>
                 {l}
               </Txt>

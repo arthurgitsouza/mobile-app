@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { colors, radius } from '../../../theme';
-import { PASSOS_RDO } from '../../../constants';
-import { DECLARACAO_OPERACIONAL } from '../../../constants/texts';
-import { resumoEquipamentos, totalHomemHora, totalTrabalhadores } from '../../../domain/rdo';
-import { formatNumber, contar } from '../../../utils/format';
-import { nowISO } from '../../../utils/date';
-import { haptic } from '../../../utils/feedback';
-import { useApp } from '../../../store/AppContext';
-import { Banner, Button, Card, Icon, ListRow, SectionTitle, Txt, useUI } from '../../../components/ui';
-import CheckboxField from '../../../components/form/CheckboxField';
-import { SignaturePad } from '../../../components/rdo';
-import SubmitProgress from './SubmitProgress';
-import useAcao from '../../../hooks/useAcao';
+import { View } from 'react-native';
+import { colors } from '../../../../theme';
+import { PASSOS_RDO } from '../../../../constants';
+import { DECLARACAO_OPERACIONAL } from '../../../../constants/texts';
+import { resumoEquipamentos, totalHomemHora, totalTrabalhadores } from '../../../../domain/rdo';
+import { formatNumber, contar } from '../../../../utils/format';
+import { nowISO } from '../../../../utils/date';
+import { haptic } from '../../../../utils/feedback';
+import { useApp } from '../../../../store/AppContext';
+import { Banner, Button, Card, Icon, ListRow, SectionTitle, Txt, useUI } from '../../../../components/ui';
+import CheckboxField from '../../../../components/form/CheckboxField';
+import { SignaturePad } from '../../../../components/rdo';
+import SubmitProgress from '../SubmitProgress';
+import useAcao from '../../../../hooks/useAcao';
+import { styles } from './styles';
 
 function Numero({ icone, valor, rotulo }) {
   return (
@@ -96,19 +97,19 @@ export default function StepRevisao({
   // Rodapé fixo com as ações finais (o contêiner do formulário o renderiza no lugar de Voltar/Avançar).
   useEffect(() => {
     definirRodape(
-      <View style={{ gap: 8 }}>
+      <View style={styles.gap8}>
         {!valido ? (
-          <Txt v="caption" color={colors.danger} style={{ textAlign: 'center', fontWeight: '700' }}>
+          <Txt v="caption" color={colors.danger} style={styles.textAlignCenterFontWeight700}>
             {contar(erros.length, 'pendência obrigatória', 'pendências obrigatórias')} impedem o envio.
           </Txt>
         ) : null}
-        <View style={{ flexDirection: 'row', gap: 10 }}>
+        <View style={styles.rowGap10}>
           <Button
             title="Voltar"
             icon="chevron-left"
             variant="secondary"
             onPress={() => irPara('pendencias')}
-            style={{ flex: 1 }}
+            style={styles.flex1}
           />
           <Button
             title="Enviar ao master"
@@ -116,7 +117,7 @@ export default function StepRevisao({
             variant="accent"
             disabled={!valido}
             onPress={enviar}
-            style={{ flex: 1.8 }}
+            style={styles.flex18}
           />
         </View>
       </View>,
@@ -126,7 +127,7 @@ export default function StepRevisao({
   }, [valido, erros.length, online, rdo]);
 
   return (
-    <View style={{ gap: 14 }}>
+    <View style={styles.gap14}>
       {valido ? (
         <Banner
           tone="success"
@@ -148,9 +149,9 @@ export default function StepRevisao({
       )}
 
       {Object.keys(errosPorPasso).length ? (
-        <View style={{ gap: 4 }}>
+        <View style={styles.gap4}>
           <SectionTitle>Pendências obrigatórias</SectionTitle>
-          <Card padded={false} style={{ paddingHorizontal: 12 }}>
+          <Card padded={false} style={styles.paddingHorizontal12}>
             {Object.entries(errosPorPasso).map(([chave, lista], i) => (
               <ListRow
                 key={chave}
@@ -163,7 +164,7 @@ export default function StepRevisao({
                   .map((e) => e.mensagem)
                   .join('\n')}
                 onPress={() => irPara(chave)}
-                style={i ? { borderTopWidth: 1, borderTopColor: colors.divider } : undefined}
+                style={i ? styles.borderTopWidth1BorderTopColorDivider : undefined}
                 right={
                   <Txt v="smallStrong" color={colors.blue500}>
                     Corrigir
@@ -177,9 +178,9 @@ export default function StepRevisao({
       ) : null}
 
       {Object.keys(avisosPorPasso).length ? (
-        <View style={{ gap: 4 }}>
+        <View style={styles.gap4}>
           <SectionTitle>Avisos (não bloqueiam)</SectionTitle>
-          <Card padded={false} style={{ paddingHorizontal: 12 }}>
+          <Card padded={false} style={styles.paddingHorizontal12}>
             {Object.entries(avisosPorPasso).map(([chave, lista], i) => (
               <ListRow
                 key={chave}
@@ -192,7 +193,7 @@ export default function StepRevisao({
                   .map((e) => e.mensagem)
                   .join('\n')}
                 onPress={() => irPara(chave)}
-                style={i ? { borderTopWidth: 1, borderTopColor: colors.divider } : undefined}
+                style={i ? styles.borderTopWidth1BorderTopColorDivider : undefined}
                 right={
                   <Txt v="smallStrong" color={colors.blue500}>
                     Ver
@@ -235,7 +236,7 @@ export default function StepRevisao({
       />
 
       {obra.exigeAssinaturaOperacional ? (
-        <View style={{ gap: 8 }}>
+        <View style={styles.gap8}>
           <SectionTitle>Assinatura do responsável pelo preenchimento</SectionTitle>
           <Txt v="small" muted>
             Esta obra exige a assinatura do operacional. O desenho é apenas a representação visual; a validade decorre
@@ -272,18 +273,3 @@ export default function StepRevisao({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  resumo: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  num: {
-    width: '31%',
-    flexGrow: 1,
-    alignItems: 'center',
-    gap: 2,
-    paddingVertical: 12,
-    borderRadius: radius.md,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-});

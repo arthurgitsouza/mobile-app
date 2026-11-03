@@ -1,12 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
-import { colors } from '../../../theme';
-import { calcularHoras, totalHomemHora, totalTrabalhadores } from '../../../domain/rdo';
-import { formatNumber, toNumber } from '../../../utils/format';
-import { timeToMinutes } from '../../../utils/date';
-import { Banner, Card, Txt } from '../../../components/ui';
-import { ItemListEditor, TextField } from '../../../components/form';
-import { alertaDoItem } from './helpers';
+import { colors } from '../../../../theme';
+import { calcularHoras, totalHomemHora, totalTrabalhadores } from '../../../../domain/rdo';
+import { formatNumber, toNumber } from '../../../../utils/format';
+import { timeToMinutes } from '../../../../utils/date';
+import { Banner, Card, Txt } from '../../../../components/ui';
+import { ItemListEditor, TextField } from '../../../../components/form';
+import { alertaDoItem } from '../helpers';
+import { styles } from './styles';
 
 const CAMPOS = [
   {
@@ -53,7 +54,7 @@ export default function StepMaoDeObra({ rdo, update, ctx, validacao, mostrarErro
   const contexto = { ...ctx, validacao, mostrarErros };
   const hh = totalHomemHora(rdo);
   return (
-    <View style={{ gap: 14 }}>
+    <View style={styles.gap14}>
       {rdo.reaproveitadoDe ? (
         <Banner
           tone="info"
@@ -62,8 +63,8 @@ export default function StepMaoDeObra({ rdo, update, ctx, validacao, mostrarErro
         />
       ) : null}
 
-      <Card tone="soft" style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
-        <View style={{ flex: 1 }}>
+      <Card tone="soft" style={styles.rowAlignItemsCenter}>
+        <View style={styles.flex1}>
           <Txt v="caption" muted>
             Efetivo total
           </Txt>
@@ -71,7 +72,7 @@ export default function StepMaoDeObra({ rdo, update, ctx, validacao, mostrarErro
             {totalTrabalhadores(rdo)}
           </Txt>
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={styles.flex1}>
           <Txt v="caption" muted>
             Homem-hora
           </Txt>

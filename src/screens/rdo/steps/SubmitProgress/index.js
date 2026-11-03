@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, StyleSheet, View } from 'react-native';
-import { colors, radius } from '../../../theme';
-import { shadows } from '../../../theme/shadows';
-import { Icon, ProgressBar, Txt } from '../../../components/ui';
+import { Modal, View } from 'react-native';
+import { colors } from '../../../../theme';
+import { shadows } from '../../../../theme/shadows';
+import { Icon, ProgressBar, Txt } from '../../../../components/ui';
+import { styles } from './styles';
 
 const dormir = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -58,10 +59,10 @@ export default function SubmitProgress({ visible, fotos, online, onConcluir }) {
           <View style={styles.icon}>
             <Icon name={online ? 'cloud-upload-outline' : 'content-save-outline'} size={30} color={colors.navy600} />
           </View>
-          <Txt v="h3" style={{ textAlign: 'center' }} accessibilityRole="header">
+          <Txt v="h3" style={styles.textAlignCenter} accessibilityRole="header">
             {online ? 'Enviando RDO ao master…' : 'Salvando no aparelho…'}
           </Txt>
-          <Txt v="small" muted style={{ textAlign: 'center' }}>
+          <Txt v="small" muted style={styles.textAlignCenter}>
             {online
               ? 'Dados e fotos estão sendo enviados com segurança.'
               : 'Sem conexão: o RDO será enviado automaticamente quando a rede voltar.'}
@@ -75,7 +76,7 @@ export default function SubmitProgress({ visible, fotos, online, onConcluir }) {
                     size={18}
                     color={(progresso[f.id] || 0) >= 100 ? colors.success : colors.textMuted}
                   />
-                  <Txt v="caption" muted style={{ flex: 1 }} numberOfLines={1}>
+                  <Txt v="caption" muted style={styles.flex1} numberOfLines={1}>
                     Foto {String(f.numero).padStart(2, '0')} — {f.legenda}
                   </Txt>
                   <Txt v="caption" muted>
@@ -89,18 +90,3 @@ export default function SubmitProgress({ visible, fotos, online, onConcluir }) {
     </Modal>
   );
 }
-
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.overlay, justifyContent: 'center', padding: 24 },
-  card: { backgroundColor: colors.surface, borderRadius: radius.xl, padding: 20, gap: 12 },
-  icon: {
-    alignSelf: 'center',
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: colors.blue100,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-});

@@ -1,11 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
-import { colors, criticidadeMeta } from '../../../theme';
-import { CRITICIDADES, ORIGENS_PENDENCIA, STATUS_PENDENCIA, rotuloDe } from '../../../constants';
-import { formatDate } from '../../../utils/date';
-import { ItemListEditor, TextField } from '../../../components/form';
-import { SectionTitle } from '../../../components/ui';
-import { alertaDoItem } from './helpers';
+import { colors, criticidadeMeta } from '../../../../theme';
+import { CRITICIDADES, ORIGENS_PENDENCIA, STATUS_PENDENCIA, rotuloDe } from '../../../../constants';
+import { formatDate } from '../../../../utils/date';
+import { ItemListEditor, TextField } from '../../../../components/form';
+import { SectionTitle } from '../../../../components/ui';
+import { alertaDoItem } from '../helpers';
+import { styles } from './styles';
 
 const CAMPOS = [
   {
@@ -36,8 +37,8 @@ export default function StepPendencias({ rdo, update, ctx, validacao, mostrarErr
   const contexto = { ...ctx, validacao, mostrarErros };
   const setPlan = (patch) => update((d) => ({ planejamento: { ...d.planejamento, ...patch } }));
   return (
-    <View style={{ gap: 20 }}>
-      <View style={{ gap: 10 }}>
+    <View style={styles.gap20}>
+      <View style={styles.gap10}>
         <SectionTitle>Pendências</SectionTitle>
         <ItemListEditor
           items={rdo.pendencias}
@@ -81,7 +82,7 @@ export default function StepPendencias({ rdo, update, ctx, validacao, mostrarErr
         />
       </View>
 
-      <View style={{ gap: 14 }}>
+      <View style={styles.gap14}>
         <SectionTitle>Planejamento</SectionTitle>
         <TextField
           label="Atividades previstas para o próximo dia"

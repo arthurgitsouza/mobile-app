@@ -1,16 +1,17 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { colors } from '../../theme';
-import { PASSOS_RDO, PERFIL, STATUS } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { validarRdo } from '../../domain/validation';
-import { podeEditarOperacional } from '../../domain/workflow';
-import { numeroFormatado } from '../../domain/rdo';
-import { formatTime, nowISO } from '../../utils/date';
-import { Banner, Button, EmptyState, IconButton, Screen, Txt, useUI } from '../../components/ui';
-import { CommentItem } from '../../components/rdo';
-import StepperBar from './StepperBar';
-import { STEP_COMPONENTS } from './steps';
+import { View } from 'react-native';
+import { colors } from '../../../theme';
+import { PASSOS_RDO, PERFIL, STATUS } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { validarRdo } from '../../../domain/validation';
+import { podeEditarOperacional } from '../../../domain/workflow';
+import { numeroFormatado } from '../../../domain/rdo';
+import { formatTime, nowISO } from '../../../utils/date';
+import { Banner, Button, EmptyState, IconButton, Screen, Txt, useUI } from '../../../components/ui';
+import { CommentItem } from '../../../components/rdo';
+import StepperBar from '../StepperBar';
+import { STEP_COMPONENTS } from '../steps';
+import { styles } from './styles';
 
 const PASSO_MASTER = {
   key: 'justificativa',
@@ -224,17 +225,17 @@ function RdoFormInner({ rdoInicial, obra, modo, passoParam, navigation }) {
                 icon="chevron-left"
                 variant="secondary"
                 onPress={() => irPara(indice - 1)}
-                style={{ flex: 1 }}
+                style={styles.flex1}
               />
             ) : (
-              <Button title="Sair" variant="secondary" onPress={sair} style={{ flex: 1 }} />
+              <Button title="Sair" variant="secondary" onPress={sair} style={styles.flex1} />
             )}
             {!ultimo ? (
               <Button
                 title="Avançar"
                 iconRight="chevron-right"
                 onPress={() => irPara(indice + 1)}
-                style={{ flex: 1.5 }}
+                style={styles.flex15}
               />
             ) : null}
           </View>
@@ -254,7 +255,7 @@ function RdoFormInner({ rdoInicial, obra, modo, passoParam, navigation }) {
         <Banner tone="warning" icon="undo-variant" title="Devolvido para correção" message={draft.devolucao.motivo} />
       ) : null}
 
-      <View style={{ gap: 2 }}>
+      <View style={styles.gap2}>
         <Txt v="label" color={colors.navy600}>
           ETAPA {indice + 1} DE {passos.length} · GRUPO {passo.letras}
         </Txt>
@@ -270,7 +271,7 @@ function RdoFormInner({ rdoInicial, obra, modo, passoParam, navigation }) {
       </View>
 
       {comentariosDoPasso.length ? (
-        <View style={{ gap: 8 }}>
+        <View style={styles.gap8}>
           <Txt v="label" color={colors.warning}>
             COMENTÁRIOS DO MASTER NESTA ETAPA
           </Txt>
@@ -328,7 +329,3 @@ function RdoFormInner({ rdoInicial, obra, modo, passoParam, navigation }) {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  rodape: { flexDirection: 'row', gap: 10 },
-});

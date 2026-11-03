@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { colors } from '../../theme';
-import { CONTEXTOS_COMENTARIO } from '../../constants';
-import { addDays, combineDateTime, hojeObra } from '../../utils/date';
-import { Banner, BottomSheet, Button, Icon, Txt } from '../../components/ui';
-import { DateField, SelectField, SwitchField, TextField, TimeField } from '../../components/form';
-import CheckboxField from '../../components/form/CheckboxField';
+import { colors } from '../../../theme';
+import { CONTEXTOS_COMENTARIO } from '../../../constants';
+import { addDays, combineDateTime, hojeObra } from '../../../utils/date';
+import { Banner, BottomSheet, Button, Icon, Txt } from '../../../components/ui';
+import { DateField, SelectField, SwitchField, TextField, TimeField } from '../../../components/form';
+import CheckboxField from '../../../components/form/CheckboxField';
+import { styles } from './styles';
 
 // Comentário em contexto (RF-12): seção ou foto específica. `podeCliente`: master pode tornar visível ao cliente.
 export function ComentarSheet({ visible, onClose, onEnviar, inicial, fotos = [], podeCliente, respondendo }) {
@@ -31,8 +32,8 @@ export function ComentarSheet({ visible, onClose, onEnviar, inicial, fotos = [],
       title={respondendo ? 'Responder esclarecimento' : 'Novo comentário'}
       subtitle={respondendo ? 'A resposta ficará visível ao cliente.' : undefined}
       footer={
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          <Button title="Cancelar" variant="secondary" onPress={onClose} style={{ flex: 1 }} />
+        <View style={styles.rowGap10}>
+          <Button title="Cancelar" variant="secondary" onPress={onClose} style={styles.flex1} />
           <Button
             title="Enviar"
             icon="send-outline"
@@ -45,7 +46,7 @@ export function ComentarSheet({ visible, onClose, onEnviar, inicial, fotos = [],
                 visibilidade: aoCliente || respondendo ? 'cliente' : 'interno',
               })
             }
-            style={{ flex: 1.3 }}
+            style={styles.flex13}
           />
         </View>
       }
@@ -129,9 +130,9 @@ export function DevolverSheet({ visible, onClose, onConfirmar, comentariosNestaA
       title="Devolver para correção"
       subtitle="O operacional é notificado com o motivo e o prazo."
       footer={
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          <Button title="Cancelar" variant="secondary" onPress={onClose} style={{ flex: 1 }} />
-          <Button title="Devolver" icon="undo-variant" onPress={confirmar} style={{ flex: 1.3 }} />
+        <View style={styles.rowGap10}>
+          <Button title="Cancelar" variant="secondary" onPress={onClose} style={styles.flex1} />
+          <Button title="Devolver" icon="undo-variant" onPress={confirmar} style={styles.flex13} />
         </View>
       }
     >
@@ -148,8 +149,8 @@ export function DevolverSheet({ visible, onClose, onConfirmar, comentariosNestaA
         placeholder="Ex.: Foto 03 sem local preciso; informe o eixo/pavimento e reenvie."
         maxLength={500}
       />
-      <View style={{ flexDirection: 'row', gap: 12 }}>
-        <View style={{ flex: 1.4 }}>
+      <View style={styles.rowGap12}>
+        <View style={styles.flex14}>
           <DateField
             label="Prazo de correção"
             required
@@ -159,7 +160,7 @@ export function DevolverSheet({ visible, onClose, onConfirmar, comentariosNestaA
             max={addDays(hojeObra(), 15)}
           />
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={styles.flex1}>
           <TimeField label="Hora" value={hora} onChangeText={setHora} />
         </View>
       </View>
@@ -198,22 +199,22 @@ export function EnviarClienteSheet({ visible, onClose, onConfirmar, clientes = [
       title="Enviar ao cliente"
       subtitle="O cliente recebe link seguro e solicitação de ciência/aceite."
       footer={
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          <Button title="Cancelar" variant="secondary" onPress={onClose} style={{ flex: 1 }} />
+        <View style={styles.rowGap10}>
+          <Button title="Cancelar" variant="secondary" onPress={onClose} style={styles.flex1} />
           <Button
             title="Enviar"
             icon="account-arrow-right-outline"
             onPress={() => onConfirmar(['app', ...(email ? ['email'] : []), ...(whats ? ['whatsapp'] : [])])}
-            style={{ flex: 1.3 }}
+            style={styles.flex13}
           />
         </View>
       }
     >
-      <View style={{ gap: 6 }}>
+      <View style={styles.gap6}>
         <Txt v="smallStrong">Destinatários</Txt>
         {clientes.length ? (
           clientes.map((c) => (
-            <View key={c.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <View key={c.id} style={styles.rowAlignItemsCenter}>
               <Icon name="account-tie-outline" size={18} color={colors.navy600} />
               <Txt v="small">
                 {c.nome} · {c.email}

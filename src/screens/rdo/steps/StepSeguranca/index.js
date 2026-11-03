@@ -1,11 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
-import { colors } from '../../../theme';
-import { TIPOS_INCIDENTE, rotuloDe } from '../../../constants';
-import { totalTrabalhadores } from '../../../domain/rdo';
-import { Button, Card } from '../../../components/ui';
-import { IntegerField, ItemListEditor, SwitchField, TextField } from '../../../components/form';
-import { alertaDoItem } from './helpers';
+import { colors } from '../../../../theme';
+import { TIPOS_INCIDENTE, rotuloDe } from '../../../../constants';
+import { totalTrabalhadores } from '../../../../domain/rdo';
+import { Button, Card } from '../../../../components/ui';
+import { IntegerField, ItemListEditor, SwitchField, TextField } from '../../../../components/form';
+import { alertaDoItem } from '../helpers';
+import { styles } from './styles';
 
 const CAMPOS_INCIDENTE = [
   { key: 'tipo', label: 'Tipo', type: 'select', options: TIPOS_INCIDENTE, required: true },
@@ -27,7 +28,7 @@ export default function StepSeguranca({ rdo, update, ctx, validacao, mostrarErro
   const efetivo = totalTrabalhadores(rdo);
 
   return (
-    <View style={{ gap: 14 }}>
+    <View style={styles.gap14}>
       <SwitchField
         label="DDS realizado"
         description="Diálogo Diário de Segurança com a equipe."
@@ -35,7 +36,7 @@ export default function StepSeguranca({ rdo, update, ctx, validacao, mostrarErro
         onValueChange={(v) => set({ dds: { ...s.dds, realizado: v } })}
       />
       {s.dds.realizado ? (
-        <Card style={{ gap: 14 }}>
+        <Card style={styles.gap14}>
           <TextField
             label="Tema do DDS"
             value={s.dds.tema}

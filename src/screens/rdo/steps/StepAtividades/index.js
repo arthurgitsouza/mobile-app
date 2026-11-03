@@ -1,12 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
-import { colors } from '../../../theme';
-import { SITUACOES_ATIVIDADE, rotuloDe } from '../../../constants';
-import { acumuladoAnterior } from '../../../domain/rdo';
-import { formatQuantidade, isFilled, isValidNumber, toNumber } from '../../../utils/format';
-import { Banner } from '../../../components/ui';
-import { ItemListEditor, SwitchField, TextField } from '../../../components/form';
-import { alertaDoItem, msgErro } from './helpers';
+import { colors } from '../../../../theme';
+import { SITUACOES_ATIVIDADE, rotuloDe } from '../../../../constants';
+import { acumuladoAnterior } from '../../../../domain/rdo';
+import { formatQuantidade, isFilled, isValidNumber, toNumber } from '../../../../utils/format';
+import { Banner } from '../../../../components/ui';
+import { ItemListEditor, SwitchField, TextField } from '../../../../components/form';
+import { alertaDoItem, msgErro } from '../helpers';
+import { styles } from './styles';
 
 const CAMPOS = [
   {
@@ -67,7 +68,7 @@ export default function StepAtividades({ rdo, update, ctx, validacao, mostrarErr
   const contexto = { ...ctx, rdo, validacao, mostrarErros };
   const sp = rdo.semProducao;
   return (
-    <View style={{ gap: 14 }}>
+    <View style={styles.gap14}>
       {rdo.reaproveitadoDe ? (
         <Banner
           tone="info"

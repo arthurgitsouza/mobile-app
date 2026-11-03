@@ -1,13 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { colors } from '../../../theme';
-import { ROTULOS_CAMPOS } from '../../../constants/rotulos';
-import { conteudoTecnico } from '../../../domain/rdo';
-import { diffConteudo } from '../../../utils/object';
-import { useApp } from '../../../store/AppContext';
-import { haptic } from '../../../utils/feedback';
-import { Banner, Button, Card, Txt, useUI } from '../../../components/ui';
-import { TextField } from '../../../components/form';
+import { colors } from '../../../../theme';
+import { ROTULOS_CAMPOS } from '../../../../constants/rotulos';
+import { conteudoTecnico } from '../../../../domain/rdo';
+import { diffConteudo } from '../../../../utils/object';
+import { useApp } from '../../../../store/AppContext';
+import { haptic } from '../../../../utils/feedback';
+import { Banner, Button, Card, Txt, useUI } from '../../../../components/ui';
+import { TextField } from '../../../../components/form';
+import { styles } from './styles';
 
 // Edição pelo master (seção 9): justificativa obrigatória + registro antes/depois. Preferir devolver ao autor.
 export default function StepJustificativa({ rdo, ctx, definirRodape, navigation }) {
@@ -33,15 +34,15 @@ export default function StepJustificativa({ rdo, ctx, definirRodape, navigation 
 
   useEffect(() => {
     definirRodape(
-      <View style={{ flexDirection: 'row', gap: 10 }}>
-        <Button title="Cancelar" variant="secondary" onPress={() => navigation.goBack()} style={{ flex: 1 }} />
+      <View style={styles.rowGap10}>
+        <Button title="Cancelar" variant="secondary" onPress={() => navigation.goBack()} style={styles.flex1} />
         <Button
           title="Salvar alterações"
           icon="content-save-check-outline"
           variant="accent"
           disabled={!ok}
           onPress={salvar}
-          style={{ flex: 1.6 }}
+          style={styles.flex16}
         />
       </View>,
     );
@@ -50,20 +51,20 @@ export default function StepJustificativa({ rdo, ctx, definirRodape, navigation 
   }, [ok, justificativa, alteracoes]);
 
   return (
-    <View style={{ gap: 14 }}>
+    <View style={styles.gap14}>
       <Banner
         tone="warning"
         icon="lightbulb-on-outline"
         title="Prefira devolver ao autor"
         message="Quando a mudança for técnica (quantidades, horários, equipe), devolva o RDO ao operacional em vez de editar. Use a edição para ajustes pontuais."
       />
-      <Card style={{ gap: 8 }}>
+      <Card style={styles.gap8}>
         <Txt v="label" color={colors.navy600}>
           ALTERAÇÕES DETECTADAS ({alteracoes.length})
         </Txt>
         {alteracoes.length ? (
           alteracoes.slice(0, 30).map((a, i) => (
-            <View key={i} style={{ gap: 1 }}>
+            <View key={i} style={styles.gap1}>
               <Txt v="smallStrong">{a.caminho}</Txt>
               <Txt v="caption" muted>
                 {a.antes} → {a.depois}

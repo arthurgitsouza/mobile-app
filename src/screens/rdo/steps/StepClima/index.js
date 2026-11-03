@@ -1,12 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
-import { colors } from '../../../theme';
-import { CONDICOES_TEMPO, FONTES_CLIMA, IMPACTOS_CLIMA, PERIODOS_CLIMA } from '../../../constants';
-import { duracaoChuvaMin } from '../../../domain/rdo';
-import { formatDuracao } from '../../../utils/date';
-import { Banner, Button, Card, Icon, Txt } from '../../../components/ui';
-import { ChipGroup, NumberField, SwitchField, TextField, TimeField } from '../../../components/form';
-import { msgErro } from './helpers';
+import { colors } from '../../../../theme';
+import { CONDICOES_TEMPO, FONTES_CLIMA, IMPACTOS_CLIMA, PERIODOS_CLIMA } from '../../../../constants';
+import { duracaoChuvaMin } from '../../../../domain/rdo';
+import { formatDuracao } from '../../../../utils/date';
+import { Banner, Button, Card, Icon, Txt } from '../../../../components/ui';
+import { ChipGroup, NumberField, SwitchField, TextField, TimeField } from '../../../../components/form';
+import { msgErro } from '../helpers';
+import { styles } from './styles';
 
 const CHUVA = ['chuva_fraca', 'chuva_moderada', 'chuva_forte'];
 
@@ -22,14 +23,14 @@ export default function StepClima({ rdo, update, erros, mostrarErros }) {
   const marcouChuva = Object.values(c.periodos).some((p) => CHUVA.includes(p.condicao));
 
   return (
-    <View style={{ gap: 14 }}>
+    <View style={styles.gap14}>
       {msgErro(erros, 'periodos', mostrarErros) ? (
         <Banner tone="danger" message={msgErro(erros, 'periodos', mostrarErros)} />
       ) : null}
 
       {PERIODOS_CLIMA.map((p) => (
-        <Card key={p.key} style={{ gap: 12 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+        <Card key={p.key} style={styles.gap12}>
+          <View style={styles.rowAlignItemsCenter}>
             <Icon name={p.icone} size={20} color={colors.navy600} />
             <Txt v="bodyStrong">{p.label}</Txt>
           </View>
@@ -69,12 +70,12 @@ export default function StepClima({ rdo, update, erros, mostrarErros }) {
       />
 
       {c.choveu ? (
-        <Card style={{ gap: 14 }}>
+        <Card style={styles.gap14}>
           {msgErro(erros, 'chuva', mostrarErros) ? (
             <Banner tone="danger" message={msgErro(erros, 'chuva', mostrarErros)} />
           ) : null}
-          <View style={{ flexDirection: 'row', gap: 12 }}>
-            <View style={{ flex: 1 }}>
+          <View style={styles.rowGap12}>
+            <View style={styles.flex1}>
               <TimeField
                 label="Início da chuva"
                 value={c.chuvaInicio}
@@ -82,7 +83,7 @@ export default function StepClima({ rdo, update, erros, mostrarErros }) {
                 error={msgErro(erros, 'chuvaHorario', mostrarErros)}
               />
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={styles.flex1}>
               <TimeField label="Fim da chuva" value={c.chuvaFim} onChangeText={(t) => setClima({ chuvaFim: t })} />
             </View>
           </View>
@@ -107,7 +108,7 @@ export default function StepClima({ rdo, update, erros, mostrarErros }) {
             onChange={(v) => setClima({ impacto: v })}
           />
           {c.impacto && c.impacto !== 'nenhum' ? (
-            <View style={{ gap: 8 }}>
+            <View style={styles.gap8}>
               <TimeField
                 label="Horas paralisadas (HH:MM)"
                 required

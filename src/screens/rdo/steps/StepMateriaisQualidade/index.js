@@ -1,17 +1,18 @@
 import React from 'react';
 import { View } from 'react-native';
-import { colors } from '../../../theme';
+import { colors } from '../../../../theme';
 import {
   INSPECAO_MATERIAL,
   MOVIMENTO_MATERIAL,
   RESULTADOS_QUALIDADE,
   TIPOS_QUALIDADE,
   rotuloDe,
-} from '../../../constants';
-import { formatQuantidade, isValidNumber } from '../../../utils/format';
-import { ItemListEditor } from '../../../components/form';
-import { SectionTitle } from '../../../components/ui';
-import { alertaDoItem } from './helpers';
+} from '../../../../constants';
+import { formatQuantidade, isValidNumber } from '../../../../utils/format';
+import { ItemListEditor } from '../../../../components/form';
+import { SectionTitle } from '../../../../components/ui';
+import { alertaDoItem } from '../helpers';
+import { styles } from './styles';
 
 const recebido = (v) => v.movimento === 'recebido';
 const utilizado = (v) => v.movimento === 'utilizado';
@@ -71,8 +72,8 @@ export default function StepMateriaisQualidade({ rdo, update, ctx, validacao, mo
   const contexto = { ...ctx, validacao, mostrarErros };
   const setSem = (chave) => (v) => update((d) => ({ semRegistro: { ...d.semRegistro, [chave]: v } }));
   return (
-    <View style={{ gap: 20 }}>
-      <View style={{ gap: 10 }}>
+    <View style={styles.gap20}>
+      <View style={styles.gap10}>
         <SectionTitle>Materiais recebidos e utilizados</SectionTitle>
         <ItemListEditor
           items={rdo.materiais}
@@ -117,7 +118,7 @@ export default function StepMateriaisQualidade({ rdo, update, ctx, validacao, mo
         />
       </View>
 
-      <View style={{ gap: 10 }}>
+      <View style={styles.gap10}>
         <SectionTitle>Qualidade: inspeções, ensaios e não conformidades</SectionTitle>
         <ItemListEditor
           items={rdo.qualidade}

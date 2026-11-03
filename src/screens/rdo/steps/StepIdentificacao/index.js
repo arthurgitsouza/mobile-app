@@ -1,19 +1,20 @@
 import React from 'react';
 import { View } from 'react-native';
-import { TURNOS } from '../../../constants';
-import { FUSO_OBRA_LABEL, hojeObra, nomeDiaSemana } from '../../../utils/date';
-import { Banner, Card, KeyValue, Txt } from '../../../components/ui';
-import { ChipGroup, DateField, TextField } from '../../../components/form';
-import { numeroFormatado } from '../../../domain/rdo';
-import { msgErro } from './helpers';
+import { TURNOS } from '../../../../constants';
+import { FUSO_OBRA_LABEL, hojeObra, nomeDiaSemana } from '../../../../utils/date';
+import { Banner, Card, KeyValue, Txt } from '../../../../components/ui';
+import { ChipGroup, DateField, TextField } from '../../../../components/form';
+import { numeroFormatado } from '../../../../domain/rdo';
+import { msgErro } from '../helpers';
+import { styles } from './styles';
 
 // Grupo A — Identificação. Dados da obra vêm do cadastro (não editáveis aqui); data, turno e responsável são do dia.
 export default function StepIdentificacao({ rdo, update, obra, erros, mostrarErros, validacao }) {
   const duplicado = validacao.avisos.find((a) => a.passo === 'identificacao' && /Já existe/.test(a.mensagem));
   const i = rdo.identificacao;
   return (
-    <View style={{ gap: 14 }}>
-      <Card style={{ gap: 8 }}>
+    <View style={styles.gap14}>
+      <Card style={styles.gap8}>
         <Txt v="label" color="#1F4E79">
           DADOS DA OBRA (DO CADASTRO)
         </Txt>

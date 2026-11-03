@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, useWindowDimensions } from 'react-native';
-import { colors } from '../../../theme';
-import { uid } from '../../../utils/format';
-import { nowISO } from '../../../utils/date';
-import { Banner, Button, Card, Icon, LinkButton, Txt, useUI } from '../../../components/ui';
-import { PhotoTile } from '../../../components/rdo';
-import { capturarFoto, escolherDaGaleria } from '../../../services/media';
-import { haptic } from '../../../utils/feedback';
-import PhotoEditorSheet from './PhotoEditorSheet';
+import { View, useWindowDimensions } from 'react-native';
+import { colors } from '../../../../theme';
+import { uid } from '../../../../utils/format';
+import { nowISO } from '../../../../utils/date';
+import { Banner, Button, Card, Icon, LinkButton, Txt, useUI } from '../../../../components/ui';
+import { PhotoTile } from '../../../../components/rdo';
+import { capturarFoto, escolherDaGaleria } from '../../../../services/media';
+import { haptic } from '../../../../utils/feedback';
+import PhotoEditorSheet from '../PhotoEditorSheet';
+import { styles, dinamico } from './styles';
 
 const EXEMPLOS = [
   { cor: 'blue', icone: 'wall' },
@@ -93,25 +94,25 @@ export default function StepFotos({ rdo, update, ctx, mostrarErros }) {
   const semLegenda = rdo.fotos.filter((f) => !f.legenda?.trim()).length;
 
   return (
-    <View style={{ gap: 14 }}>
+    <View style={styles.gap14}>
       <View style={styles.acoes}>
-        <Button title="Tirar foto" icon="camera-outline" onPress={tirar} style={{ flex: 1 }} />
+        <Button title="Tirar foto" icon="camera-outline" onPress={tirar} style={styles.flex1} />
         <Button
           title="Galeria"
           icon="image-multiple-outline"
           variant="secondary"
           onPress={galeria}
-          style={{ flex: 1 }}
+          style={styles.flex1}
         />
       </View>
 
       {rdo.fotos.length === 0 ? (
-        <Card tone="soft" style={{ alignItems: 'center', gap: 8 }}>
+        <Card tone="soft" style={styles.alignItemsCenterGap8}>
           <Icon name="camera-plus-outline" size={34} color={colors.navy600} />
-          <Txt v="bodyStrong" style={{ textAlign: 'center' }}>
+          <Txt v="bodyStrong" style={styles.textAlignCenter}>
             Nenhuma foto ainda
           </Txt>
-          <Txt v="small" muted style={{ textAlign: 'center' }}>
+          <Txt v="small" muted style={styles.textAlignCenter}>
             Recomendado: ao menos 3 fotos com legenda, local e vínculo à atividade ou ocorrência. Funciona offline: as
             fotos ficam no aparelho até a sincronização.
           </Txt>
@@ -121,13 +122,13 @@ export default function StepFotos({ rdo, update, ctx, mostrarErros }) {
         <>
           <View style={styles.grid}>
             {rdo.fotos.map((f) => (
-              <View key={f.id} style={{ width: tile, gap: 4 }}>
+              <View key={f.id} style={dinamico.colunaFoto(tile)}>
                 <PhotoTile foto={f} width={tile} onPress={() => setEditandoId(f.id)} />
                 <Txt
                   v="caption"
                   color={f.legenda ? colors.textMuted : colors.danger}
                   numberOfLines={2}
-                  style={!f.legenda ? { fontWeight: '800' } : undefined}
+                  style={!f.legenda ? styles.fontWeight800 : undefined}
                 >
                   {f.legenda || 'Sem legenda (obrigatória)'}
                 </Txt>
@@ -166,8 +167,3 @@ export default function StepFotos({ rdo, update, ctx, mostrarErros }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  acoes: { flexDirection: 'row', gap: 10 },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-});

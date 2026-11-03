@@ -1,10 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
-import { colors } from '../../../theme';
-import { formatDate, timeToMinutes } from '../../../utils/date';
-import { ItemListEditor } from '../../../components/form';
-import { SectionTitle } from '../../../components/ui';
-import { alertaDoItem, proximoCodigoOcorrencia } from './helpers';
+import { colors } from '../../../../theme';
+import { formatDate, timeToMinutes } from '../../../../utils/date';
+import { ItemListEditor } from '../../../../components/form';
+import { SectionTitle } from '../../../../components/ui';
+import { alertaDoItem, proximoCodigoOcorrencia } from '../helpers';
+import { styles } from './styles';
 
 const CAMPOS_OCORRENCIA = [
   { key: 'codigo', type: 'readonly', label: 'Código (automático)' },
@@ -65,8 +66,8 @@ export default function StepOcorrencias({ rdo, update, ctx, validacao, mostrarEr
   const contexto = { ...ctx, validacao, mostrarErros };
   const setSem = (chave) => (v) => update((d) => ({ semRegistro: { ...d.semRegistro, [chave]: v } }));
   return (
-    <View style={{ gap: 20 }}>
-      <View style={{ gap: 10 }}>
+    <View style={styles.gap20}>
+      <View style={styles.gap10}>
         <SectionTitle>Ocorrências e comunicações</SectionTitle>
         <ItemListEditor
           items={rdo.ocorrencias}
@@ -117,7 +118,7 @@ export default function StepOcorrencias({ rdo, update, ctx, validacao, mostrarEr
         />
       </View>
 
-      <View style={{ gap: 10 }}>
+      <View style={styles.gap10}>
         <SectionTitle>Visitas e orientações</SectionTitle>
         <ItemListEditor
           items={rdo.visitas}

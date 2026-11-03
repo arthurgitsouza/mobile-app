@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
-import { colors, statusMeta } from '../../theme';
-import { PERFIL, STATUS_ORDEM } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { useNow } from '../../hooks/useNow';
-import useCriarRdo from '../../hooks/useCriarRdo';
-import { diasSemRdo, obrasVisiveis, rdosVisiveis } from '../../domain/selectors';
-import { addDays, formatDate, formatMonthYear, hojeObra, ymOf } from '../../utils/date';
-import { normalizar } from '../../utils/format';
+import { colors, statusMeta } from '../../../theme';
+import { PERFIL, STATUS_ORDEM } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { useNow } from '../../../hooks/useNow';
+import useCriarRdo from '../../../hooks/useCriarRdo';
+import { diasSemRdo, obrasVisiveis, rdosVisiveis } from '../../../domain/selectors';
+import { addDays, formatDate, formatMonthYear, hojeObra, ymOf } from '../../../utils/date';
+import { normalizar } from '../../../utils/format';
 import {
   BottomSheet,
   Button,
@@ -19,10 +19,11 @@ import {
   SegmentedTabs,
   SyncBanner,
   Txt,
-} from '../../components/ui';
-import CalendarMonth from '../../components/ui/CalendarMonth';
-import { SearchBar, ChipGroup, SelectField } from '../../components/form';
-import { RdoCard } from '../../components/rdo';
+} from '../../../components/ui';
+import CalendarMonth from '../../../components/ui/CalendarMonth';
+import { SearchBar, ChipGroup, SelectField } from '../../../components/form';
+import { RdoCard } from '../../../components/rdo';
+import { styles, dinamico } from './styles';
 
 const PERIODOS = [
   { value: '7', label: '7 dias' },
@@ -124,14 +125,14 @@ export default function RdoListScreen({ route, navigation }) {
   };
 
   const cabecalho = (
-    <View style={{ gap: 10, marginTop: 8 }}>
+    <View style={styles.gap10MarginTop8}>
       <View style={styles.searchRow}>
         <SearchBar
           onDark
           value={busca}
           onChangeText={setBusca}
           placeholder="Buscar nº, atividade, ocorrência, autor"
-          style={{ flex: 1 }}
+          style={styles.flex1}
         />
         <IconButton
           icon="filter-variant"
@@ -182,8 +183,8 @@ export default function RdoListScreen({ route, navigation }) {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ gap: 8, paddingRight: 16 }}
-        style={{ flexGrow: 0 }}
+        contentContainerStyle={styles.gap8PaddingRight16}
+        style={styles.flexGrow0}
       >
         <Chip label="Todos" selected={!status} onPress={() => setStatus('')} count={todos.length} />
         {STATUS_ORDEM.filter((s) => contagem[s]).map((s) => (
@@ -274,7 +275,7 @@ export default function RdoListScreen({ route, navigation }) {
               onAction={() => novoRdo(dia)}
             />
           )}
-          <Txt v="caption" subtle style={{ textAlign: 'center' }}>
+          <Txt v="caption" subtle style={styles.textAlignCenter}>
             {formatMonthYear(mes)}
           </Txt>
         </>
@@ -285,7 +286,7 @@ export default function RdoListScreen({ route, navigation }) {
         onClose={() => setFiltros(false)}
         title="Filtros"
         footer={
-          <View style={{ flexDirection: 'row', gap: 10 }}>
+          <View style={styles.rowGap10}>
             <Button
               title="Limpar"
               variant="secondary"
@@ -295,9 +296,9 @@ export default function RdoListScreen({ route, navigation }) {
                 setAutorId('');
                 setPeriodo('todos');
               }}
-              style={{ flex: 1 }}
+              style={styles.flex1}
             />
-            <Button title="Aplicar" icon="check" onPress={() => setFiltros(false)} style={{ flex: 1.3 }} />
+            <Button title="Aplicar" icon="check" onPress={() => setFiltros(false)} style={styles.flex13} />
           </View>
         }
       >
@@ -359,26 +360,10 @@ export default function RdoListScreen({ route, navigation }) {
 function Legenda({ cor, texto, fundo }) {
   return (
     <View style={styles.leg}>
-      <View
-        style={[
-          styles.legDot,
-          { backgroundColor: fundo ? colors.warningBg : cor },
-          fundo && { borderWidth: 1, borderColor: cor },
-        ]}
-      />
+      <View style={[styles.legDot, dinamico.fundoLegenda(fundo, cor), fundo && dinamico.bordaLegenda(cor)]} />
       <Txt v="caption" muted>
         {texto}
       </Txt>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  searchRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  fab: { position: 'absolute', right: 16, bottom: 16 },
-  fabBtn: { paddingHorizontal: 22, height: 54, borderRadius: 27 },
-  cal: { backgroundColor: colors.surface, borderRadius: 16, borderWidth: 1, borderColor: colors.border, padding: 12 },
-  legenda: { flexDirection: 'row', gap: 16, justifyContent: 'center', marginTop: 4 },
-  leg: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  legDot: { width: 12, height: 12, borderRadius: 6 },
-});
