@@ -41,7 +41,7 @@ export function DateField({
         style={[inputStyles.wrap, !!error && inputStyles.error, disabled && inputStyles.readonly]}
       >
         <Icon name="calendar-month-outline" size={20} color={colors.textMuted} />
-        <Txt v="body" color={value ? colors.text : colors.textSubtle} style={{ flex: 1 }}>
+        <Txt v="body" color={value ? colors.text : colors.textSubtle} style={styles.ocupa}>
           {value ? `${formatDate(value)} · ${nomeDiaSemana(value)}` : placeholder}
         </Txt>
         <Icon name="chevron-down" size={20} color={colors.textMuted} />
@@ -105,7 +105,7 @@ export function SelectField({
         style={[inputStyles.wrap, !!error && inputStyles.error, disabled && inputStyles.readonly]}
       >
         {current?.icone ? <Icon name={current.icone} size={20} color={colors.navy600} /> : null}
-        <Txt v="body" color={shown ? colors.text : colors.textSubtle} style={{ flex: 1 }} numberOfLines={1}>
+        <Txt v="body" color={shown ? colors.text : colors.textSubtle} style={styles.ocupa} numberOfLines={1}>
           {shown || placeholder}
         </Txt>
         <Icon name="chevron-down" size={20} color={colors.textMuted} />
@@ -140,7 +140,7 @@ export function SelectField({
             style={[styles.option, { backgroundColor: colors.blue50 }]}
           >
             <Icon name="plus-circle-outline" size={22} color={colors.navy600} />
-            <Txt v="bodyStrong" color={colors.navy600} style={{ flex: 1 }}>
+            <Txt v="bodyStrong" color={colors.navy600} style={styles.ocupa}>
               Usar “{q.trim()}”
             </Txt>
           </Pressable>
@@ -158,7 +158,7 @@ export function SelectField({
               style={[styles.option, ativo && { backgroundColor: colors.blue50 }, o.disabled && { opacity: 0.45 }]}
             >
               {o.icone ? <Icon name={o.icone} size={22} color={ativo ? colors.navy700 : colors.textMuted} /> : null}
-              <View style={{ flex: 1 }}>
+              <View style={styles.ocupa}>
                 <Txt v={ativo ? 'bodyStrong' : 'body'} color={ativo ? colors.navy700 : colors.text}>
                   {o.label}
                 </Txt>
@@ -177,7 +177,7 @@ export function SelectField({
           );
         })}
         {!filtrados.length && !(allowCustom && q.trim()) ? (
-          <Txt v="small" muted style={{ textAlign: 'center', paddingVertical: 12 }}>
+          <Txt v="small" muted style={styles.vazio}>
             Nenhuma opção encontrada.
           </Txt>
         ) : null}
@@ -212,9 +212,9 @@ export function ChipGroup({ label, required, help, error, options, value, onChan
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ gap: 8, paddingRight: 8 }}
+          contentContainerStyle={styles.chipsConteudo}
           accessibilityRole="radiogroup"
-          style={{ flexGrow: 0 }}
+          style={styles.rolagem}
         >
           {chips}
         </ScrollView>
@@ -243,7 +243,7 @@ export function SwitchField({ label, description, value, onValueChange, disabled
         style,
       ]}
     >
-      <View style={{ flex: 1, gap: 2 }}>
+      <View style={styles.textos}>
         <Txt v="bodyStrong">{label}</Txt>
         {description ? (
           <Txt v="small" muted>

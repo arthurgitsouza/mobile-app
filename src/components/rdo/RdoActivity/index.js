@@ -25,7 +25,7 @@ export function CommentItem({ comentario, nome, fotos }) {
     <View style={[styles.comment, comentario.tipo === 'devolucao' && { borderColor: colors.warning }]}>
       <View style={styles.head}>
         <Avatar nome={nome} size={34} />
-        <View style={{ flex: 1 }}>
+        <View style={styles.ocupa}>
           <Txt v="smallStrong" numberOfLines={1}>
             {nome}
           </Txt>
@@ -38,7 +38,7 @@ export function CommentItem({ comentario, nome, fotos }) {
       {contexto && comentario.contexto !== 'geral' ? (
         <View style={styles.ctx}>
           <Icon name="link-variant" size={12} color={colors.navy600} />
-          <Txt v="caption" color={colors.navy600} style={{ fontWeight: '800' }}>
+          <Txt v="caption" color={colors.navy600} style={styles.destaque}>
             {contexto}
           </Txt>
         </View>
@@ -69,7 +69,7 @@ export function AuditItem({ evento, nome, papel, ultimo }) {
         </View>
         {!ultimo ? <View style={styles.trilho} /> : null}
       </View>
-      <View style={{ flex: 1, paddingBottom: 14, gap: 2 }}>
+      <View style={styles.corpo}>
         <Txt v="smallStrong">{meta.label}</Txt>
         <Txt v="caption" muted>
           {nome}
@@ -82,7 +82,7 @@ export function AuditItem({ evento, nome, papel, ultimo }) {
         ) : null}
         {evento.meta?.alteracoes?.length ? (
           <View style={styles.diff}>
-            <Txt v="caption" color={colors.goldText} style={{ fontWeight: '800' }}>
+            <Txt v="caption" color={colors.goldText} style={styles.destaque}>
               Alterações (antes → depois)
             </Txt>
             {evento.meta.alteracoes.map((a, i) => (

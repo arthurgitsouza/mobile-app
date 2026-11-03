@@ -16,4 +16,7 @@ export const styles = StyleSheet.create({
     borderRadius: 999,
   },
   aviso: { flexDirection: 'row', alignItems: 'center', gap: 6, padding: 8, borderRadius: 8 },
+  ocupa: { flex: 1 },
+  destaque: { fontWeight: '800' },
+  avisoTexto: { flex: 1, fontWeight: '700' },
 });

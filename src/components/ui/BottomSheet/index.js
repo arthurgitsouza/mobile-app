@@ -59,7 +59,7 @@ export default function BottomSheet({
           <View style={styles.grabber} />
           {title ? (
             <View style={styles.header}>
-              <View style={{ flex: 1, gap: 2 }}>
+              <View style={styles.cabecalhoTexto}>
                 <Txt v="h3" numberOfLines={2} accessibilityRole="header">
                   {title}
                 </Txt>

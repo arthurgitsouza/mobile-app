@@ -25,4 +25,8 @@ export const styles = StyleSheet.create({
   valueRow: { flexDirection: 'row', alignItems: 'flex-end', gap: 4 },
   value: { fontSize: 32, lineHeight: 38 },
   delta: { flexDirection: 'row', alignItems: 'center', gap: 4, flexWrap: 'wrap' },
+  ocupa: { flex: 1 },
+  sufixo: { marginBottom: 4 },
+  aDireita: { marginLeft: 'auto' },
+  negrito: { fontWeight: '800' },
 });

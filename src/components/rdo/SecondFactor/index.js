@@ -69,7 +69,7 @@ export default function SecondFactor({ usuario, verificado, onVerificado }) {
     return (
       <Card tone="success" style={styles.ok}>
         <Icon name="shield-check" size={26} color={colors.success} />
-        <View style={{ flex: 1 }}>
+        <View style={styles.ocupa}>
           <Txt v="bodyStrong" color={colors.success}>
             Identidade confirmada
           </Txt>
@@ -83,10 +83,10 @@ export default function SecondFactor({ usuario, verificado, onVerificado }) {
   }
 
   return (
-    <Card style={{ gap: 12 }}>
+    <Card style={styles.cartao}>
       <View style={styles.head}>
         <Icon name="shield-key-outline" size={22} color={colors.navy600} />
-        <Txt v="bodyStrong" style={{ flex: 1 }}>
+        <Txt v="bodyStrong" style={styles.ocupa}>
           Segundo fator de autenticação
         </Txt>
       </View>
@@ -97,7 +97,7 @@ export default function SecondFactor({ usuario, verificado, onVerificado }) {
 
       {codigo ? (
         <>
-          <Card tone="gold" style={{ gap: 4 }}>
+          <Card tone="gold" style={styles.cartaoCodigo}>
             <Txt v="label" color={colors.goldText}>
               E-MAIL SIMULADO PARA {mascararEmail(usuario.email).toUpperCase()}
             </Txt>
@@ -107,7 +107,7 @@ export default function SecondFactor({ usuario, verificado, onVerificado }) {
             <Txt
               v="display"
               color={colors.goldText}
-              style={{ letterSpacing: 6 }}
+              style={styles.codigo}
               accessibilityLabel={`Código ${codigo.split('').join(' ')}`}
             >
               {codigo}

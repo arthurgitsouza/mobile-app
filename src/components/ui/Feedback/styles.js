@@ -14,4 +14,10 @@ export const styles = StyleSheet.create({
   },
   banner: { flexDirection: 'row', gap: 10, padding: 12, borderRadius: radius.md },
   bannerAction: { alignSelf: 'flex-start', paddingVertical: 4, minHeight: 32, justifyContent: 'center' },
+  centralizado: { textAlign: 'center' },
+  mensagemVazia: { textAlign: 'center', maxWidth: 300 },
+  acaoVazia: { marginTop: 6 },
+  bannerIcone: { marginTop: 1 },
+  bannerTexto: { flex: 1, gap: 2 },
+  sublinhado: { textDecorationLine: 'underline' },
 });

@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { colors } from '../../theme';
-import { EVENTOS_PUBLICOS, PERFIL, STATUS } from '../../constants';
-import { useApp } from '../../store/AppContext';
-import { useNow } from '../../hooks/useNow';
-import useAcao from '../../hooks/useAcao';
-import { numeroFormatado } from '../../domain/rdo';
-import { acoesDisponiveis, estaBloqueado, podeVerRdo } from '../../domain/workflow';
-import { nomeUsuario, perfilUsuario } from '../../domain/selectors';
-import { formatDate, formatDateTime, nomeDiaCurto, tempoRelativo } from '../../utils/date';
+import { View } from 'react-native';
+import { colors } from '../../../theme';
+import { EVENTOS_PUBLICOS, PERFIL, STATUS } from '../../../constants';
+import { useApp } from '../../../store/AppContext';
+import { useNow } from '../../../hooks/useNow';
+import useAcao from '../../../hooks/useAcao';
+import { numeroFormatado } from '../../../domain/rdo';
+import { acoesDisponiveis, estaBloqueado, podeVerRdo } from '../../../domain/workflow';
+import { nomeUsuario, perfilUsuario } from '../../../domain/selectors';
+import { formatDate, formatDateTime, nomeDiaCurto, tempoRelativo } from '../../../utils/date';
 import {
   Banner,
   BottomSheet,
@@ -22,9 +22,10 @@ import {
   StatusBadge,
   Txt,
   useUI,
-} from '../../components/ui';
-import { AuditItem, CommentItem, PhotoViewer, RdoSections, WorkflowTimeline } from '../../components/rdo';
-import { ComentarSheet, DevolverSheet, EnviarClienteSheet } from './sheets';
+} from '../../../components/ui';
+import { AuditItem, CommentItem, PhotoViewer, RdoSections, WorkflowTimeline } from '../../../components/rdo';
+import { ComentarSheet, DevolverSheet, EnviarClienteSheet } from '../sheets';
+import { styles } from './styles';
 
 export default function RdoDetailScreen({ route, navigation }) {
   const { rdoId, tab: tabInicial = 'conteudo' } = route.params;
@@ -246,7 +247,7 @@ export default function RdoDetailScreen({ route, navigation }) {
             icon={secundaria.icone}
             variant="secondary"
             onPress={() => executar(secundaria.key)}
-            style={{ flex: 1 }}
+            style={styles.acaoSecundaria}
           />
         ) : null}
         {principal ? (
@@ -255,7 +256,7 @@ export default function RdoDetailScreen({ route, navigation }) {
             icon={principal.icone}
             variant="accent"
             onPress={() => executar(principal.key)}
-            style={{ flex: 1.4 }}
+            style={styles.acaoPrincipal}
           />
         ) : null}
       </View>
@@ -275,7 +276,7 @@ export default function RdoDetailScreen({ route, navigation }) {
     >
       <View style={styles.resumo}>
         <StatusBadge status={rdo.status} />
-        <Txt v="small" muted style={{ flex: 1, textAlign: 'right' }} numberOfLines={2}>
+        <Txt v="small" muted style={styles.autor} numberOfLines={2}>
           {nomeDe(rdo.autorId)}
           {rdo.submetidoEm ? ` · enviado ${tempoRelativo(rdo.submetidoEm, now)}` : ' · em preenchimento'}
         </Txt>
@@ -375,7 +376,7 @@ export default function RdoDetailScreen({ route, navigation }) {
             onVerAssinatura={(quem) => navigation.navigate('Receipt', { rdoId, quem })}
           />
           {versoes.length > 1 ? (
-            <Card style={{ gap: 4 }}>
+            <Card style={styles.versoes}>
               <Txt v="label" color={colors.navy600}>
                 VERSÕES DESTE RDO
               </Txt>
@@ -535,8 +536,3 @@ export default function RdoDetailScreen({ route, navigation }) {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({
-  resumo: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  rodape: { flexDirection: 'row', gap: 10 },
-});

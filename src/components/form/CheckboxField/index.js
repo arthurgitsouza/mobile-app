@@ -36,7 +36,7 @@ export default function CheckboxField({
           size={plain ? 24 : 26}
           color={value ? colors.navy700 : colors.textMuted}
         />
-        <View style={{ flex: 1, gap: 2 }}>
+        <View style={styles.textos}>
           <Txt v={plain ? 'small' : 'bodyStrong'} style={plain ? { fontWeight: '600' } : undefined}>
             {label}
             {required ? (
@@ -53,7 +53,7 @@ export default function CheckboxField({
         </View>
       </Pressable>
       {error ? (
-        <Txt v="caption" color={colors.danger} style={{ marginTop: 4 }}>
+        <Txt v="caption" color={colors.danger} style={styles.erro}>
           {error}
         </Txt>
       ) : null}

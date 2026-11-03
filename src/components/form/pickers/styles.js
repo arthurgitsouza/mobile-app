@@ -54,4 +54,9 @@ export const styles = StyleSheet.create({
     minWidth: 48,
     paddingVertical: 6,
   },
+  ocupa: { flex: 1 },
+  vazio: { textAlign: 'center', paddingVertical: 12 },
+  chipsConteudo: { gap: 8, paddingRight: 8 },
+  rolagem: { flexGrow: 0 },
+  textos: { flex: 1, gap: 2 },
 });
