@@ -1,4 +1,4 @@
-import { styles } from './styles';
+import { styles, dinamico } from './styles';
 import React from 'react';
 import { Pressable, View, useWindowDimensions } from 'react-native';
 import { colors } from '../../../theme';
@@ -37,8 +37,8 @@ const conds = Object.fromEntries(CONDICOES_TEMPO.map((c) => [c.value, c]));
 function Linha({ icon, children, color = colors.textMuted }) {
   return (
     <View style={styles.linha}>
-      <Icon name={icon} size={16} color={color} style={{ marginTop: 2 }} />
-      <View style={{ flex: 1 }}>{children}</View>
+      <Icon name={icon} size={16} color={color} style={styles.icone} />
+      <View style={styles.ocupa}>{children}</View>
     </View>
   );
 }
@@ -60,7 +60,7 @@ function ComentarSecao({ chave, contagem, onComentar }) {
         color={contagem ? colors.navy700 : colors.textMuted}
       />
       {contagem ? (
-        <Txt v="caption" color={colors.navy700} style={{ fontWeight: '800' }}>
+        <Txt v="caption" color={colors.navy700} style={styles.destaque}>
           {contagem}
         </Txt>
       ) : null}
@@ -104,7 +104,7 @@ export default function RdoSections({
   const turno = rotuloDe(TURNOS, rdo.turno);
 
   return (
-    <View style={{ gap: 12 }}>
+    <View style={styles.secoes}>
       {/* A */}
       <SectionCard letra="A" titulo="Identificação" right={cs('identificacao')}>
         <KeyValue inline label="Número / versão" value={`${numeroFormatado(rdo)} · v${rdo.versao}`} />
@@ -141,7 +141,7 @@ export default function RdoSections({
                   {p.label}
                 </Txt>
                 <Icon name={cond?.icone || 'minus'} size={26} color={cond ? colors.navy600 : colors.borderStrong} />
-                <Txt v="smallStrong" style={{ textAlign: 'center' }} numberOfLines={2}>
+                <Txt v="smallStrong" style={styles.centralizado} numberOfLines={2}>
                   {cond?.label || '—'}
                 </Txt>
                 {c.temperatura ? (
@@ -156,7 +156,7 @@ export default function RdoSections({
         {clima.choveu ? (
           <View style={styles.chuva}>
             <Icon name="weather-pouring" size={20} color={colors.info} />
-            <View style={{ flex: 1, gap: 2 }}>
+            <View style={styles.bloco}>
               <Txt v="smallStrong" color={colors.info}>
                 Chuva{clima.chuvaInicio ? ` das ${clima.chuvaInicio} às ${clima.chuvaFim}` : ''}
                 {duracao !== null ? ` (${formatDuracao(duracao)})` : ''}
@@ -187,7 +187,7 @@ export default function RdoSections({
         {rdo.maoDeObra.length ? (
           <View>
             <View style={[styles.tr, styles.th]}>
-              <Txt v="caption" muted style={{ flex: 1 }}>
+              <Txt v="caption" muted style={styles.ocupa}>
                 Função / equipe
               </Txt>
               <Txt v="caption" muted style={styles.tdNum}>
@@ -202,7 +202,7 @@ export default function RdoSections({
             </View>
             {rdo.maoDeObra.map((m) => (
               <View key={m.id} style={styles.tr}>
-                <View style={{ flex: 1 }}>
+                <View style={styles.ocupa}>
                   <Txt v="smallStrong">{m.funcao}</Txt>
                   <Txt v="caption" muted>
                     {m.empresa || '—'}
@@ -221,7 +221,7 @@ export default function RdoSections({
               </View>
             ))}
             <View style={[styles.tr, styles.total]}>
-              <Txt v="smallStrong" style={{ flex: 1 }}>
+              <Txt v="smallStrong" style={styles.ocupa}>
                 Total
               </Txt>
               <Txt v="smallStrong" style={styles.tdNum}>
@@ -256,7 +256,7 @@ export default function RdoSections({
           rdo.equipamentos.map((e) => (
             <Item key={e.id}>
               <View style={styles.rowBetween}>
-                <Txt v="bodyStrong" style={{ flex: 1 }}>
+                <Txt v="bodyStrong" style={styles.ocupa}>
                   {e.tipo} {e.quantidade > 1 ? `× ${e.quantidade}` : ''}
                 </Txt>
                 <Badge
@@ -309,7 +309,7 @@ export default function RdoSections({
         {rdo.semProducao?.ativo ? (
           <View style={[styles.chuva, { backgroundColor: colors.warningBg }]}>
             <Icon name="pause-circle-outline" size={20} color={colors.warning} />
-            <View style={{ flex: 1 }}>
+            <View style={styles.ocupa}>
               <Txt v="smallStrong" color={colors.warning}>
                 Dia sem produção
               </Txt>
@@ -325,7 +325,7 @@ export default function RdoSections({
           return (
             <Item key={a.id}>
               <View style={styles.rowBetween}>
-                <Txt v="bodyStrong" style={{ flex: 1 }}>
+                <Txt v="bodyStrong" style={styles.ocupa}>
                   {a.servico}
                 </Txt>
                 <Badge
@@ -348,7 +348,7 @@ export default function RdoSections({
                 <Txt v="small" muted>
                   no dia
                 </Txt>
-                <Txt v="small" muted style={{ marginLeft: 'auto' }}>
+                <Txt v="small" muted style={styles.aDireita}>
                   Acumulado: {formatQuantidade(acumulado)} {a.unidade}
                 </Txt>
               </View>
@@ -376,7 +376,7 @@ export default function RdoSections({
           rdo.materiais.map((m) => (
             <Item key={m.id}>
               <View style={styles.rowBetween}>
-                <Txt v="bodyStrong" style={{ flex: 1 }}>
+                <Txt v="bodyStrong" style={styles.ocupa}>
                   {m.material}
                 </Txt>
                 <Badge
@@ -414,7 +414,7 @@ export default function RdoSections({
           rdo.qualidade.map((q) => (
             <Item key={q.id}>
               <View style={styles.rowBetween}>
-                <Txt v="bodyStrong" style={{ flex: 1 }}>
+                <Txt v="bodyStrong" style={styles.ocupa}>
                   {rotuloDe(TIPOS_QUALIDADE, q.tipo)}
                 </Txt>
                 <Badge
@@ -485,7 +485,7 @@ export default function RdoSections({
           />
         ) : null}
         {rdo.seguranca.incidentes.map((i) => (
-          <Item key={i.id} style={{ borderColor: colors.danger }}>
+          <Item key={i.id} style={styles.itemAlerta}>
             <Txt v="bodyStrong" color={colors.danger}>
               {rotuloDe(TIPOS_INCIDENTE, i.tipo)}
             </Txt>
@@ -580,7 +580,7 @@ export default function RdoSections({
         {rdo.fotos.length ? (
           <View style={styles.grid}>
             {rdo.fotos.map((f, i) => (
-              <View key={f.id} style={{ width: tile, gap: 4 }}>
+              <View key={f.id} style={dinamico.foto(tile)}>
                 <PhotoTile foto={f} width={tile} onPress={onAbrirFoto ? () => onAbrirFoto(i) : undefined} />
                 <Txt v="caption" muted numberOfLines={2}>
                   {f.legenda || 'Sem legenda'}
@@ -703,7 +703,7 @@ function AssinaturaLinha({ titulo, dados, pendente, onPress, cliente }) {
       style={styles.assin}
     >
       <View style={styles.rowBetween}>
-        <Txt v="smallStrong" style={{ flex: 1 }}>
+        <Txt v="smallStrong" style={styles.ocupa}>
           {titulo}
         </Txt>
         {tipo ? (
@@ -734,7 +734,7 @@ function AssinaturaLinha({ titulo, dados, pendente, onPress, cliente }) {
         </Txt>
       ) : null}
       {onPress ? (
-        <Txt v="caption" color={colors.blue500} style={{ fontWeight: '800' }}>
+        <Txt v="caption" color={colors.blue500} style={styles.destaque}>
           Ver comprovante e evidências ›
         </Txt>
       ) : null}

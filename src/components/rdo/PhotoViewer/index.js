@@ -36,13 +36,13 @@ export default function PhotoViewer({
     >
       <View style={[styles.root, { paddingTop: insets.top + 8, paddingBottom: insets.bottom + 8 }]}>
         <View style={styles.bar}>
-          <Txt v="bodyStrong" color={colors.white} style={{ flex: 1 }}>
+          <Txt v="bodyStrong" color={colors.white} style={styles.ocupa}>
             Foto {n} de {fotos.length}
           </Txt>
           <IconButton icon="close" label="Fechar visualização" color={colors.white} onPress={onClose} />
         </View>
-        <ScrollView contentContainerStyle={{ padding: 16, gap: 14 }} showsVerticalScrollIndicator={false}>
-          <View onLayout={(e) => setLargura(e.nativeEvent.layout.width)} style={{ alignItems: 'center' }}>
+        <ScrollView contentContainerStyle={styles.conteudo} showsVerticalScrollIndicator={false}>
+          <View onLayout={(e) => setLargura(e.nativeEvent.layout.width)} style={styles.imagem}>
             <PhotoTile foto={foto} width={largura} ratio={0.75} showState={false} />
           </View>
           <View style={styles.nav}>
@@ -89,7 +89,7 @@ export default function PhotoViewer({
                   : '—'
               }
             />
-            <View style={{ flexDirection: 'row', gap: 6, flexWrap: 'wrap' }}>
+            <View style={styles.etiquetas}>
               <Badge
                 label={foto.envio === 'local' ? 'Somente no aparelho' : 'Enviada ao servidor'}
                 color={foto.envio === 'local' ? colors.warning : colors.success}
@@ -99,7 +99,7 @@ export default function PhotoViewer({
               />
             </View>
             {onComentar || onEditar ? (
-              <View style={{ flexDirection: 'row', gap: 10, marginTop: 4 }}>
+              <View style={styles.acoes}>
                 {onEditar ? (
                   <Button
                     title="Editar legenda"
@@ -107,7 +107,7 @@ export default function PhotoViewer({
                     variant="secondary"
                     size="sm"
                     onPress={() => onEditar(foto)}
-                    style={{ flex: 1 }}
+                    style={styles.ocupa}
                   />
                 ) : null}
                 {onComentar ? (
@@ -117,7 +117,7 @@ export default function PhotoViewer({
                     variant="tonal"
                     size="sm"
                     onPress={() => onComentar(foto)}
-                    style={{ flex: 1 }}
+                    style={styles.ocupa}
                   />
                 ) : null}
               </View>

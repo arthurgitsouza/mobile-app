@@ -15,4 +15,6 @@ export const styles = StyleSheet.create({
   },
   badges: { position: 'absolute', bottom: 6, right: 6, flexDirection: 'row', gap: 4 },
   mini: { width: 20, height: 20, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  rotuloFoto: { letterSpacing: 1 },
+  destaque: { fontWeight: '800' },
 });

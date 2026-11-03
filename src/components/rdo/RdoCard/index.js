@@ -39,7 +39,7 @@ export default function RdoCard({ rdo, obra, onPress, showObra = true, agora, au
       <View style={[styles.bar, { backgroundColor: meta.color }]} />
       <View style={styles.body}>
         <View style={styles.top}>
-          <Txt v="h3" style={{ flex: 1 }} numberOfLines={1}>
+          <Txt v="h3" style={styles.ocupa} numberOfLines={1}>
             RDO nº {numeroFormatado(rdo)}
             {rdo.versao > 1 ? <Txt v="smallStrong" muted>{`  v${rdo.versao}`}</Txt> : null}
           </Txt>
@@ -58,7 +58,7 @@ export default function RdoCard({ rdo, obra, onPress, showObra = true, agora, au
           {rdo.sync?.pendente ? (
             <View style={[styles.flag, { backgroundColor: colors.warningBg }]}>
               <Icon name="cloud-off-outline" size={13} color={colors.warning} />
-              <Txt v="caption" color={colors.warning} style={{ fontWeight: '800' }}>
+              <Txt v="caption" color={colors.warning} style={styles.destaque}>
                 Aguardando envio
               </Txt>
             </View>
@@ -100,7 +100,7 @@ function Aviso({ tone, icon, texto }) {
   return (
     <View style={[styles.aviso, { backgroundColor: bg }]}>
       <Icon name={icon} size={15} color={c} />
-      <Txt v="caption" color={c} style={{ flex: 1, fontWeight: '700' }} numberOfLines={2}>
+      <Txt v="caption" color={c} style={styles.avisoTexto} numberOfLines={2}>
         {texto}
       </Txt>
     </View>

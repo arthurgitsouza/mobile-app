@@ -60,4 +60,17 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.gold200,
   },
+  icone: { marginTop: 2 },
+  ocupa: { flex: 1 },
+  destaque: { fontWeight: '800' },
+  secoes: { gap: 12 },
+  centralizado: { textAlign: 'center' },
+  bloco: { flex: 1, gap: 2 },
+  aDireita: { marginLeft: 'auto' },
+  itemAlerta: { borderColor: colors.danger },
 });
+
+// Valores que só se sabem em tempo de execução ficam em funções.
+export const dinamico = {
+  foto: (largura) => ({ width: largura, gap: 4 }),
+};

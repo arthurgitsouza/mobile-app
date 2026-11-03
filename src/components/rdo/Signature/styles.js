@@ -13,4 +13,6 @@ export const styles = StyleSheet.create({
   x: { position: 'absolute', left: 12, bottom: 34 },
   actions: { flexDirection: 'row', alignItems: 'center', gap: 16 },
   link: { flexDirection: 'row', alignItems: 'center', gap: 4, minHeight: 36, paddingHorizontal: 4 },
+  raiz: { gap: 8 },
+  ocupa: { flex: 1 },
 });

@@ -42,13 +42,13 @@ export default function PhotoTile({ foto, width = 110, ratio = 0.75, onPress, se
       ) : (
         <View style={styles.center}>
           <Icon name={foto.icone || 'image-outline'} size={Math.max(22, width * 0.26)} color={p.fg} />
-          <Txt v="smallStrong" color={p.fg} style={{ letterSpacing: 1 }}>
+          <Txt v="smallStrong" color={p.fg} style={styles.rotuloFoto}>
             FOTO {num}
           </Txt>
         </View>
       )}
       <View style={styles.num}>
-        <Txt v="caption" color={colors.white} style={{ fontWeight: '800' }}>
+        <Txt v="caption" color={colors.white} style={styles.destaque}>
           {num}
         </Txt>
       </View>
