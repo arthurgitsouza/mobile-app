@@ -1,6 +1,6 @@
 import { styles, dinamico } from './styles';
 import React, { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { Image, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../../theme';
@@ -11,9 +11,11 @@ import { env } from '../../../config/env';
 import { autenticarBiometria, biometriaDisponivel } from '../../../services/biometrics';
 import { haptic } from '../../../utils/feedback';
 import { isEmail, primeiroNome } from '../../../utils/format';
-import { Avatar, Banner, BrandMark, Button, Card, Icon, LinkButton, Txt, useUI } from '../../../components/ui';
+import { Avatar, Banner, Button, Card, Icon, LinkButton, Txt, useUI } from '../../../components/ui';
 import { PasswordField, TextField } from '../../../components/form';
 import CheckboxField from '../../../components/form/CheckboxField';
+
+const logoPlanengen = require('../../../../assets/logo-planengen.png');
 
 const MAX_TENTATIVAS = 5;
 const BLOQUEIO_MS = 30000;
@@ -124,23 +126,28 @@ export default function LoginScreen({ navigation }) {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
-      >
+      > 
         <View style={[styles.hero, dinamico.hero(insets.top)]}>
-          <BrandMark size={72} />
-          <Txt v="display" color={colors.white} style={styles.titulo} accessibilityRole="header">
-            RDO Mobile
-          </Txt>
+          <Image
+            source={logoPlanengen}
+            style={styles.logo}
+            resizeMode="contain"
+            accessibilityLabel="Planengen Consultoria e Construção"
+          />
+
           <Txt v="body" color={colors.textOnDarkMuted} style={styles.subtitulo}>
             Registro Diário de Obra: do canteiro à assinatura, com histórico verificável.
           </Txt>
-          <View style={styles.proto}>
-            <Icon name="flask-outline" size={14} color={colors.gold200} />
-            <Txt v="caption" color={colors.gold200}>
-              Protótipo acadêmico · UNDB Engenharia Civil
-            </Txt>
-          </View>
+          {demoAtiva ? (
+            <View style={styles.proto}>
+              <Icon name="flask-outline" size={14} color={colors.gold200} />
+              <Txt v="caption" color={colors.gold200}>
+                Protótipo acadêmico · UNDB Engenharia Civil
+              </Txt>
+            </View>
+          ) : null}
         </View>
-
+          
         <View style={styles.body}>
           <Card style={styles.formCard}>
             <Txt v="h2">Entrar</Txt>
@@ -255,7 +262,7 @@ export default function LoginScreen({ navigation }) {
               />
             ) : null}
             <Txt v="caption" subtle>
-              v1.0.0 · protótipo de interface — dados fictícios
+              {demoAtiva ? 'v1.0.0 · protótipo de interface — dados fictícios' : 'v1.0.0'}
             </Txt>
           </View>
         </View>
