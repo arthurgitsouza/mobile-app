@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
 
   //código adicionado
   logo: { width: 230, height: 58, marginBottom: 15, marginTop: -50 },
-  subtitulo: { textAlign: 'center', maxWidth: 320 , marginBottom: 50, marginTop: 10 },
+  subtitulo: { textAlign: 'center', maxWidth: 320, marginBottom: 50, marginTop: 10 },
   fill: { flex: 1 },
   demo: { gap: 10 },
   quickInfo: { flex: 1, gap: 1 },
@@ -42,6 +42,6 @@ export const styles = StyleSheet.create({
 
 // Valores que dependem do aparelho (área segura) viram funções aqui mesmo.
 export const dinamico = {
-  scrollConteudo: (base) => ({flexGrow: 1, paddingBottom: base + 24 }),
+  scrollConteudo: (base) => ({ flexGrow: 1, paddingBottom: base + 24 }),
   hero: (topo) => ({ paddingTop: topo + 140 }),
 };

@@ -126,7 +126,7 @@ export default function LoginScreen({ navigation }) {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
-      > 
+      >
         <View style={[styles.hero, dinamico.hero(insets.top)]}>
           <Image
             source={logoPlanengen}
@@ -147,7 +147,7 @@ export default function LoginScreen({ navigation }) {
             </View>
           ) : null}
         </View>
-          
+
         <View style={styles.body}>
           <Card style={styles.formCard}>
             <Txt v="h2">Entrar</Txt>
