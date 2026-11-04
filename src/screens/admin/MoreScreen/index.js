@@ -5,6 +5,7 @@ import { styles } from './styles';
 import { colors } from '../../../theme';
 import { PERFIL, PERFIS } from '../../../constants';
 import { useApp } from '../../../store/AppContext';
+import { env } from '../../../config/env';
 import {
   Avatar,
   Badge,
@@ -25,6 +26,7 @@ export default function MoreScreen() {
   const { state, actions, currentUser, online } = useApp();
   const { confirm } = useUI();
   const [trocar, setTrocar] = useState(false);
+  const demoAtiva = env.USE_MOCK && env.DEMO;
   const perfil = currentUser.perfil;
   const pendentes = state.rdos.filter((r) => r.sync?.pendente).length;
 
@@ -129,30 +131,37 @@ export default function MoreScreen() {
           },
         )}
         <Divider />
-        {item('bell-cog-outline', 'Configurações', 'Conta, segurança, notificações, LGPD e demonstração', () =>
-          nav.navigate('Settings'),
+        {item(
+          'bell-cog-outline',
+          'Configurações',
+          demoAtiva ? 'Conta, segurança, notificações, LGPD e demonstração' : 'Conta, segurança, notificações e LGPD',
+          () => nav.navigate('Settings'),
         )}
       </Card>
 
-      <SectionTitle>Demonstração</SectionTitle>
-      <Card padded={false} style={styles.lista}>
-        {item(
-          'account-switch-outline',
-          'Trocar de perfil',
-          'Alterna entre Master, Operacional e Cliente sem digitar senha',
-          () => setTrocar(true),
-        )}
-        <Divider />
-        {item('map-marker-path', 'Roteiro de demonstração', 'Passo a passo do cenário principal (seção 21)', () =>
-          nav.navigate('DemoGuide'),
-        )}
-      </Card>
+      {demoAtiva ? (
+        <>
+          <SectionTitle>Demonstração</SectionTitle>
+          <Card padded={false} style={styles.lista}>
+            {item(
+              'account-switch-outline',
+              'Trocar de perfil',
+              'Alterna entre Master, Operacional e Cliente sem digitar senha',
+              () => setTrocar(true),
+            )}
+            <Divider />
+            {item('map-marker-path', 'Roteiro de demonstração', 'Passo a passo do cenário principal (seção 21)', () =>
+              nav.navigate('DemoGuide'),
+            )}
+          </Card>
+        </>
+      ) : null}
 
       <Card padded={false} style={styles.lista}>
         {item('logout', 'Encerrar sessão', undefined, sair, { danger: true, chevron: false })}
       </Card>
       <Txt v="caption" subtle style={styles.footerText}>
-        RDO Mobile v1.0.0 · protótipo de interface (sem back-end)
+        RDO Mobile v1.0.0
       </Txt>
 
       <BottomSheet

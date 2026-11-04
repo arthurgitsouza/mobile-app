@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { styles } from './styles';
 import { PERFIL } from '../../../constants';
 import { useApp } from '../../../store/AppContext';
+import { env } from '../../../config/env';
 import { autenticarBiometria, biometriaDisponivel } from '../../../services/biometrics';
 import { formatDateTime } from '../../../utils/date';
 import { haptic } from '../../../utils/feedback';
@@ -31,6 +32,7 @@ const INATIVIDADE = [
 // Configurações: conta, segurança, notificações, lembretes (master), offline, LGPD e ferramentas de demonstração.
 export default function SettingsScreen({ navigation }) {
   const { state, actions, currentUser, online } = useApp();
+  const demoAtiva = env.USE_MOCK && env.DEMO;
   const { confirm, notice, toast } = useUI();
   const s = state.settings;
   const master = currentUser.perfil === PERFIL.MASTER;
@@ -228,28 +230,32 @@ export default function SettingsScreen({ navigation }) {
         />
       </Card>
 
-      <SectionTitle>Demonstração</SectionTitle>
-      <SwitchField
-        label="Simular falha de e-mail no próximo envio ao cliente"
-        description="Permite ver o aviso de falha de entrega ao master e o reenvio (seção 10). Vale para um único envio."
-        value={s.simularFalhaEmail}
-        onValueChange={(v) => actions.atualizarConfiguracoes({ patch: { simularFalhaEmail: v } })}
-      />
-      <Button
-        title="Roteiro de demonstração"
-        icon="map-marker-path"
-        variant="secondary"
-        onPress={() => navigation.navigate('DemoGuide')}
-      />
-      <Button
-        title="Restaurar dados de demonstração"
-        icon="database-refresh-outline"
-        variant="danger"
-        onPress={resetar}
-      />
-      <Txt v="caption" subtle style={styles.footerText}>
-        Protótipo de interface · dados fictícios armazenados apenas neste aparelho.
-      </Txt>
+      {demoAtiva ? (
+        <>
+          <SectionTitle>Demonstração</SectionTitle>
+          <SwitchField
+            label="Simular falha de e-mail no próximo envio ao cliente"
+            description="Permite ver o aviso de falha de entrega ao master e o reenvio (seção 10). Vale para um único envio."
+            value={s.simularFalhaEmail}
+            onValueChange={(v) => actions.atualizarConfiguracoes({ patch: { simularFalhaEmail: v } })}
+          />
+          <Button
+            title="Roteiro de demonstração"
+            icon="map-marker-path"
+            variant="secondary"
+            onPress={() => navigation.navigate('DemoGuide')}
+          />
+          <Button
+            title="Restaurar dados de demonstração"
+            icon="database-refresh-outline"
+            variant="danger"
+            onPress={resetar}
+          />
+          <Txt v="caption" subtle style={styles.footerText}>
+            Protótipo de interface · dados fictícios armazenados apenas neste aparelho.
+          </Txt>
+        </>
+      ) : null}
 
       <BottomSheet
         visible={senhaSheet}
