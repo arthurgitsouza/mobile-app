@@ -12,14 +12,7 @@ import { fileURLToPath } from 'node:url';
 
 const raiz = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PASTAS = ['src/screens', 'src/components'];
-const PENDENTES = [
-  'src/components/ui',
-  'src/components/form',
-  'src/components/charts',
-  'src/components/rdo',
-  'src/screens/rdo',
-  'src/screens/reports',
-];
+const PENDENTES = [];
 
 const REGRAS = [
   { re: /StyleSheet\.create/, motivo: 'StyleSheet.create fora do styles.js' },
