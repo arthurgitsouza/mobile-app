@@ -7,7 +7,6 @@ import { ApiError, tratarErros } from './erros.js';
 export function criarApp() {
   const app = express();
   app.disable('x-powered-by');
-  app.set('trust proxy', 1);
   app.use(express.json({ limit: '2mb' }));
 
   // CORS: necessário só para a versão web do app; o app nativo não passa por CORS.
