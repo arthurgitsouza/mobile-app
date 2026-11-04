@@ -37,3 +37,10 @@
 
 - src/theme e src/components/ui: Luís
 - screens/rdo: Thai, até avisar "liberei" no grupo
+
+## Identidade visual da Planengen
+
+- O app usa o logo da Planengen na tela de login (assets/logo-planengen.png), na versão clara, própria para fundo escuro.
+- Decisão: manter a paleta de cores atual do app. As cores da marca (#010028, #0084F4, #EEF0F2, #202020) ficam registradas aqui como referência para uma evolução futura.
+- As fontes da marca (Codec Cold Trial e Gadugi) não foram aplicadas: a primeira tem licença de teste e a segunda só existe no Windows.
+- Informações de protótipo (textos de demonstração, dados fictícios) ficam visíveis apenas no modo demo (EXPO_PUBLIC_DEMO). Fora dele, o app mostra só o que é de uso real.
