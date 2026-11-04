@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(243,221,166,0.4)',
   },
-  body: { paddingHorizontal: 16, marginTop: -40, gap: 20 },
+  body: { flexGrow: 1, paddingHorizontal: 16, marginTop: -30, gap: 20 },
   formCard: { gap: 14, padding: 18 },
   rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   demoHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 },
@@ -32,8 +32,8 @@ export const styles = StyleSheet.create({
   footer: { alignItems: 'center', gap: 6, paddingTop: 4 },
 
   //código adicionado
-  titulo: { marginTop: 14 },
-  subtitulo: { textAlign: 'center', maxWidth: 320 },
+  logo: { width: 230, height: 58, marginBottom: 15, marginTop: -50 },
+  subtitulo: { textAlign: 'center', maxWidth: 320, marginBottom: 50, marginTop: 10 },
   fill: { flex: 1 },
   demo: { gap: 10 },
   quickInfo: { flex: 1, gap: 1 },
@@ -42,6 +42,6 @@ export const styles = StyleSheet.create({
 
 // Valores que dependem do aparelho (área segura) viram funções aqui mesmo.
 export const dinamico = {
-  scrollConteudo: (base) => ({ paddingBottom: base + 24 }),
-  hero: (topo) => ({ paddingTop: topo + 28 }),
+  scrollConteudo: (base) => ({ flexGrow: 1, paddingBottom: base + 24 }),
+  hero: (topo) => ({ paddingTop: topo + 140 }),
 };
