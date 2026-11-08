@@ -72,7 +72,7 @@ export function criarRdoVazio({ obra, autor, data, turno = 'diurno', numero, ver
     maoDeObra: [],
     observacaoMaoDeObra: '',
     equipamentos: [],
-    semProducao: { ativo: false, justificativa: '' },
+    semProducao: { ativo: false, interrupcao: false, justificativa: '' },
     atividades: [],
     materiais: [],
     qualidade: [],
