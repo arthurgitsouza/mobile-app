@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 import { colors, radius } from '../../../theme';
 
 export const styles = StyleSheet.create({
+  fundoImagem: { opacity: 0.12 },
   root: { flex: 1, backgroundColor: colors.bg },
   hero: {
     backgroundColor: colors.navy700,

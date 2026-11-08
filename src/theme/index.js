@@ -1,17 +1,18 @@
 // Identidade visual do RDO Mobile.
-// Paleta inspirada no exemplo de RDO do documento-base: azul-marinho (cabeçalho),
-// azul de seção e dourado como destaque (aprovações/assinaturas).
+// Paleta baseada na identidade da Planengen (azul #0084F4, azul escuro #010028, cinzas #EEF0F2 e #202020):
+// tons de azul para cabeçalho e ações, com dourado como destaque (aprovações/assinaturas).
+// Os nomes (navy700, blue500...) foram mantidos de propósito: só os valores mudaram.
 // Este módulo é JS puro (sem imports do React Native) para poder ser usado por testes e domínio.
 
 export const colors = {
-  navy900: '#0C2038',
-  navy800: '#11294A',
-  navy700: '#17375E',
-  navy600: '#1F4E79',
-  blue500: '#2F6FB3',
-  blue200: '#B9D3EE',
-  blue100: '#E3EEFB',
-  blue50: '#F1F6FC',
+  navy900: '#010028',
+  navy800: '#06308A',
+  navy700: '#0B5BC4',
+  navy600: '#0066C4',
+  blue500: '#0066C4',
+  blue200: '#B3D9FC',
+  blue100: '#DCEEFE',
+  blue50: '#EEF5FD',
 
   gold600: '#B98322',
   gold500: '#D9A441',
@@ -20,17 +21,17 @@ export const colors = {
   gold50: '#FFF8E6',
   goldText: '#6B4700',
 
-  bg: '#F3F6FA',
+  bg: '#EEF0F2',
   surface: '#FFFFFF',
   border: '#D7E0EB',
   borderStrong: '#B4C3D5',
   divider: '#E6ECF3',
 
-  text: '#14253B',
+  text: '#202020',
   textMuted: '#4E617A',
-  textSubtle: '#71849C',
+  textSubtle: '#5A6C85',
   textOnDark: '#FFFFFF',
-  textOnDarkMuted: '#B7C7DC',
+  textOnDarkMuted: '#DCEEFE',
 
   success: '#1B6E45',
   successBg: '#DDF3E6',
@@ -47,7 +48,7 @@ export const colors = {
   gray: '#465870',
   grayBg: '#E9EEF4',
 
-  overlay: 'rgba(12, 32, 56, 0.55)',
+  overlay: 'rgba(1, 0, 40, 0.55)',
   white: '#FFFFFF',
   black: '#000000',
 };
