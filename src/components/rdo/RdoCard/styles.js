@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
   bar: { width: 5 },
   body: { flex: 1, padding: 12, gap: 6 },
   top: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  interrompido: { alignSelf: 'flex-start' },
   counts: { flexDirection: 'row', alignItems: 'center', gap: 14, flexWrap: 'wrap' },
   count: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   flag: {

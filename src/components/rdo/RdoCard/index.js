@@ -5,7 +5,7 @@ import { colors, statusMeta } from '../../../theme';
 import { atrasoDeAcao } from '../../../domain/workflow';
 import { resumoEquipamentos, totalTrabalhadores, numeroFormatado } from '../../../domain/rdo';
 import { formatDateShort, nomeDiaCurto, formatDateTime, tempoRelativo } from '../../../utils/date';
-import { Card, Icon, StatusBadge, Txt } from '../../ui';
+import { Badge, Card, Icon, StatusBadge, Txt } from '../../ui';
 
 function Contagem({ icon, valor, label }) {
   return (
@@ -45,6 +45,18 @@ export default function RdoCard({ rdo, obra, onPress, showObra = true, agora, au
           </Txt>
           <StatusBadge status={rdo.status} size="sm" />
         </View>
+
+        {rdo.semProducao?.interrupcao ? (
+          <Badge
+            label="Interrompido"
+            icon="pause-circle-outline"
+            color={colors.warning}
+            bg={colors.warningBg}
+            size="sm"
+            style={styles.interrompido}
+          />
+        ) : null}
+
         <Txt v="small" muted numberOfLines={1}>
           {showObra && obra ? `${obra.nome} · ` : ''}
           {nomeDiaCurto(rdo.data)}, {formatDateShort(rdo.data)} · {turno}
