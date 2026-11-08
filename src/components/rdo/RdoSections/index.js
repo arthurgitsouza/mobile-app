@@ -311,7 +311,7 @@ export default function RdoSections({
             <Icon name="pause-circle-outline" size={20} color={colors.warning} />
             <View style={styles.ocupa}>
               <Txt v="smallStrong" color={colors.warning}>
-                Dia sem produção
+                {rdo.semProducao.interrupcao ? 'Atividade interrompida' : 'Dia sem produção'}
               </Txt>
               <Txt v="small" color={colors.warning}>
                 {rdo.semProducao.justificativa}
