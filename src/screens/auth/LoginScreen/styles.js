@@ -3,6 +3,16 @@ import { colors, radius } from '../../../theme';
 
 export const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
+  fundoImagem: {
+    position: 'absolute',
+    top: 0,
+    left: '-20%',
+    right: 0,
+    bottom: 0,
+    width: '140%',
+    height: '275%',
+    opacity: 0.05,
+  },
   hero: {
     backgroundColor: colors.navy700,
     alignItems: 'center',
@@ -11,6 +21,7 @@ export const styles = StyleSheet.create({
     paddingBottom: 64,
     borderBottomWidth: 4,
     borderBottomColor: colors.gold500,
+    overflow: 'hidden',
   },
   proto: {
     flexDirection: 'row',

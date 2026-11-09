@@ -4,9 +4,9 @@ import { Platform } from 'react-native';
 const make = (elevation, opacity, radius, offsetY) =>
   Platform.select({
     android: { elevation },
-    web: { boxShadow: `0px ${offsetY}px ${radius}px rgba(12, 32, 56, ${opacity})` },
+    web: { boxShadow: `0px ${offsetY}px ${radius}px rgba(1, 0, 40, ${opacity})` },
     default: {
-      shadowColor: '#0C2038',
+      shadowColor: '#010028',
       shadowOpacity: opacity,
       shadowRadius: radius,
       shadowOffset: { width: 0, height: offsetY },

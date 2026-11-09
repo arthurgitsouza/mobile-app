@@ -17,6 +17,8 @@ import CheckboxField from '../../../components/form/CheckboxField';
 
 const logoPlanengen = require('../../../../assets/logo-planengen.png');
 
+const fundoPadrao = require('../../../../assets/fundo-padrao-escuro.jpg');
+
 const MAX_TENTATIVAS = 5;
 const BLOQUEIO_MS = 30000;
 
@@ -128,6 +130,8 @@ export default function LoginScreen({ navigation }) {
         automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
       >
         <View style={[styles.hero, dinamico.hero(insets.top)]}>
+          <Image source={fundoPadrao} style={styles.fundoImagem} resizeMode="cover" />
+
           <Image
             source={logoPlanengen}
             style={styles.logo}

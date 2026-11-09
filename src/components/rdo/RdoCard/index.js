@@ -36,7 +36,7 @@ export default function RdoCard({ rdo, obra, onPress, showObra = true, agora, au
       accessibilityLabel={`RDO ${numeroFormatado(rdo)}${showObra && obra ? `, ${obra.nome}` : ''}, ${meta.label}`}
       style={styles.card}
     >
-      <View style={[styles.bar, { backgroundColor: meta.color }]} />
+      <View style={[styles.bar, { backgroundColor: meta.barra || meta.color }]} />
       <View style={styles.body}>
         <View style={styles.top}>
           <Txt v="h3" style={styles.ocupa} numberOfLines={1}>
