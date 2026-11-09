@@ -206,15 +206,27 @@ export default function StepRevisao({
         </View>
       ) : null}
 
-      <SectionTitle>Resumo do dia</SectionTitle>
-      <View style={styles.resumo}>
-        <Numero icone="account-group-outline" valor={totalTrabalhadores(rdo)} rotulo="Efetivo" />
-        <Numero icone="clock-outline" valor={formatNumber(totalHomemHora(rdo), 0)} rotulo="Homem-hora" />
-        <Numero icone="excavator" valor={eq.unidades} rotulo="Equipamentos" />
-        <Numero icone="hammer-wrench" valor={rdo.atividades.length} rotulo="Atividades" />
-        <Numero icone="camera-outline" valor={rdo.fotos.length} rotulo="Fotos" />
-        <Numero icone="alert-octagon-outline" valor={rdo.ocorrencias.length} rotulo="Ocorrências" />
-      </View>
+      {rdo.semProducao?.interrupcao ? (
+        <Banner
+          tone="warning"
+          icon="pause-circle-outline"
+          title="Atividade interrompida"
+          message={rdo.semProducao.justificativa}
+        />
+      ) : (
+        <>
+          <SectionTitle>Resumo do dia</SectionTitle>
+          <View style={styles.resumo}>
+            <Numero icone="account-group-outline" valor={totalTrabalhadores(rdo)} rotulo="Efetivo" />
+            <Numero icone="clock-outline" valor={formatNumber(totalHomemHora(rdo), 0)} rotulo="Homem-hora" />
+            <Numero icone="excavator" valor={eq.unidades} rotulo="Equipamentos" />
+            <Numero icone="hammer-wrench" valor={rdo.atividades.length} rotulo="Atividades" />
+            <Numero icone="camera-outline" valor={rdo.fotos.length} rotulo="Fotos" />
+            <Numero icone="alert-octagon-outline" valor={rdo.ocorrencias.length} rotulo="Ocorrências" />
+          </View>
+        </>
+      )}
+
       <Button
         title="Pré-visualizar o PDF (minuta)"
         icon="file-pdf-box"

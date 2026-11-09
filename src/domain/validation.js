@@ -186,6 +186,16 @@ export function validarRdo(rdo, { obra, rdos = [], agora } = {}) {
   if (obra?.exigeAssinaturaOperacional && !rdo.assinaturaOperacional)
     erro('revisao', 'assinatura', 'Esta obra exige a assinatura do responsável pelo preenchimento.');
 
+  // ---- Interrupção no início: só identificação, justificativa e aprovação valem ----
+  const interrompido = !!rdo.semProducao?.interrupcao;
+  if (interrompido) {
+    if (!isFilled(rdo.semProducao.justificativa) || rdo.semProducao.justificativa.trim().length < 10)
+      erro('identificacao', 'justificativaInterrupcao', 'Interrupção: descreva o motivo (mínimo 10 caracteres).');
+    const vale = (x) => ['identificacao', 'revisao'].includes(x.passo);
+    erros.splice(0, erros.length, ...erros.filter(vale));
+    avisos.splice(0, avisos.length, ...avisos.filter(vale));
+  }
+
   // ---- Resumo por passo ----
   const temConteudo = {
     identificacao: true,
@@ -227,7 +237,9 @@ export function validarRdo(rdo, { obra, rdos = [], agora } = {}) {
     avisos,
     porPasso,
     valido: erros.length === 0,
-    progresso: { completos, total: passosContaveis.length },
+    progresso: interrompido
+      ? { completos: erros.length ? 0 : 1, total: 1 }
+      : { completos, total: passosContaveis.length },
   };
 }
 

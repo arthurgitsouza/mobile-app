@@ -66,10 +66,15 @@ function RdoFormInner({ rdoInicial, obra, modo, passoParam, navigation }) {
   const { state, actions, currentUser, online } = useApp();
   const { confirm, toast } = useUI();
   const master = modo === 'master';
-  const passos = master ? [...PASSOS_RDO.slice(0, -1), PASSO_MASTER] : PASSOS_RDO;
   const original = useRef(rdoInicial).current;
 
   const [draft, setDraft] = useState(rdoInicial);
+  const interrompido = !master && !!draft.semProducao?.interrupcao;
+  const passos = useMemo(() => {
+    if (master) return [...PASSOS_RDO.slice(0, -1), PASSO_MASTER];
+    if (interrompido) return PASSOS_RDO.filter((p) => ['identificacao', 'revisao'].includes(p.key));
+    return PASSOS_RDO;
+  }, [master, interrompido]);
   const [visitados, setVisitados] = useState(() => new Set());
   const [salvoEm, setSalvoEm] = useState(null);
   const [rodape, setRodape] = useState(null);

@@ -155,7 +155,7 @@ export function montarHtmlRdo({ rdo, obra, nomeDe = () => '', rdos = [], fotosBa
   const E = sec(
     'E',
     'Atividades executadas e quantidades',
-    `${rdo.semProducao?.ativo ? `<div class="item">${chip('Dia sem produção', 'w')} ${esc(rdo.semProducao.justificativa)}</div>` : ''}${
+    `${rdo.semProducao?.ativo ? `<div class="item">${chip(rdo.semProducao.interrupcao ? 'Atividade interrompida' : 'Dia sem produção', 'w')} ${esc(rdo.semProducao.justificativa)}</div>` : ''}${
       rdo.atividades
         .map((a) => {
           const acum = acumuladoAnterior(rdos, rdo.obraId, a.servico, rdo.data, rdo.id) + toNumber(a.quantidadeDia);
@@ -298,10 +298,14 @@ export function montarHtmlRdo({ rdo, obra, nomeDe = () => '', rdos = [], fotosBa
     ${hash ? `<div class="small muted">Hash ${rdo.hashFinal ? 'final (conteúdo + assinaturas)' : 'do conteúdo técnico'} — SHA-256</div><div class="mono">${esc(hash)}</div>${rdo.hashFinal && rdo.hashTecnico ? `<div class="small muted" style="margin-top:4px">Hash do conteúdo técnico</div><div class="mono">${esc(rdo.hashTecnico)}</div>` : ''}<div class="small muted" style="margin-top:4px">Verificação: ${esc(payloadVerificacao(rdo))}</div>` : '<div class="muted">Documento ainda não assinado — sem hash de verificação.</div>'}</div></div>`,
   );
 
+  const avisoInterrupcao = rdo.semProducao?.interrupcao
+    ? `<div class="item">${chip('ATIVIDADE INTERROMPIDA', 'w')} ${esc(rdo.semProducao.justificativa)}</div>`
+    : '';
+
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>RDO ${num} — ${esc(obra?.nome)}</title><style>${CSS}</style></head><body>
   ${minuta || !finalizado ? '<div class="wm">MINUTA</div>' : ''}
   <div class="top"><div><h1>RDO ${num} · ${esc(obra?.nome)}</h1><div class="sub">Registro Diário de Obra · versão ${rdo.versao} · ${formatDate(rdo.data)} (${nomeDiaSemana(rdo.data)}) · ${esc(turno)}</div></div><div class="badge">${minuta || !finalizado ? 'Minuta · ' : ''}${esc(situacao)}</div></div>
-  ${A}${B}${C}${D}${E}${FG}${H}${IJ}${K}${L}${M}${CM}${trilha}${verificacao}
+  ${avisoInterrupcao}${A}${B}${C}${D}${E}${FG}${H}${IJ}${K}${L}${M}${CM}${trilha}${verificacao}
   <div class="foot">Gerado pelo RDO Mobile em ${formatDateTime(geradoEm || new Date().toISOString())} (${FUSO_OBRA_LABEL}) · ${esc(rdo.identificacao.empresa)}${minuta || !finalizado ? ' · MINUTA sem valor de assinatura completa' : ''}</div>
   </body></html>`;
 }

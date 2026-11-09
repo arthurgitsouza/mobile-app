@@ -1,9 +1,10 @@
 import React from 'react';
 import { View } from 'react-native';
 import { TURNOS } from '../../../../constants';
+import { colors } from '../../../../theme';
 import { FUSO_OBRA_LABEL, hojeObra, nomeDiaSemana } from '../../../../utils/date';
 import { Banner, Card, KeyValue, Txt } from '../../../../components/ui';
-import { ChipGroup, DateField, TextField } from '../../../../components/form';
+import { ChipGroup, DateField, SwitchField, TextField } from '../../../../components/form';
 import { numeroFormatado } from '../../../../domain/rdo';
 import { msgErro } from '../helpers';
 import { styles } from './styles';
@@ -12,10 +13,31 @@ import { styles } from './styles';
 export default function StepIdentificacao({ rdo, update, obra, erros, mostrarErros, validacao }) {
   const duplicado = validacao.avisos.find((a) => a.passo === 'identificacao' && /Já existe/.test(a.mensagem));
   const i = rdo.identificacao;
+  const sp = rdo.semProducao;
   return (
     <View style={styles.gap14}>
+      <SwitchField
+        label="Não foi possível prosseguir com a atividade"
+        description="Marque se uma emergência ou imprevisto impediu o trabalho hoje."
+        value={!!sp.interrupcao}
+        onValueChange={(interrupcao) =>
+          update((d) => ({ semProducao: { ...d.semProducao, interrupcao, ativo: interrupcao } }))
+        }
+        tone="gold"
+      />
+      {sp.interrupcao ? (
+        <TextField
+          label="Justificativa da interrupção"
+          required
+          multiline
+          value={sp.justificativa}
+          onChangeText={(t) => update((d) => ({ semProducao: { ...d.semProducao, justificativa: t } }))}
+          error={msgErro(erros, 'justificativaInterrupcao', mostrarErros)}
+          placeholder="Descreva o motivo (mínimo 10 caracteres)."
+        />
+      ) : null}
       <Card style={styles.gap8}>
-        <Txt v="label" color="#1F4E79">
+        <Txt v="label" color={colors.navy600}>
           DADOS DA OBRA (DO CADASTRO)
         </Txt>
         <KeyValue inline label="Número / versão" value={`${numeroFormatado(rdo)} · v${rdo.versao} (automático)`} />
