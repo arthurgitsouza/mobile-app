@@ -159,7 +159,7 @@ test('Regras de submissão (seção 9)', () => {
     true,
   );
 
-    // interrupção no início: só identificação, justificativa e declaração valem
+  // interrupção no início: só identificação, justificativa e declaração valem
   const interrompido = {
     ...ok,
     clima: base.clima,
@@ -169,9 +169,7 @@ test('Regras de submissão (seção 9)', () => {
   };
   assert.equal(validarRdo(interrompido, { obra, rdos: s.rdos }).valido, true);
   const semMotivo = { ...interrompido, semProducao: { ...interrompido.semProducao, justificativa: '' } };
-  assert.ok(
-    validarRdo(semMotivo, { obra, rdos: s.rdos }).erros.some((e) => e.campo === 'justificativaInterrupcao'),
-  );
+  assert.ok(validarRdo(semMotivo, { obra, rdos: s.rdos }).erros.some((e) => e.campo === 'justificativaInterrupcao'));
 
   // chuva exige duração/precipitação e impacto
   const chuva = { ...ok, clima: { ...ok.clima, choveu: true } };
