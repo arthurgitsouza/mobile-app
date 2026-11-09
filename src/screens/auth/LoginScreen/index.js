@@ -1,6 +1,6 @@
 import { styles, dinamico } from './styles';
 import React, { useEffect, useState } from 'react';
-import { Image, KeyboardAvoidingView, Platform, ScrollView, View, ImageBackground } from 'react-native';
+import { Image, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../../theme';
@@ -16,6 +16,8 @@ import { PasswordField, TextField } from '../../../components/form';
 import CheckboxField from '../../../components/form/CheckboxField';
 
 const logoPlanengen = require('../../../../assets/logo-planengen.png');
+
+const fundoPadrao = require('../../../../assets/fundo-padrao-escuro.jpg');
 
 const MAX_TENTATIVAS = 5;
 const BLOQUEIO_MS = 30000;
@@ -128,6 +130,8 @@ export default function LoginScreen({ navigation }) {
         automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
       >
         <View style={[styles.hero, dinamico.hero(insets.top)]}>
+          <Image source={fundoPadrao} style={styles.fundoImagem} resizeMode="cover" />
+
           <Image
             source={logoPlanengen}
             style={styles.logo}

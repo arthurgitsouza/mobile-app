@@ -87,20 +87,39 @@ export const type = {
 
 // Cor/rótulo por estado do RDO (seção 5 do documento + "devolvido" do fluxo de análise).
 export const statusMeta = {
-  rascunho: { label: 'Rascunho', color: colors.gray, bg: colors.grayBg, icon: 'pencil-outline' },
-  submetido: { label: 'Submetido', color: colors.info, bg: colors.infoBg, icon: 'send-outline' },
-  em_analise: { label: 'Em análise', color: colors.purple, bg: colors.purpleBg, icon: 'magnify' },
-  devolvido: { label: 'Devolvido', color: colors.warning, bg: colors.warningBg, icon: 'undo-variant' },
-  validado: { label: 'Validado', color: colors.teal, bg: colors.tealBg, icon: 'check-decagram-outline' },
+  rascunho: { label: 'Rascunho', color: colors.gray, bg: colors.grayBg, icon: 'pencil-outline', barra: colors.gray },
+  submetido: { label: 'Submetido', color: '#0B5BC4', bg: '#DCEEFE', icon: 'send-outline', barra: '#A5D2FD' },
+  em_analise: { label: 'Em análise', color: '#06308A', bg: '#B3D9FC', icon: 'magnify', barra: '#62B2F9' },
+  devolvido: {
+    label: 'Devolvido',
+    color: colors.warning,
+    bg: colors.warningBg,
+    icon: 'undo-variant',
+    barra: '#0084F4',
+  },
+  validado: { label: 'Validado', color: '#FFFFFF', bg: '#0B5BC4', icon: 'check-decagram-outline', barra: '#0B5BC4' },
   enviado_cliente: {
     label: 'Enviado ao cliente',
     color: colors.info,
     bg: colors.infoBg,
     icon: 'account-arrow-right-outline',
+    barra: '#06308A',
   },
-  finalizado: { label: 'Finalizado', color: colors.success, bg: colors.successBg, icon: 'check-circle-outline' },
-  retificado: { label: 'Retificado', color: colors.goldText, bg: colors.gold100, icon: 'file-restore-outline' },
-  cancelado: { label: 'Cancelado', color: colors.danger, bg: colors.dangerBg, icon: 'file-cancel-outline' },
+  finalizado: {
+    label: 'Finalizado',
+    color: colors.success,
+    bg: colors.successBg,
+    icon: 'check-circle-outline',
+    barra: '#010028',
+  },
+  retificado: { label: 'Retificado', color: '#06308A', bg: '#EEF5FD', icon: 'file-restore-outline', barra: '#6F86B3' },
+  cancelado: {
+    label: 'Cancelado',
+    color: colors.danger,
+    bg: colors.dangerBg,
+    icon: 'file-cancel-outline',
+    barra: colors.danger,
+  },
 };
 
 export const criticidadeMeta = {
