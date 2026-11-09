@@ -186,7 +186,7 @@ export function validarRdo(rdo, { obra, rdos = [], agora } = {}) {
   if (obra?.exigeAssinaturaOperacional && !rdo.assinaturaOperacional)
     erro('revisao', 'assinatura', 'Esta obra exige a assinatura do responsável pelo preenchimento.');
 
-    // ---- Interrupção no início: só identificação, justificativa e aprovação valem ----
+  // ---- Interrupção no início: só identificação, justificativa e aprovação valem ----
   const interrompido = !!rdo.semProducao?.interrupcao;
   if (interrompido) {
     if (!isFilled(rdo.semProducao.justificativa) || rdo.semProducao.justificativa.trim().length < 10)
