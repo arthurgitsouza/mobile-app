@@ -93,7 +93,7 @@ export function rdoParaTela(rdo) {
     },
     planejamento: { proximoDia: '', restricoes: '', ...convertido.planejamento },
     semRegistro: { ...convertido.semRegistro },
-    semProducao: { ativo: false, justificativa: '', ...convertido.semProducao },
+    semProducao: { ativo: false, interrupcao: false, justificativa: '', ...convertido.semProducao },
     sync: { ...convertido.sync, atualizadoEmServidor: rdo.atualizadoEm },
     auditoria: (convertido.auditoria || []).map((evento) => ({ ...evento, evento: evento.evento || evento.tipo })),
     comentarios: (convertido.comentarios || []).map((comentario) => ({
