@@ -8,13 +8,13 @@ Issues abertas pela equipe.
 
 | Campo                                   | Valor                                                             |
 | --------------------------------------- | ----------------------------------------------------------------- |
-| Responsável pela tarefa                 | Kauã Ferreira Aragão                                                            |
-| Data da execução                        | 26/10/2026                                                    |
+| Responsável pela tarefa                 | Kauã Ferreira Aragão                                              |
+| Data da execução                        | 26/10/2026                                                        |
 | Commit testado (`git log -1 --oneline`) | `________` (branch com as alterações do `useAcao` no operacional) |
 | Aplicativo                              | Expo Go (SDK 57), modo mock                                       |
-| Aparelho Android                        | modelo: Samsung S25                                 |
+| Aparelho Android                        | modelo: Samsung S25                                               |
 | Aparelho iOS                            | não testado: a equipe não tem aparelho Apple                      |
-| Tela pequena usada                      | aparelho ou emulador (ex.: 360 × 640 dp): foi usado emulador                    |
+| Tela pequena usada                      | aparelho ou emulador (ex.: 360 × 640 dp): foi usado emulador      |
 
 ### Limitações
 
@@ -92,11 +92,11 @@ Provocar cada erro e conferir a mensagem. Cada linha vale para Android e iOS.
 | ----- | ------------------------------ | --------------------------------------------- | ------------------------------------------------------------------- | ------- | --- | --------- |
 | FT-01 | Foto pela câmera               | Tocar em **Tirar foto** e aceitar a permissão | Foto entra na lista com data e hora; ou aviso "Câmera indisponível" | ✅      | ➖  |           |
 | FT-02 | Foto pela galeria              | Tocar em **Galeria** e escolher até 6 imagens | Fotos entram na lista; ou aviso "Galeria indisponível"              | ✅      | ➖  |           |
-| FT-03 | Imagem de exemplo              | Usar o atalho "Usar imagem de exemplo"        | Foto de exemplo adicionada (útil em emulador sem câmera)            | ✅       | ➖  |           |
-| FT-04 | Permissão negada               | Negar a permissão de câmera ou galeria        | Mensagem compreensível, sem travar o formulário                     | ➖       | ➖  |           |
-| FT-05 | Três fotos legendadas          | Anexar 3 fotos com legenda e local            | Cenário da seção 21: três fotos legendadas; sem avisos nas fotos    | ✅       | ➖  |           |
-| FT-06 | Aviso de local e de quantidade | Foto sem local; RDO sem nenhuma foto          | Avisos "local não informado" e "recomendado: ao menos 3 fotos"      | ⚠️       | ➖  |           |
-| FT-07 | Progresso de envio             | Enviar o RDO com fotos online                 | Tela de progresso com as fotos (RNF-02)                             | ➖       | ➖  |           |
+| FT-03 | Imagem de exemplo              | Usar o atalho "Usar imagem de exemplo"        | Foto de exemplo adicionada (útil em emulador sem câmera)            | ✅      | ➖  |           |
+| FT-04 | Permissão negada               | Negar a permissão de câmera ou galeria        | Mensagem compreensível, sem travar o formulário                     | ➖      | ➖  |           |
+| FT-05 | Três fotos legendadas          | Anexar 3 fotos com legenda e local            | Cenário da seção 21: três fotos legendadas; sem avisos nas fotos    | ✅      | ➖  |           |
+| FT-06 | Aviso de local e de quantidade | Foto sem local; RDO sem nenhuma foto          | Avisos "local não informado" e "recomendado: ao menos 3 fotos"      | ⚠️      | ➖  |           |
+| FT-07 | Progresso de envio             | Enviar o RDO com fotos online                 | Tela de progresso com as fotos (RNF-02)                             | ➖      | ➖  |           |
 
 ## 7. Modo offline (RF-05, RNF-03)
 
@@ -118,9 +118,9 @@ Ativar em **Mais → Configurações → Sincronização e offline → Simular m
 | ID    | Caso                    | Passos                                      | Resultado esperado                                                            | Android | iOS | Evidência |
 | ----- | ----------------------- | ------------------------------------------- | ----------------------------------------------------------------------------- | ------- | --- | --------- |
 | EN-01 | Enviar online           | Concluir o RDO completo e confirmar o envio | "RDO enviado ao master"; status passa a Enviado; abre o detalhe do RDO        | ✅      | ➖  |           |
-| EN-02 | Bloqueio de edição      | Tentar editar o RDO já enviado              | Sem edição; só é possível editar se o master devolver                         | ✅       | ➖  |           |
-| EN-03 | Master recebe o aviso   | Entrar como `master@planengen.com.br`       | O RDO aparece na aba Análise e há aviso com obra, RDO, status e acesso direto | ✅       | ➖  |           |
-| EN-04 | Correção após devolução | Abrir o RDO devolvido, corrigir e reenviar  | Comentário do master visível; reenvio muda o status para Enviado              | ✅       | ➖  |           |
+| EN-02 | Bloqueio de edição      | Tentar editar o RDO já enviado              | Sem edição; só é possível editar se o master devolver                         | ✅      | ➖  |           |
+| EN-03 | Master recebe o aviso   | Entrar como `master@planengen.com.br`       | O RDO aparece na aba Análise e há aviso com obra, RDO, status e acesso direto | ✅      | ➖  |           |
+| EN-04 | Correção após devolução | Abrir o RDO devolvido, corrigir e reenviar  | Comentário do master visível; reenvio muda o status para Enviado              | ✅      | ➖  |           |
 
 ## 9. Telas pequenas e acessibilidade (RNF-01, RNF-05)
 

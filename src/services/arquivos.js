@@ -47,24 +47,21 @@ export async function compartilharPdf(html, nomeArquivo) {
     await Print.printAsync({ html });
     return { web: true };
   }
-  const { uri } = await Print.printToFileAsync({ html, width: 595, height: 842 });
-  let alvo = uri;
-  try {
-    const destino = new File(Paths.cache, nomeArquivo);
-    if (destino.exists) destino.delete();
-    new File(uri).copy(destino);
-    alvo = destino.uri;
-  } catch {
-    // mantém o nome gerado pelo sistema
-  }
+  // base64: o PDF volta como texto e nós mesmos gravamos o arquivo na pasta do app.
+  // Assim evitamos ler o arquivo temporário do expo-print, que o Expo Go não deixa abrir.
+  const { base64 } = await Print.printToFileAsync({ html, width: 595, height: 842, base64: true });
+  const arquivo = new File(Paths.cache, nomeArquivo);
+  if (arquivo.exists) arquivo.delete();
+  arquivo.create();
+  arquivo.write(base64, { encoding: 'base64' });
   if (await Sharing.isAvailableAsync()) {
-    await Sharing.shareAsync(alvo, {
+    await Sharing.shareAsync(arquivo.uri, {
       mimeType: 'application/pdf',
       UTI: 'com.adobe.pdf',
       dialogTitle: 'Compartilhar RDO em PDF',
     });
   }
-  return { uri: alvo };
+  return { uri: arquivo.uri };
 }
 
 export async function imprimir(html) {

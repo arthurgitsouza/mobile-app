@@ -44,5 +44,3 @@ Para voltar ao cenário inicial: **Mais → Configurações → Restaurar dados 
 | `npm test`       | Roda os testes das regras de negócio (`tests/`)             |
 | `npm run lint`   | ESLint + Prettier; erro de formatação também falha          |
 | `npm run format` | Formata o código com o Prettier (rode antes de abrir um PR) |
-
-
