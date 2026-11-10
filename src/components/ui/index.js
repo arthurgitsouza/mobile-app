@@ -18,3 +18,4 @@ export { default as Screen } from './Screen';
 export { default as BottomSheet } from './BottomSheet';
 export { UIProvider, useUI } from './UIProvider';
 export { default as SyncBanner } from './SyncBanner';
+export { default as SplashScreen } from './SplashScreen';

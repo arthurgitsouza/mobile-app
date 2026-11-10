@@ -1,13 +1,12 @@
-import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import React, { useCallback, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { useFonts } from 'expo-font';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { colors } from './src/theme';
 import { AppProvider, useApp } from './src/store/AppContext';
-import { UIProvider, BrandMark, Txt } from './src/components/ui';
+import { UIProvider, SplashScreen } from './src/components/ui';
 import RootNavigator from './src/navigation/RootNavigator';
 import { navigationRef } from './src/navigation/navigationRef';
 import AppWatchers from './src/store/AppWatchers';
@@ -24,29 +23,26 @@ const navTheme = {
   },
 };
 
-function Splash() {
-  return (
-    <View style={{ flex: 1, backgroundColor: colors.navy700, alignItems: 'center', justifyContent: 'center', gap: 14 }}>
-      <StatusBar style="light" />
-      <BrandMark size={84} />
-      <Txt v="display" color={colors.white}>
-        RDO Mobile
-      </Txt>
-      <ActivityIndicator color={colors.gold500} />
-    </View>
-  );
-}
+const styles = StyleSheet.create({ root: { flex: 1, backgroundColor: colors.navy900 } });
 
 function Root() {
   const { hydrated } = useApp();
   // Pré-carrega a fonte de ícones para evitar "piscar" de glifos vazios na primeira renderização.
   const [fontsLoaded] = useFonts(MaterialCommunityIcons.font);
-  if (!hydrated || !fontsLoaded) return <Splash />;
+  const pronto = hydrated && fontsLoaded;
+  // A splash fica por cima do app enquanto carrega e, ao terminar a animação, some revelando a primeira tela.
+  const [splashAtiva, setSplashAtiva] = useState(true);
+  const fimSplash = useCallback(() => setSplashAtiva(false), []);
   return (
-    <NavigationContainer theme={navTheme} ref={navigationRef}>
-      <RootNavigator />
-      <AppWatchers />
-    </NavigationContainer>
+    <View style={styles.root}>
+      {pronto && (
+        <NavigationContainer theme={navTheme} ref={navigationRef}>
+          <RootNavigator />
+          <AppWatchers />
+        </NavigationContainer>
+      )}
+      {splashAtiva && <SplashScreen pronto={pronto} onFim={fimSplash} />}
+    </View>
   );
 }
 
