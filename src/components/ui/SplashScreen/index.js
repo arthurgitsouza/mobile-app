@@ -51,13 +51,16 @@ const saidaSuave = Easing.out(Easing.cubic);
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
+const PASSOS = 8;
 function faixa(valor, de, ate, total, saida = [0, 1], easing = suave) {
-  return valor.interpolate({
-    inputRange: [de / total, ate / total],
-    outputRange: saida,
-    easing,
-    extrapolate: 'clamp',
-  });
+  const inputRange = [];
+  const outputRange = [];
+  for (let i = 0; i <= PASSOS; i += 1) {
+    const p = i / PASSOS;
+    inputRange.push((de + (ate - de) * p) / total);
+    outputRange.push(saida[0] + (saida[1] - saida[0]) * easing(p));
+  }
+  return valor.interpolate({ inputRange, outputRange, extrapolate: 'clamp' });
 }
 
 function Contorno({ cor, traco, animado }) {

@@ -38,7 +38,7 @@ function Root() {
       {pronto && (
         <NavigationContainer theme={navTheme} ref={navigationRef}>
           <RootNavigator />
-          <AppWatchers />
+          {!splashAtiva && <AppWatchers />}
         </NavigationContainer>
       )}
       {splashAtiva && <SplashScreen pronto={pronto} onFim={fimSplash} />}

@@ -5,7 +5,7 @@ import { shadows } from '../../../theme/shadows';
 export const styles = StyleSheet.create({
   toastWrap: { position: 'absolute', left: 12, right: 12, zIndex: 1000 },
   toast: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 14, borderRadius: radius.lg },
-  backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: colors.overlay },
+  backdrop: { ...StyleSheet.absoluteFill, backgroundColor: colors.overlay },
   dialogRoot: { flex: 1, justifyContent: 'center', padding: 20 },
   dialog: { backgroundColor: colors.surface, borderRadius: radius.xl, padding: 20, gap: 12, alignItems: 'stretch' },
   dialogIcon: {
