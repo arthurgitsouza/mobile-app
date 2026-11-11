@@ -11,7 +11,7 @@ export const AZUL_MARCA = '#0084F4';
 
 export const styles = StyleSheet.create({
   root: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: colors.navy900,
     alignItems: 'center',
     justifyContent: 'center',
